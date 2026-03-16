@@ -1,0 +1,63 @@
+HEADER: awel 7aga tet3emel
+
+FOOTER: siblo makan hane3melo fel a5er (about us/social/contact us etc)
+
+
+
+
+
+HOME PAGE : Banner - Short Quiz - On Sale/Offers - categories by Icon    
+
+Refrenece Link: https://sigma-computer.com/en
+
+
+
+
+BENCHMARK PAGE: GPU/CPU score + simulate by game     
+
+Refrenece Link: https://howmanyfps.com/
+
+
+
+
+BUILDER PAGE: choose parts then yedi overall score w bottleneck calculator
+
+Refrenece Link: https://pcpartpicker.com/list/
+
+
+
+CATEGORIY PAGE: show products  
+
+Zy sigma/amazon etc
+
+
+
+Login/Signup Page: Terms of Service
+
+
+
+
+
+ADDITIONAL NOTES :
+
+COLORS:
+
+Primary Background                                     #0F172A – Deep Slate (main background)
+
+Secondary Background / Cards                           #1E293B – Dark Blue-Gray
+
+Primary Accent (CTA / Buttons / Highlights)            #3B82F6 – Electric Blue
+
+Secondary Accent (Hover / Links / Active States)       #22D3EE – Cyan Glow
+
+Success / Performance Badge (High FPS / Great Deal)    #10B981 – Emerald Green
+
+Warning / Limited Stock                                #F59E0B – Amber
+
+Text Primary                                           #F8FAFC – Soft White
+
+Text Secondary                                         #94A3B8 – Cool Gray
+
+
+FONT: Rasmus Andersson’s Inter
+
