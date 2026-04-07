@@ -1,0 +1,89 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benchmark</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav> <!-- Navigation bar FLEXBOX -->
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#">Benchmark</a></li>
+            <li><a href="#">Contact</a></li>    
+        </ul>    
+    </nav>
+    <section id="selectors">
+        <h1>Select Components</h1>
+
+
+        <label for="select-cpu">Select CPU:</label>
+        <select id="select-cpu">
+            
+            <option value="i9-13900K">Intel i9-13900K</option>
+            <option value="i7-13700K">Intel i7-13700K</option>
+            <option value="r9-5995X">AMD R9 5995X</option>
+            <option value="r7-5800X">AMD R7 5800X</option>
+        </select>
+
+
+
+        <label for="select-gpu">Select GPU:</label>
+        <select id="select-gpu">
+            <option value="rtx4090">RTX 4090</option>
+            <option value="rtx4070">RTX 4070</option>
+            <option value="rx7900xt">RX 7900 XTX</option>
+            <option value="rx7800xt">RX 7800 XT</option>
+        </select> 
+
+
+        <br>
+        <button id="run-benchmark">Run Benchmark</button>
+    </section>
+
+
+
+    <section id="results">
+        <h2>Benchmark Results</h2>
+
+        <div id="results-container">
+            <label>Performance:</label>
+            <div class="bar-container">
+                <div id="performance-bar" class="bar-fill"></div>
+            </div>
+        </div>
+
+
+        <div class="results-row">
+            <label>Memory:</label>
+            <div class="bar-container">
+                <div id="memory-bar" class="bar-fill"></div>
+            </div>
+        </div>
+
+        
+        <div class="results-row">
+            <label>Power Efficiency:</label>
+            <div class="bar-container">
+                <div id="power-bar" class="bar-fill"></div>
+            </div>
+        </div>
+
+
+        <div class="results-row">
+            <label>Thermal Performance:</label>
+            <div class="bar-container">
+                <div id="thermal-bar" class="bar-fill"></div>
+            </div>
+
+        </div> 
+        
+    
+    
+    
+    </section>
+    <script src="script.js"></script>
+
+</body>
+</html> 
