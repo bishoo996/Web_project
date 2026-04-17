@@ -7,7 +7,7 @@
 </head>
 <body>
 
-    <!-- NAVIGATION BAR -->
+    <!-- navigation bar -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -19,17 +19,15 @@
                 <li><a href="#categories">Categories</a></li>
                 <li><a href="#offers">Offers</a></li>
                 <li><a href="#quiz">Quiz</a></li>
-                <li><a href="#">Compare</a></li>
             </ul>
             <div class="nav-buttons">
-                <button class="btn-icon">🔍</button>
                 <button class="btn-icon">🛒</button>
                 <button class="btn-primary">Sign In</button>
             </div>
         </div>
     </nav>
 
-    <!-- BANNER SECTION -->
+    <!-- banner section -->
     <section class="banner" id="home">
         <div class="banner-content">
             <p class="banner-tag">New Season 2026</p>
@@ -60,8 +58,12 @@
         <div class="banner-image">
             <div class="banner-card">
                 <span class="badge-hot">🔥 HOT DEAL</span>
-                <div class="card-image">💻</div>
-                <h3>Gaming Laptop Pro</h3>
+                <div class="card-image">
+                    <img src="images/banner-laptop.jpg" alt="Asus ROG SCAR 18"
+                         onerror="this.style.display='none'">
+                    <span class="image-fallback">💻</span>
+                </div>
+                <h3>Asus ROG SCAR 18</h3>
                 <p class="card-specs">RTX 4070 · i7-13700H · 32GB</p>
                 <div class="card-price">
                     <span class="old-price">$2,199</span>
@@ -71,7 +73,41 @@
         </div>
     </section>
 
-    <!-- SHORT QUIZ SECTION -->
+    <!-- features / trust strip -->
+    <section class="features-strip">
+        <div class="features-container">
+            <div class="feature">
+                <span class="feature-icon">🚚</span>
+                <div class="feature-text">
+                    <h4>Free Shipping</h4>
+                    <p>On orders over $500</p>
+                </div>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">🛡️</span>
+                <div class="feature-text">
+                    <h4>2-Year Warranty</h4>
+                    <p>On all products</p>
+                </div>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">💬</span>
+                <div class="feature-text">
+                    <h4>24/7 Support</h4>
+                    <p>Expert help anytime</p>
+                </div>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">🔒</span>
+                <div class="feature-text">
+                    <h4>Secure Payment</h4>
+                    <p>SSL protected checkout</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- short quiz section -->
     <section class="quiz-section" id="quiz">
         <div class="section-header">
             <h2>What Should You Buy?</h2>
@@ -94,70 +130,15 @@
         </div>
     </section>
 
-    <!--OFFERS SECTION -->
+    <!-- OFFERS SECTION -->
     <section class="offers" id="offers">
         <div class="section-header">
             <h2>🔥 On Sale Now</h2>
             <p>Limited-time deals on the best PCs and laptops</p>
         </div>
 
-        <div class="offers-grid">
-            <div class="product-card">
-                <span class="badge-sale">-25%</span>
-                <div class="product-image">💻</div>
-                <h3>Acer Predator Helios</h3>
-                <p class="product-specs">RTX 4060 · i7-13620H · 16GB RAM</p>
-                <div class="product-rating">⭐⭐⭐⭐⭐ <span>(128)</span></div>
-                <div class="product-price">
-                    <span class="old-price">$1,599</span>
-                    <span class="new-price">$1,199</span>
-                </div>
-                <button class="btn-primary btn-full">Add to Cart</button>
-            </div>
-
-            <div class="product-card">
-                <span class="badge-sale">-15%</span>
-                <div class="product-image">🖥️</div>
-                <h3>Custom Gaming Rig</h3>
-                <p class="product-specs">RTX 4070 Ti · Ryzen 7 7700X · 32GB</p>
-                <div class="product-rating">⭐⭐⭐⭐⭐ <span>(204)</span></div>
-                <div class="product-price">
-                    <span class="old-price">$2,099</span>
-                    <span class="new-price">$1,779</span>
-                </div>
-                <button class="btn-primary btn-full">Add to Cart</button>
-            </div>
-
-            <div class="product-card">
-                <span class="badge-limited">⚡ Limited</span>
-                <div class="product-image">💻</div>
-                <h3>MacBook Pro 14"</h3>
-                <p class="product-specs">M3 Pro · 18GB RAM · 512GB SSD</p>
-                <div class="product-rating">⭐⭐⭐⭐⭐ <span>(512)</span></div>
-                <div class="product-price">
-                    <span class="old-price">$1,999</span>
-                    <span class="new-price">$1,849</span>
-                </div>
-                <button class="btn-primary btn-full">Add to Cart</button>
-            </div>
-
-            <div class="product-card">
-                <span class="badge-sale">-20%</span>
-                <div class="product-image">🖥️</div>
-                <h3>Office Desktop Pro</h3>
-                <p class="product-specs">Intel i5-13400 · 16GB · 1TB SSD</p>
-                <div class="product-rating">⭐⭐⭐⭐ <span>(86)</span></div>
-                <div class="product-price">
-                    <span class="old-price">$899</span>
-                    <span class="new-price">$719</span>
-                </div>
-                <button class="btn-primary btn-full">Add to Cart</button>
-            </div>
-        </div>
-
-        <div class="offers-footer">
-            <button class="btn-outline">View All Offers →</button>
-        </div>
+        <!-- Product cards are generated by JavaScript -->
+        <div class="offers-grid" id="offersGrid"></div>
     </section>
 
     <!-- CATEGORIES SECTION -->
@@ -215,6 +196,38 @@
     <footer class="footer">
 
     </footer>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">×</button>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img src="" alt="" id="modalImage" onerror="this.style.display='none'">
+                    <span class="image-fallback" id="modalFallback">💻</span>
+                </div>
+                <div class="modal-details">
+                    <span class="modal-badge" id="modalBadge"></span>
+                    <h2 id="modalName"></h2>
+                    <div class="modal-rating" id="modalRating"></div>
+                    <p class="modal-description" id="modalDescription"></p>
+                    <div class="modal-specs-title">Full Specifications</div>
+                    <ul class="modal-specs-list" id="modalSpecsList"></ul>
+                    <div class="modal-price">
+                        <span class="old-price" id="modalOldPrice"></span>
+                        <span class="new-price" id="modalNewPrice"></span>
+                    </div>
+                    <button class="btn-primary btn-large" id="modalAddToCart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span class="toast-message">Added to cart!</span>
+    </div>
 
     <script src="homPageScript.js"></script>
 </body>
