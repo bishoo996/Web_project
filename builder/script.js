@@ -247,15 +247,36 @@ function render() {
   const count = Object.keys(parts).length;
   document.getElementById('partsCount').textContent = `${count} Part${count !== 1 ? 's' : ''} Selected`;
 
-  const chips = document.getElementById('compatChips');
-  const hasDual = parts['memory'] && parts['memory2'];
-  chips.innerHTML = count === 0
-    ? '<span class="chip chip-info">No parts selected</span>'
-    : `<span class="chip chip-ok">✓ ${count} Component${count !== 1 ? 's' : ''} Added</span>
-       <span class="chip chip-info">ATX Form Factor</span>
-       ${hasDual ? '<span class="chip chip-ok">✓ Dual Channel RAM</span>' : ''}
-       ${count >= 2 ? '<span class="chip chip-warn">⚠ Check PSU Wattage</span>' : ''}`;
+const chips = document.getElementById('compatChips');
+const hasDual = parts['memory'] && parts['memory2'];
 
+const psu = parts['psu'];
+const psuCapacity = psu?.watts ?? null;
+
+const totalWatts = Object.entries(parts)
+  .filter(([id]) => id !== 'psu')
+  .reduce((sum, [, part]) => sum + (part.watts || 0), 0);
+
+let psuChip = '';
+if (psu && psuCapacity) {
+  const loadPct = Math.round((totalWatts / psuCapacity) * 100);
+  if (loadPct > 100) {
+    psuChip = `<span class="chip chip-error">✕ PSU Overloaded · ${totalWatts}W / ${psuCapacity}W (${loadPct}%)</span>`;
+  } else if (loadPct >= 80) {
+    psuChip = `<span class="chip chip-warn">⚠ PSU Near Limit · ${totalWatts}W / ${psuCapacity}W (${loadPct}%)</span>`;
+  } else {
+    psuChip = `<span class="chip chip-ok">✓ PSU OK · ${totalWatts}W / ${psuCapacity}W (${loadPct}%)</span>`;
+  }
+} else if (totalWatts > 0 && !psu) {
+  psuChip = `<span class="chip chip-warn">⚠ No PSU · ${totalWatts}W needed</span>`;
+}
+
+chips.innerHTML = count === 0
+  ? '<span class="chip chip-info">No parts selected</span>'
+  : `<span class="chip chip-ok">✓ ${count} Component${count !== 1 ? 's' : ''} Added</span>
+     <span class="chip chip-info">ATX Form Factor</span>
+     ${hasDual ? '<span class="chip chip-ok">✓ Dual Channel RAM</span>' : ''}
+     ${psuChip}`;
   document.querySelectorAll('.action-btn.remove').forEach(btn =>
     btn.addEventListener('click', () => {
       const p    = getParts();
