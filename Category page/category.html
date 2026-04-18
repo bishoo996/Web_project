@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PC Builder · Choose Component</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="categorystyle.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  </head>
+<body>
+<div class="page">
+
+  <!-- Back bar -->
+  <div class="back-bar">
+    <a class="back-btn" id="backBtn" href="builder_index.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Builder
+    </a>
+    <div class="breadcrumb">
+      <a href="index.html">Builder</a>
+      <span class="breadcrumb-sep">›</span>
+      <span id="breadcrumbCat">Choose Component</span>
+    </div>
+  </div>
+
+  <!-- Category header -->
+  <div class="cat-header">
+    <div class="cat-title-wrap">
+      <div class="cat-icon" id="catIcon">📦</div>
+      <div>
+        <div class="cat-title" id="catTitle">Select a Component</div>
+        <div class="cat-subtitle" id="catSubtitle">Pick the best part for your build</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-input" id="searchInput" placeholder="Search parts…" type="text">
+    </div>
+
+    <div class="filter-group" id="filterGroup"></div>
+
+    <select class="sort-select" id="sortSelect">
+      <option value="default">Sort: Featured</option>
+      <option value="price-asc">Price: Low → High</option>
+      <option value="price-desc">Price: High → Low</option>
+      <option value="bench-desc">Best Benchmark</option>
+      <option value="watt-asc">Lowest Wattage</option>
+    </select>
+
+    <span class="results-count" id="resultsCount"><span>0</span> results</span>
+  </div>
+
+  <!-- Parts table -->
+  <div class="parts-card">
+    <table class="parts-table">
+      <thead>
+        <tr>
+          <th class="col-info">Part</th>
+          <th class="col-specs">Key Specs</th>
+          <th class="col-watt2 c">Wattage</th>
+          <th class="col-bench2 c">Benchmark</th>
+          <th class="col-avail2 c">Availability</th>
+          <th class="col-price2 r">Price</th>
+          <th class="col-act r">Add to Build</th>
+        </tr>
+      </thead>
+      <tbody id="partsBody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="categoryJS.js"></script>
+
+</body>
+</html>
