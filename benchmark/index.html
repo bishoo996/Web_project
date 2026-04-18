@@ -1,89 +1,161 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benchmark</title>
+    <title>PC Benchmark - GPU & CPU Performance</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav> <!-- Navigation bar FLEXBOX -->
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="#">Benchmark</a></li>
-            <li><a href="#">Contact</a></li>    
-        </ul>    
+
+    <!-- Part 1: Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <div class="brand">PCMarket</div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Products</a></li>
+                <li><a href="#" class="active">Benchmark</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </div>
     </nav>
-    <section id="selectors">
-        <h1>Select Components</h1>
 
-
-        <label for="select-cpu">Select CPU:</label>
-        <select id="select-cpu">
+    <!-- Part 2: Hero Section - Component Selection -->
+    <section id="hero">
+        <div class="hero-content">
+            <h1>Component Benchmark</h1>
+            <p>Select a GPU or CPU to see its performance scores</p>
             
-            <option value="i9-13900K">Intel i9-13900K</option>
-            <option value="i7-13700K">Intel i7-13700K</option>
-            <option value="r9-5995X">AMD R9 5995X</option>
-            <option value="r7-5800X">AMD R7 5800X</option>
-        </select>
+            <div class="selection-controls">
+                <div class="selector-group">
+                    <label for="gpu-select">Graphics Card (GPU)</label>
+                    <select id="gpu-select">
+                        <option value="">-- Select GPU --</option>
+                        <option value="rtx4090">NVIDIA RTX 4090</option>
+                        <option value="rtx4080">NVIDIA RTX 4080</option>
+                        <option value="rx7900xtx">AMD RX 7900 XTX</option>
+                        <option value="rtx4070">NVIDIA RTX 4070</option>
+                    </select>
+                </div>
 
+                <div class="selector-group">
+                    <label for="cpu-select">Processor (CPU)</label>
+                    <select id="cpu-select">
+                        <option value="">-- Select CPU --</option>
+                        <option value="i9-13900k">Intel i9-13900K</option>
+                        <option value="i7-13700k">Intel i7-13700K</option>
+                        <option value="ryzen9-7950x">AMD Ryzen 9 7950X</option>
+                        <option value="ryzen7-7700x">AMD Ryzen 7 7700X</option>
+                    </select>
+                </div>
+            </div>
 
-
-        <label for="select-gpu">Select GPU:</label>
-        <select id="select-gpu">
-            <option value="rtx4090">RTX 4090</option>
-            <option value="rtx4070">RTX 4070</option>
-            <option value="rx7900xt">RX 7900 XTX</option>
-            <option value="rx7800xt">RX 7800 XT</option>
-        </select> 
-
-
-        <br>
-        <button id="run-benchmark">Run Benchmark</button>
+            <button id="run-benchmark-btn" class="btn-primary">Run Benchmark</button>
+        </div>
     </section>
 
-
-
-    <section id="results">
+    <!-- Part 3: Benchmark Results - Progress Bars -->
+    <section id="benchmark-results">
         <h2>Benchmark Results</h2>
-
-        <div id="results-container">
-            <label>Performance:</label>
+        
+        <div class="benchmark-row">
+            <label>Performance</label>
             <div class="bar-container">
                 <div id="performance-bar" class="bar-fill"></div>
+                <span class="score-text" id="performance-score">0/100</span>
             </div>
         </div>
 
-
-        <div class="results-row">
-            <label>Memory:</label>
+        <div class="benchmark-row">
+            <label>Memory</label>
             <div class="bar-container">
                 <div id="memory-bar" class="bar-fill"></div>
+                <span class="score-text" id="memory-score">0/100</span>
             </div>
         </div>
 
-        
-        <div class="results-row">
-            <label>Power Efficiency:</label>
+        <div class="benchmark-row">
+            <label>Power Efficiency</label>
             <div class="bar-container">
                 <div id="power-bar" class="bar-fill"></div>
+                <span class="score-text" id="power-score">0/100</span>
             </div>
         </div>
 
-
-        <div class="results-row">
-            <label>Thermal Performance:</label>
+        <div class="benchmark-row">
+            <label>Thermal Performance</label>
             <div class="bar-container">
                 <div id="thermal-bar" class="bar-fill"></div>
+                <span class="score-text" id="thermal-score">0/100</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Part 4: Game Simulation Section - Game Grid -->
+    <section id="game-simulation">
+        <h2>Simulate FPS by Game</h2>
+        <p class="subtitle">Click on a game to see estimated FPS with your selected components</p>
+        
+        <div class="game-grid">
+            <div class="game-card" data-game="cyberpunk">
+                <div class="game-image-placeholder">
+                    <span>CP2077</span>
+                </div>
+                <h3>Cyberpunk 2077</h3>
             </div>
 
-        </div> 
-        
-    
-    
-    
-    </section>
-    <script src="script.js"></script>
+            <div class="game-card" data-game="rdr2">
+                <div class="game-image-placeholder">
+                    <span>RDR2</span>
+                </div>
+                <h3>Red Dead Redemption 2</h3>
+            </div>
 
+            <div class="game-card" data-game="warzone">
+                <div class="game-image-placeholder">
+                    <span>COD</span>
+                </div>
+                <h3>Call of Duty: Warzone</h3>
+            </div>
+
+            <div class="game-card" data-game="valorant">
+                <div class="game-image-placeholder">
+                    <span>VAL</span>
+                </div>
+                <h3>Valorant</h3>
+            </div>
+
+            <div class="game-card" data-game="fortnite">
+                <div class="game-image-placeholder">
+                    <span>FN</span>
+                </div>
+                <h3>Fortnite</h3>
+            </div>
+
+            <div class="game-card" data-game="elden-ring">
+                <div class="game-image-placeholder">
+                    <span>ER</span>
+                </div>
+                <h3>Elden Ring</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Part 5: FPS Results Display -->
+    <section id="fps-results">
+        <h2>Estimated FPS</h2>
+        <div class="fps-display">
+            <div class="fps-value" id="fps-number">--</div>
+            <div class="fps-label">Frames Per Second</div>
+            <div class="game-title" id="selected-game">Select a game above</div>
+            <div class="quality-settings">
+                <span>Settings: </span>
+                <span id="quality-preset">Ultra - 1080p</span>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
 </body>
-</html> 
+</html>
