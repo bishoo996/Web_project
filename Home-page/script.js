@@ -40,7 +40,7 @@ const products = [
     {
         id: 1,
         name: "Acer Predator Helios",
-        image: "images/acer-predator.jpg",
+        image: "/External Recources/images/acer-predator.jpg",
         fallbackIcon: "💻",
         specs: "RTX 4060 · i7-13620H · 16GB RAM",
         description: "Powerful gaming laptop with a high refresh rate display and top-tier cooling for long gaming sessions.",
@@ -62,7 +62,7 @@ const products = [
     {
         id: 2,
         name: "Custom Gaming Rig",
-        image: "images/custom-gaming-rig.jpg",
+        image: "/External Recources/images/custom-gaming-rig.jpg",
         fallbackIcon: "🖥️",
         specs: "RTX 4070 Ti · Ryzen 7 7700X · 32GB",
         description: "A hand-picked custom desktop with high-end parts, perfect for gaming and streaming at max settings.",
@@ -84,7 +84,7 @@ const products = [
     {
         id: 3,
         name: "MacBook Pro 14\"",
-        image: "images/macbook-pro.jpg",
+        image: "/External Recources/images/macbook-pro.jpg",
         fallbackIcon: "💻",
         specs: "M3 Pro · 18GB RAM · 512GB SSD",
         description: "Apple's flagship laptop with the M3 Pro chip — incredible battery life, stunning Liquid Retina display, and silent performance.",
@@ -106,7 +106,7 @@ const products = [
     {
         id: 4,
         name: "Office Desktop Pro",
-        image: "images/office-desktop.jpg",
+        image: "/External Recources/images/office-desktop.jpg",
         fallbackIcon: "🖥️",
         specs: "Intel i5-13400 · 16GB · 1TB SSD",
         description: "Reliable office desktop built for productivity. Fast enough for multitasking, programming, and everyday work.",

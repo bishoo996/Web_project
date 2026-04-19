@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overclocked - PC Builder</title>
+  <link rel="stylesheet" href="../home-page/style.css">
+  <link rel="stylesheet" href="builder_style.css">
+</head>
+<body>
+  <nav>
+      <div class="nav-container">
+          <div class="brand">Overclocked</div>
+          <ul class="nav-links">
+    <li><a href="../home-page/index.html">Home</a></li>
+    <li><a href="../builder-page/builder_index.html">Build Your Own PC</a></li>
+    <li><a href="../home-page/index.html#categories">Categories</a></li>
+    <li><a href="../benchmark-page/benchmark.html">Benchmark</a></li>
+    <li><a href="../home-page/index.html#quiz">Quiz</a></li>
+</ul>
+<div class="nav-buttons">
+    <button class="btn-icon" onclick="window.location.href='../builder-page/builder_index.html'">🛒</button>
+    <button class="btn-primary" onclick="window.location.href='../home-page/sign_in.html'">Sign In</button>
+</div>
+      </div>
+  </nav>
+<div class="page">
+
+  <div class="compat-bar">
+    <span class="compat-label">Compatibility</span>
+    <div class="compat-chips" id="compatChips"><span class="chip chip-info">No parts selected</span></div>
+    <div class="compat-spacer"></div>
+    <div class="compat-status">
+      <div class="status-dot"></div>
+      <span id="partsCount">0 Parts Selected</span>
+    </div>
+  </div>
+
+  <div class="builder-card">
+    <table class="builder-table">
+      <thead>
+        <tr>
+          <th class="col-category">Component</th>
+          <th class="col-selection">Selection</th>
+          <th class="col-wattage align-center">Wattage</th>
+          <th class="col-bench align-center">Benchmark</th>
+          <th class="col-avail align-center">Availability</th>
+          <th class="col-price align-right">Price</th>
+          <th class="col-buy align-right">Buy</th>
+        </tr>
+      </thead>
+      <tbody id="coreBody"></tbody>
+    </table>
+
+    <div class="section-wrap">
+      <div class="section-divider"><span>Optional Peripherals</span></div>
+    </div>
+
+    <table class="builder-table">
+      <tbody id="peripheralBody"></tbody>
+    </table>
+  </div>
+</div>
+<footer class="footer">
+      <div class="footer-container">
+          <div class="footer-section">
+              <div class="brand">PCMarket</div>
+              <p class="footer-description">Your trusted source for PC parts, laptops, and gaming gear since 2020.</p>
+          </div>
+          <div class="footer-section">
+              <h4>Quick Links</h4>
+              <ul>
+    <li><a href="../home-page/index.html">Home</a></li>
+    <li><a href="../builder-page/builder_index.html">Build Your Own PC</a></li>
+    <li><a href="../home-page/index.html#categories">Categories</a></li>
+    <li><a href="../benchmark-page/benchmark.html">Benchmark</a></li>
+    <li><a href="../home-page/index.html#quiz">Quiz</a></li>
+</ul>
+          </div>
+          <div class="footer-section">
+              <h4>Support</h4>
+              <ul>
+                  <li><a href="#">Contact Us</a></li>
+                  <li><a href="#">Shipping Info</a></li>
+                  <li><a href="#">Returns</a></li>
+                  <li><a href="#">Warranty</a></li>
+              </ul>
+          </div>
+          <div class="footer-section">
+              <h4>Follow Us</h4>
+              <div class="social-icons">
+                  <a href="#">📘 Facebook</a>
+                  <a href="#">🐦 Twitter</a>
+                  <a href="#">📷 Instagram</a>
+              </div>
+          </div>
+      </div>
+      <div class="footer-bottom">
+          <p>&copy; 2026 PCMarket. All rights reserved.</p>
+      </div>
+  </footer>
+<div class="toast" id="toast"></div>
+
+<script src="builder_script.js"></script>
+</body>
+</html>

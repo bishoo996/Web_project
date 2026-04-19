@@ -3,25 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PC Benchmark - GPU & CPU Performance</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Overclocked - GPU & CPU Benchmark</title>
+    <link rel="stylesheet" href="../home-page/style.css">
 </head>
 <body>
 
-    <!-- Part 1: Navigation Bar -->
+    <!-- Navigation Bar -->
     <nav>
         <div class="nav-container">
-            <div class="brand">PCMarket</div>
+            <div class="brand">Overclocked</div>
             <ul class="nav-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#" class="active">Benchmark</a></li>
-                <li><a href="#">About</a></li>
-            </ul>
+    <li><a href="../home-page/index.html">Home</a></li>
+    <li><a href="../builder-page/builder_index.html">Build Your Own PC</a></li>
+    <li><a href="../home-page/index.html#categories">Categories</a></li>
+    <li><a href="../benchmark-page/benchmark.html">Benchmark</a></li>
+    <li><a href="../home-page/index.html#quiz">Quiz</a></li>
+</ul>
+<div class="nav-buttons">
+    <button class="btn-icon" onclick="window.location.href='../builder-page/builder_index.html'">🛒</button>
+    <button class="btn-primary" onclick="window.location.href='../home-page/sign_in.html'">Sign In</button>
+</div>
         </div>
     </nav>
 
-    <!-- Part 2: Hero Section - Component Selection -->
+    <!-- Hero Section - Component Selection -->
     <section id="hero">
         <div class="hero-content">
             <h1>Component Benchmark</h1>
@@ -55,7 +60,7 @@
         </div>
     </section>
 
-    <!-- Part 3: Benchmark Results - Progress Bars -->
+    <!-- Benchmark Results - Progress Bars -->
     <section id="benchmark-results">
         <h2>Benchmark Results</h2>
         
@@ -92,7 +97,7 @@
         </div>
     </section>
 
-    <!-- Part 4: Game Simulation Section - Game Grid -->
+    <!-- Game Simulation Section - Game Grid -->
     <section id="game-simulation">
         <h2>Simulate FPS by Game</h2>
         <p class="subtitle">Click on a game to see estimated FPS with your selected components</p>
@@ -142,7 +147,7 @@
         </div>
     </section>
 
-    <!-- Part 5: FPS Results Display -->
+    <!-- FPS Results Display -->
     <section id="fps-results">
         <h2>Estimated FPS</h2>
         <div class="fps-display">
@@ -156,6 +161,46 @@
         </div>
     </section>
 
-    <script src="script.js"></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <div class="brand">PCMarket</div>
+                <p class="footer-description">Your trusted source for PC parts, laptops, and gaming gear since 2020.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+    <li><a href="../home-page/index.html">Home</a></li>
+    <li><a href="../builder-page/builder_index.html">Build Your Own PC</a></li>
+    <li><a href="../home-page/index.html#categories">Categories</a></li>
+    <li><a href="../benchmark-page/benchmark.html">Benchmark</a></li>
+    <li><a href="../home-page/index.html#quiz">Quiz</a></li>
+</ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Warranty</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#">📘 Facebook</a>
+                    <a href="#">🐦 Twitter</a>
+                    <a href="#">📷 Instagram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 PCMarket. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="benchmark-script.js"></script>
 </body>
 </html>

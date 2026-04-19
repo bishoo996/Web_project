@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overclocked · Choose Component</title>
+  <link rel="stylesheet" href="../home-page/style.css">
+  <link rel="stylesheet" href="categorystyle.css">
+  </head>
+<body>
+  <nav>
+      <div class="nav-container">
+          <div class="brand">Overclocked</div>
+          <ul class="nav-links">
+    <li><a href="../home-page/index.html">Home</a></li>
+    <li><a href="../builder-page/builder_index.html">Build Your Own PC</a></li>
+    <li><a href="../home-page/index.html#categories">Categories</a></li>
+    <li><a href="../benchmark-page/benchmark.html">Benchmark</a></li>
+    <li><a href="../home-page/index.html#quiz">Quiz</a></li>
+</ul>
+<div class="nav-buttons">
+    <button class="btn-icon" onclick="window.location.href='../builder-page/builder_index.html'">🛒</button>
+    <button class="btn-primary" onclick="window.location.href='../home-page/sign_in.html'">Sign In</button>
+</div>
+      </div>
+  </nav>
+<div class="page">
+
+  <!-- Back bar -->
+  <div class="back-bar">
+    <a class="back-btn" id="backBtn" href="/Home page/index.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Builder
+    </a>
+    <div class="breadcrumb">
+      <a href="/Home page/index.html">Builder</a>
+      <span class="breadcrumb-sep">›</span>
+      <span id="breadcrumbCat">Choose Component</span>
+    </div>
+  </div>
+
+  <!-- Category header -->
+  <div class="cat-header">
+    <div class="cat-title-wrap">
+      <div class="cat-icon" id="catIcon">📦</div>
+      <div>
+        <div class="cat-title" id="catTitle">Select a Component</div>
+        <div class="cat-subtitle" id="catSubtitle">Pick the best part for your build</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-input" id="searchInput" placeholder="Search parts…" type="text">
+    </div>
+
+    <div class="filter-group" id="filterGroup"></div>
+
+    <select class="sort-select" id="sortSelect">
+      <option value="default">Sort: Featured</option>
+      <option value="price-asc">Price: Low → High</option>
+      <option value="price-desc">Price: High → Low</option>
+      <option value="bench-desc">Best Benchmark</option>
+      <option value="watt-asc">Lowest Wattage</option>
+    </select>
+
+    <span class="results-count" id="resultsCount"><span>0</span> results</span>
+  </div>
+
+  <!-- Parts table -->
+  <div class="parts-card">
+    <table class="parts-table">
+      <thead>
+        <tr>
+          <th class="col-info">Part</th>
+          <th class="col-specs">Key Specs</th>
+          <th class="col-watt2 c">Wattage</th>
+          <th class="col-bench2 c">Benchmark</th>
+          <th class="col-avail2 c">Availability</th>
+          <th class="col-price2 r">Price</th>
+          <th class="col-act r">Add to Build</th>
+        </tr>
+      </thead>
+      <tbody id="partsBody"></tbody>
+    </table>
+  </div>
+
+</div>
+<footer class="footer">
+      <div class="footer-container">
+          <div class="footer-section">
+              <div class="brand">PCMarket</div>
+              <p class="footer-description">Your trusted source for PC parts, laptops, and gaming gear since 2020.</p>
+          </div>
+          <div class="footer-section">
+              <h4>Quick Links</h4>
+              <ul>
+    <li><a href="../home-page/index.html">Home</a></li>
+    <li><a href="../builder-page/builder_index.html">Build Your Own PC</a></li>
+    <li><a href="../home-page/index.html#categories">Categories</a></li>
+    <li><a href="../benchmark-page/benchmark.html">Benchmark</a></li>
+    <li><a href="../home-page/index.html#quiz">Quiz</a></li>
+</ul>
+          </div>
+          <div class="footer-section">
+              <h4>Support</h4>
+              <ul>
+                  <li><a href="#">Contact Us</a></li>
+                  <li><a href="#">Shipping Info</a></li>
+                  <li><a href="#">Returns</a></li>
+                  <li><a href="#">Warranty</a></li>
+              </ul>
+          </div>
+          <div class="footer-section">
+              <h4>Follow Us</h4>
+              <div class="social-icons">
+                  <a href="#">📘 Facebook</a>
+                  <a href="#">🐦 Twitter</a>
+                  <a href="#">📷 Instagram</a>
+              </div>
+          </div>
+      </div>
+      <div class="footer-bottom">
+          <p>&copy; 2026 PCMarket. All rights reserved.</p>
+      </div>
+  </footer>
+<div class="toast" id="toast"></div>
+<script src="categoryJS.js"></script>
+
+</body>
+</html>

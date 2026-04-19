@@ -351,7 +351,7 @@ document.getElementById('catIcon').textContent        = meta.icon;
 document.getElementById('catTitle').textContent       = `Choose ${meta.label}`;
 document.getElementById('catSubtitle').textContent    = `Select the best ${meta.sub.toLowerCase()} for your build`;
 document.getElementById('breadcrumbCat').textContent  = meta.label;
-document.getElementById('backBtn').href = from === 'builder' ? 'builder_index.html' : 'homePage.html';
+document.getElementById('backBtn').href = from === 'home' ? '../home-page/index.html' : '../builder-page/builder_index.html';
 
 /* ─── FILTERS ────────────────────────────────────────────────────── */
 const fg = document.getElementById('filterGroup');
@@ -521,7 +521,7 @@ function renderTable() {
 
       selectedPartId = partId;
       showToast(`✓ ${part.name} added to build`);
-      setTimeout(() => { window.location.href = 'builder_index.html'; }, 700);
+      setTimeout(() => { window.location.href = '../builder-page/builder_index.html'; }, 700);
     });
   });
 }

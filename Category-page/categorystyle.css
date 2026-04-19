@@ -1,28 +1,30 @@
     /* ── DESIGN TOKENS (identical to builder) ── */
-    :root {
-      --bg-primary:    #0F172A;
-      --bg-secondary:  #1E293B;
-      --bg-tertiary:   #263347;
-      --accent-blue:   #3B82F6;
-      --accent-cyan:   #22D3EE;
-      --success:       #10B981;
-      --warning:       #F59E0B;
-      --danger:        #EF4444;
-      --text-primary:  #F8FAFC;
-      --text-secondary:#94A3B8;
-      --border:        rgba(148,163,184,0.12);
-      --border-hover:  rgba(59,130,246,0.4);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      min-height: 100vh;
-      background-image:
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59,130,246,.08), transparent),
-        radial-gradient(ellipse 60% 40% at 80% 80%,  rgba(34,211,238,.05), transparent);
-    }
+:root {
+  /* Mapped to your home page's palette */
+  --bg-primary:    #020617; /* Home --bg-color */
+  --bg-secondary:  #0B1120; /* Home --surface-color */
+  --bg-tertiary:   #0F172A; /* Home --secondary-color */
+  --accent-blue:   #7C3AED; /* Home --primary-color (Purple) */
+  --accent-cyan:   #9333EA; /* Lighter Purple for accents */
+  --success:       #10B981;
+  --warning:       #F59E0B;
+  --danger:        #EF4444;
+  --text-primary:  #E5E7EB; /* Home --text-color */
+  --text-secondary:#94A3B8; /* Home --text-muted */
+  --border:        rgba(124, 58, 237, 0.3); /* Home border style */
+  --border-hover:  rgba(124, 58, 237, 0.6);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124,58,237,.12), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 80%,  rgba(147,51,234,.08), transparent);
+}
+
     .page { max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
 
     /* ── BREADCRUMB / BACK BAR ── */

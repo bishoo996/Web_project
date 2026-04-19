@@ -84,7 +84,7 @@ function availHTML(avail) {
 
 function previewCardHTML(compId, label) {
   const items = TOP3[compId] || [];
-  const catUrl = `category.html?category=${compId}&from=builder`;
+  const catUrl = `../Category-page/category.html?category=${compId}&from=builder`;
 
   let itemsHTML = '';
   if (items.length === 0) {
@@ -116,7 +116,7 @@ const cartSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" str
 
 function makeRow(comp, parts) {
   const sel     = parts[comp.id];
-  const catUrl  = `category.html?category=${comp.id}&from=builder`;
+  const catUrl  = `../Category-page/category.html?category=${comp.id}&from=builder`;
   const tr      = document.createElement('tr');
   tr.id = 'row-' + comp.id;
 
@@ -176,7 +176,7 @@ function makeRow(comp, parts) {
 
 function makeMemory2Row(parts) {
   const sel    = parts['memory2'];
-  const catUrl = `category.html?category=memory2&from=builder`;
+  const catUrl = `../Category-page/category.html?category=memory2&from=builder`;
   const tr     = document.createElement('tr');
   tr.id = 'row-memory2';
   tr.className = 'slot2-row';
