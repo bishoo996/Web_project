@@ -345,7 +345,7 @@ document.getElementById('catIcon').textContent        = meta.icon;
 document.getElementById('catTitle').textContent       = `Choose ${meta.label}`;
 document.getElementById('catSubtitle').textContent    = `Select the best ${meta.sub.toLowerCase()} for your build`;
 document.getElementById('breadcrumbCat').textContent  = meta.label;
-document.getElementById('backBtn').href = from === 'home' ? '../home-page/index.html' : '../builder-page/builder_index.html';
+document.getElementById('backBtn').href = from === 'home' ? '../index.html' : '../builder-page/builder_index.html';
 
 const fg = document.getElementById('filterGroup');
 (meta.filters || ['All']).forEach(f => {
