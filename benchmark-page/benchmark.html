@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overclocked - GPU & CPU Benchmark</title>
+    <link rel="stylesheet" href="../home-page/style.css">
+</head>
+<body>
+
+    
+    <nav>
+        <div class="nav-container">
+            <div class="brand">Overclocked</div>
+            <ul class="nav-links">
+    <li><a href="../home-page/index.html">Home</a></li>
+    <li><a href="../builder-page/builder_index.html">Build Your Own PC</a></li>
+    <li><a href="../home-page/index.html#categories">Categories</a></li>
+    <li><a href="../benchmark-page/benchmark.html">Benchmark</a></li>
+    <li><a href="../home-page/index.html#quiz">Quiz</a></li>
+</ul>
+<div class="nav-buttons">
+    <button class="btn-icon" onclick="window.location.href='../builder-page/builder_index.html'">🛒</button>
+    <button class="btn-primary" onclick="window.location.href='../auth/sign_in.html'">Sign In</button>
+</div>
+        </div>
+    </nav>
+
+    <section id="hero">
+        <div class="hero-content">
+            <h1>Component Benchmark</h1>
+            <p>Select a GPU or CPU to see its performance scores</p>
+            
+            <div class="selection-controls">
+                <div class="selector-group">
+                    <label for="gpu-select">Graphics Card (GPU)</label>
+                    <select id="gpu-select">
+                        <option value="">-- Select GPU --</option>
+                        <option value="rtx4090">NVIDIA RTX 4090</option>
+                        <option value="rtx4080">NVIDIA RTX 4080</option>
+                        <option value="rx7900xtx">AMD RX 7900 XTX</option>
+                        <option value="rtx4070">NVIDIA RTX 4070</option>
+                    </select>
+                </div>
+
+                <div class="selector-group">
+                    <label for="cpu-select">Processor (CPU)</label>
+                    <select id="cpu-select">
+                        <option value="">-- Select CPU --</option>
+                        <option value="i9-13900k">Intel i9-13900K</option>
+                        <option value="i7-13700k">Intel i7-13700K</option>
+                        <option value="ryzen9-7950x">AMD Ryzen 9 7950X</option>
+                        <option value="ryzen7-7700x">AMD Ryzen 7 7700X</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="run-benchmark-btn" class="btn-primary">Run Benchmark</button>
+        </div>
+    </section>
+
+    <section id="benchmark-results">
+        <h2>Benchmark Results</h2>
+        
+        <div class="benchmark-row">
+            <label>Performance</label>
+            <div class="bar-container">
+                <div id="performance-bar" class="bar-fill"></div>
+                <span class="score-text" id="performance-score">0/100</span>
+            </div>
+        </div>
+
+        <div class="benchmark-row">
+            <label>Memory</label>
+            <div class="bar-container">
+                <div id="memory-bar" class="bar-fill"></div>
+                <span class="score-text" id="memory-score">0/100</span>
+            </div>
+        </div>
+
+        <div class="benchmark-row">
+            <label>Power Efficiency</label>
+            <div class="bar-container">
+                <div id="power-bar" class="bar-fill"></div>
+                <span class="score-text" id="power-score">0/100</span>
+            </div>
+        </div>
+
+        <div class="benchmark-row">
+            <label>Thermal Performance</label>
+            <div class="bar-container">
+                <div id="thermal-bar" class="bar-fill"></div>
+                <span class="score-text" id="thermal-score">0/100</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="game-simulation">
+        <h2>Simulate FPS by Game</h2>
+        <p class="subtitle">Click on a game to see estimated FPS with your selected components</p>
+        
+        <div class="game-grid">
+            <div class="game-card" data-game="cyberpunk">
+                <div class="game-image-placeholder">
+                    <span>CP2077</span>
+                </div>
+                <h3>Cyberpunk 2077</h3>
+            </div>
+
+            <div class="game-card" data-game="rdr2">
+                <div class="game-image-placeholder">
+                    <span>RDR2</span>
+                </div>
+                <h3>Red Dead Redemption 2</h3>
+            </div>
+
+            <div class="game-card" data-game="warzone">
+                <div class="game-image-placeholder">
+                    <span>COD</span>
+                </div>
+                <h3>Call of Duty: Warzone</h3>
+            </div>
+
+            <div class="game-card" data-game="valorant">
+                <div class="game-image-placeholder">
+                    <span>VAL</span>
+                </div>
+                <h3>Valorant</h3>
+            </div>
+
+            <div class="game-card" data-game="fortnite">
+                <div class="game-image-placeholder">
+                    <span>FN</span>
+                </div>
+                <h3>Fortnite</h3>
+            </div>
+
+            <div class="game-card" data-game="elden-ring">
+                <div class="game-image-placeholder">
+                    <span>ER</span>
+                </div>
+                <h3>Elden Ring</h3>
+            </div>
+        </div>
+    </section>
+
+    <section id="fps-results">
+        <h2>Estimated FPS</h2>
+        <div class="fps-display">
+            <div class="fps-value" id="fps-number">--</div>
+            <div class="fps-label">Frames Per Second</div>
+            <div class="game-title" id="selected-game">Select a game above</div>
+            <div class="quality-settings">
+                <span>Settings: </span>
+                <span id="quality-preset">Ultra - 1080p</span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <div class="brand">PCMarket</div>
+                <p class="footer-description">Your trusted source for PC parts, laptops, and gaming gear since 2020.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+    <li><a href="../home-page/index.html">Home</a></li>
+    <li><a href="../builder-page/builder_index.html">Build Your Own PC</a></li>
+    <li><a href="../home-page/index.html#categories">Categories</a></li>
+    <li><a href="../benchmark-page/benchmark.html">Benchmark</a></li>
+    <li><a href="../home-page/index.html#quiz">Quiz</a></li>
+</ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Warranty</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#">📘 Facebook</a>
+                    <a href="#">🐦 Twitter</a>
+                    <a href="#">📷 Instagram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 PCMarket. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="benchmark-script.js"></script>
+</body>
+</html>

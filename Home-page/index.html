@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overclocked - PC Parts Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <div class="brand">Overclocked</div>
+            <ul class="nav-links">
+    <li><a href="../home-page/index.html">Home</a></li>
+    <li><a href="../builder-page/builder_index.html">Build Your Own PC</a></li>
+    <li><a href="../home-page/index.html#categories">Categories</a></li>
+    <li><a href="../benchmark-page/benchmark.html">Benchmark</a></li>
+    <li><a href="../home-page/index.html#quiz">Quiz</a></li>
+</ul>
+<div class="nav-buttons">
+    <button class="btn-icon" onclick="window.location.href='../builder-page/builder_index.html'">🛒</button>
+    <button class="btn-primary" onclick="window.location.href='../auth/sign_in.html'">Sign In</button>
+</div>
+        </div>
+    </nav>
+
+    <!-- Banner Section -->
+    <section class="banner" id="home">
+        <div class="banner-content">
+            <p class="banner-tag">New Season 2026</p>
+            <h1 class="banner-title">Build Your <span class="highlight">Dream PC</span></h1>
+            <p class="banner-subtitle">
+                Find the perfect parts and laptops with smart tools like bottleneck
+                calculator, FPS estimator, and a recommendation quiz to guide you.
+            </p>
+            <div class="banner-buttons">
+                <button class="btn-primary btn-large">Shop Now</button>
+                <button class="btn-outline btn-large">Take the Quiz</button>
+            </div>
+            <div class="banner-stats">
+                <div class="stat">
+                    <h3>500+</h3>
+                    <p>Products</p>
+                </div>
+                <div class="stat">
+                    <h3>50+</h3>
+                    <p>Brands</p>
+                </div>
+                <div class="stat">
+                    <h3>24/7</h3>
+                    <p>Support</p>
+                </div>
+            </div>
+        </div>
+        <div class="banner-image">
+            <div class="banner-card">
+                <span class="badge-hot">🔥 HOT DEAL</span>
+                <div class="card-image">
+                    <img src="/External Recources/images/banner-laptop.jpg" alt="Asus ROG SCAR 18"
+                         onerror="this.style.display='none'">
+                    <span class="image-fallback">💻</span>
+                </div>
+                <h3>Asus ROG SCAR 18</h3>
+                <p class="card-specs">RTX 4070 · i7-13700H · 32GB</p>
+                <div class="card-price">
+                    <span class="old-price">$2,199</span>
+                    <span class="new-price">$1,799</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Strip -->
+    <section class="features-strip">
+        <div class="features-container">
+            <div class="feature">
+                <span class="feature-icon">🚚</span>
+                <div class="feature-text">
+                    <h4>Free Shipping</h4>
+                    <p>On orders over $500</p>
+                </div>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">🛡️</span>
+                <div class="feature-text">
+                    <h4>2-Year Warranty</h4>
+                    <p>On all products</p>
+                </div>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">💬</span>
+                <div class="feature-text">
+                    <h4>24/7 Support</h4>
+                    <p>Expert help anytime</p>
+                </div>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">🔒</span>
+                <div class="feature-text">
+                    <h4>Secure Payment</h4>
+                    <p>SSL protected checkout</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="quiz-section" id="quiz">
+        <div class="section-header">
+            <h2>What Should You Buy?</h2>
+            <p>Answer a few quick questions and we'll recommend the perfect PC for you</p>
+        </div>
+
+        <div class="quiz-box" id="quizBox">
+            <div class="quiz-progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <div class="quiz-question" id="quizQuestion">
+                <!-- Questions are injected by JavaScript -->
+            </div>
+
+            <div class="quiz-footer">
+                <span id="questionCount">Question 1 of 4</span>
+                <button class="btn-text" id="restartBtn" style="display:none;">Restart Quiz</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Offers Section -->
+    <section class="offers" id="offers">
+        <div class="section-header">
+            <h2>🔥 On Sale Now</h2>
+            <p>Limited-time deals on the best PCs and laptops</p>
+        </div>
+
+        <!-- Product cards are generated by JavaScript -->
+        <div class="offers-grid" id="offersGrid"></div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories" id="categories">
+        <div class="section-header">
+            <h2>Shop by Category</h2>
+            <p>Find exactly what you need, faster</p>
+        </div>
+    <div class="categories-grid">
+    <a href="#" class="category-card">
+        <div class="category-icon">💻</div>
+        <h3>Laptops</h3>
+        <p>150+ products</p>
+    </a>
+    <a href="#" class="category-card">
+        <div class="category-icon">🖥️</div>
+        <h3>Desktops</h3>
+        <p>80+ products</p>
+    </a>
+    <a href="/Category-page/category.html?category=gpu&from=home" class="category-card">
+        <div class="category-icon">🎮</div>
+        <h3>Graphics Cards</h3>
+        <p>60+ products</p>
+    </a>
+    <a href="/Category-page/category.html?category=cpu&from=home" class="category-card">
+        <div class="category-icon">⚙️</div>
+        <h3>Processors</h3>
+        <p>45+ products</p>
+    </a>
+    <a href="/Category-page/category.html?category=storage&from=home" class="category-card">
+        <div class="category-icon">💾</div>
+        <h3>Memory & Storage</h3>
+        <p>120+ products</p>
+    </a>
+    <a href="/Category-page/category.html?category=keyboard&from=home" class="category-card">
+        <div class="category-icon">⌨️</div>
+        <h3>Keyboards</h3>
+        <p>90+ products</p>
+    </a>
+    <a href="/Category-page/category.html?category=mouse&from=home" class="category-card">
+        <div class="category-icon">🖱️</div>
+        <h3>Mice</h3>
+        <p>70+ products</p>
+    </a>
+    <a href="/Category-page/category.html?category=headset&from=home" class="category-card">
+        <div class="category-icon">🎧</div>
+        <h3>Headsets</h3>
+        <p>55+ products</p>
+    </a>
+</div>
+        
+            
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <div class="brand">PCMarket</div>
+                <p class="footer-description">Your trusted source for PC parts, laptops, and gaming gear since 2020.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+    <li><a href="../home-page/index.html">Home</a></li>
+    <li><a href="../builder-page/builder_index.html">Build Your Own PC</a></li>
+    <li><a href="../home-page/index.html#categories">Categories</a></li>
+    <li><a href="../benchmark-page/benchmark.html">Benchmark</a></li>
+    <li><a href="../home-page/index.html#quiz">Quiz</a></li>
+</ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Warranty</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#">📘 Facebook</a>
+                    <a href="#">🐦 Twitter</a>
+                    <a href="#">📷 Instagram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 PCMarket. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Product Detail Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">×</button>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img src="" alt="" id="modalImage" onerror="this.style.display='none'">
+                    <span class="image-fallback" id="modalFallback">💻</span>
+                </div>
+                <div class="modal-details">
+                    <span class="modal-badge" id="modalBadge"></span>
+                    <h2 id="modalName"></h2>
+                    <div class="modal-rating" id="modalRating"></div>
+                    <p class="modal-description" id="modalDescription"></p>
+                    <div class="modal-specs-title">Full Specifications</div>
+                    <ul class="modal-specs-list" id="modalSpecsList"></ul>
+                    <div class="modal-price">
+                        <span class="old-price" id="modalOldPrice"></span>
+                        <span class="new-price" id="modalNewPrice"></span>
+                    </div>
+                    <button class="btn-primary btn-large" id="modalAddToCart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span class="toast-message">Added to cart!</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
