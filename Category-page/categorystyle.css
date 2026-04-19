@@ -1,17 +1,17 @@
-    /* ── DESIGN TOKENS (identical to builder) ── */
+
 :root {
-  /* Mapped to your home page's palette */
-  --bg-primary:    #020617; /* Home --bg-color */
-  --bg-secondary:  #0B1120; /* Home --surface-color */
-  --bg-tertiary:   #0F172A; /* Home --secondary-color */
-  --accent-blue:   #7C3AED; /* Home --primary-color (Purple) */
-  --accent-cyan:   #9333EA; /* Lighter Purple for accents */
+  
+  --bg-primary:    #020617; 
+  --bg-secondary:  #0B1120; 
+  --bg-tertiary:   #0F172A; 
+  --accent-blue:   #7C3AED; 
+  --accent-cyan:   #9333EA; 
   --success:       #10B981;
   --warning:       #F59E0B;
   --danger:        #EF4444;
-  --text-primary:  #E5E7EB; /* Home --text-color */
-  --text-secondary:#94A3B8; /* Home --text-muted */
-  --border:        rgba(124, 58, 237, 0.3); /* Home border style */
+  --text-primary:  #E5E7EB; 
+  --text-secondary:#94A3B8; 
+  --border:        rgba(124, 58, 237, 0.3); 
   --border-hover:  rgba(124, 58, 237, 0.6);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,7 +27,6 @@ body {
 
     .page { max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
 
-    /* ── BREADCRUMB / BACK BAR ── */
     .back-bar {
       display: flex; align-items: center; gap: 10px;
       margin-bottom: 24px; font-size: 13px;

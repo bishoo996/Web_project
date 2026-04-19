@@ -1,4 +1,4 @@
-// Part 1: Component Benchmark Data
+// data el benchmark components
 const componentData = {
     rtx4090: { performance: 98, memory: 95, power: 70, thermal: 75 },
     rtx4080: { performance: 88, memory: 90, power: 78, thermal: 80 },
@@ -10,7 +10,7 @@ const componentData = {
     'ryzen7-7700x': { performance: 82, memory: 83, power: 80, thermal: 82 }
 };
 
-// Part 2: Game FPS Data
+// game data
 const gameFpsData = {
     cyberpunk: {
         rtx4090: 120, rtx4080: 95, rx7900xtx: 88, rtx4070: 72,
@@ -38,7 +38,6 @@ const gameFpsData = {
     }
 };
 
-// Part 3: DOM Element References
 const gpuSelect = document.getElementById('gpu-select');
 const cpuSelect = document.getElementById('cpu-select');
 const runBenchmarkBtn = document.getElementById('run-benchmark-btn');
@@ -56,7 +55,6 @@ const memoryScore = document.getElementById('memory-score');
 const powerScore = document.getElementById('power-score');
 const thermalScore = document.getElementById('thermal-score');
 
-// Part 4: Run Benchmark Function
 runBenchmarkBtn.addEventListener('click', function() {
     const selectedGpu = gpuSelect.value;
     const selectedCpu = cpuSelect.value;
@@ -75,7 +73,7 @@ runBenchmarkBtn.addEventListener('click', function() {
     animateProgressBar(thermalBar, thermalScore, scores.thermal);
 });
 
-// Part 5: Game Card Click Handlers
+// save selected value w validation
 gameCards.forEach(card => {
     card.addEventListener('click', function() {
         const gameName = this.getAttribute('data-game');

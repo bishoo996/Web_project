@@ -1,8 +1,4 @@
 
-/* ─── CATALOGUE DATA ─────────────────────────────────────────────────
-   Each part has the same shape used by the builder's parts object.
-   Add as many entries as you like; the page is purely data-driven.
-────────────────────────────────────────────────────────────────────── */
 const CATALOGUE = {
 
   cpu: {
@@ -328,7 +324,6 @@ const CATALOGUE = {
   },
 };
 
-/* ─── STATE ──────────────────────────────────────────────────────── */
 function getParams() {
   const p = new URLSearchParams(location.search);
   return { category: p.get('category') || 'cpu', from: p.get('from') || 'builder' };
@@ -345,7 +340,6 @@ let searchQuery   = '';
 let sortMode      = 'default';
 let selectedPartId = getParts()[category]?.id || null;
 
-/* ─── DOM INIT ───────────────────────────────────────────────────── */
 document.title = `PC Builder · ${meta.label}`;
 document.getElementById('catIcon').textContent        = meta.icon;
 document.getElementById('catTitle').textContent       = `Choose ${meta.label}`;
@@ -353,7 +347,6 @@ document.getElementById('catSubtitle').textContent    = `Select the best ${meta.
 document.getElementById('breadcrumbCat').textContent  = meta.label;
 document.getElementById('backBtn').href = from === 'home' ? '../home-page/index.html' : '../builder-page/builder_index.html';
 
-/* ─── FILTERS ────────────────────────────────────────────────────── */
 const fg = document.getElementById('filterGroup');
 (meta.filters || ['All']).forEach(f => {
   const btn = document.createElement('button');
@@ -368,7 +361,6 @@ const fg = document.getElementById('filterGroup');
   fg.appendChild(btn);
 });
 
-/* ─── SEARCH & SORT ──────────────────────────────────────────────── */
 document.getElementById('searchInput').addEventListener('input', e => {
   searchQuery = e.target.value.toLowerCase();
   renderTable();
@@ -378,7 +370,6 @@ document.getElementById('sortSelect').addEventListener('change', e => {
   renderTable();
 });
 
-/* ─── HELPERS ────────────────────────────────────────────────────── */
 function wattageHTML(watts) {
   if (watts === null || watts === undefined) return '<span class="dash">—</span>';
   const pct = Math.min((watts / 500) * 100, 100);
@@ -401,7 +392,6 @@ function availHTML(avail) {
   return `<span class="avail-pill ${cls}"><span class="avail-dot"></span>${label}</span>`;
 }
 
-/* ─── TOAST ──────────────────────────────────────────────────────── */
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -410,7 +400,6 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
-/* ─── FILTER / SORT PARTS ────────────────────────────────────────── */
 function getFiltered() {
   let list = [...cat.parts];
   if (searchQuery) {
@@ -438,7 +427,6 @@ function getFiltered() {
   return list;
 }
 
-/* ─── RENDER TABLE ───────────────────────────────────────────────── */
 function renderTable() {
   const tbody = document.getElementById('partsBody');
   tbody.innerHTML = '';
@@ -501,21 +489,19 @@ function renderTable() {
     tbody.appendChild(tr);
   });
 
-  /* wire up select buttons */
   tbody.querySelectorAll('.btn-select:not(.selected)').forEach(btn => {
     btn.addEventListener('click', () => {
       const partId = btn.dataset.id;
       const part   = cat.parts.find(p => p.id === partId);
       if (!part) return;
 
-      /* save to sessionStorage then go back to builder */
       const parts = getParts();
       if (category === 'psu') {
         const wattSpec = (part.specs || []).find(s => s.k === 'Wattage');
         if (wattSpec) part.capacity = parseInt(wattSpec.v);
       }
       parts[category] = part;
-      /* if changing slot-1 memory, drop slot-2 to avoid type mismatch */
+      
       if (category === 'memory') delete parts['memory2'];
       saveParts(parts);
 

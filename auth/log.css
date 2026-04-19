@@ -4,8 +4,8 @@
 
 body {
     margin: 0;
-    font-family: 'Inter', sans-serif; /* Matched to main theme */
-    background: #020617; /* Matched to main theme bg */
+    font-family: 'Inter', sans-serif; 
+    background: #020617; 
     color: white;
 }
 
@@ -20,18 +20,18 @@ body {
 }
 
 .auth-box {
-    background: #0B1120; /* Matched to surface-color */
+    background: #0B1120; 
     padding: 35px;
     width: 360px;
     border-radius: 12px;
-    border: 1px solid rgba(124, 58, 237, 0.3); /* Purple border */
+    border: 1px solid rgba(124, 58, 237, 0.3); 
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
 }
 
 h2 {
     margin-top: 0;
     margin-bottom: 20px;
-    color: #7C3AED; /* Purple accent */
+    color: #7C3AED; 
     text-align: center;
 }
 
@@ -62,7 +62,7 @@ input:focus {
 .login-btn {
     width: 100%;
     padding: 12px;
-    background: #7C3AED; /* Purple button */
+    background: #7C3AED; 
     border: none;
     color: white;
     border-radius: 8px;
@@ -74,7 +74,7 @@ input:focus {
 }
 
 .login-btn:hover {
-    background: #6D28D9; /* Darker purple on hover */
+    background: #6D28D9; 
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
 }
