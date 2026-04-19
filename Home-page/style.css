@@ -1,4 +1,4 @@
-/* Reset and Base Styles */
+
 * {
     margin: 0;
     padding: 0;
@@ -52,7 +52,6 @@ ul {
     list-style: none;
 }
 
-/* Navigation Bar */
 nav {
     background-color: var(--surface-color);
     padding: 1rem 0;
@@ -116,7 +115,6 @@ nav {
     background-color: rgba(124, 58, 237, 0.1);
 }
 
-/* Buttons */
 .btn-primary {
     background-color: var(--primary-color);
     color: white;
@@ -183,9 +181,7 @@ nav {
     text-decoration: underline;
 }
 
-/* HOMEPAGE STYLES */
 
-/* Banner */
 .banner {
     max-width: 1200px;
     margin: 0 auto;
@@ -339,7 +335,6 @@ nav {
     pointer-events: none;
 }
 
-/* Features Strip */
 .features-strip {
     background-color: var(--surface-color);
     border-top: 1px solid rgba(124, 58, 237, 0.3);
@@ -375,7 +370,6 @@ nav {
     font-size: 13px;
 }
 
-/* Section Header */
 .section-header {
     text-align: center;
     margin-bottom: 48px;
@@ -393,7 +387,6 @@ nav {
     font-size: 16px;
 }
 
-/* Quiz Section */
 .quiz-section {
     max-width: 1200px;
     margin: 0 auto;
@@ -618,7 +611,6 @@ nav {
     font-size: 20px;
 }
 
-/* Categories */
 .categories {
     max-width: 1200px;
     margin: 0 auto;
@@ -662,7 +654,6 @@ nav {
     font-size: 13px;
 }
 
-/* Product Detail Modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -856,7 +847,6 @@ nav {
     font-size: 32px;
 }
 
-/* Toast Notification */
 .toast {
     position: fixed;
     bottom: 30px;
@@ -888,9 +878,7 @@ nav {
     font-weight: 700;
 }
 
-/* BENCHMARK PAGE STYLES */
 
-/* Hero Section */
 #hero {
     max-width: 1200px;
     margin: 3rem auto;
@@ -946,7 +934,7 @@ select:focus {
     border-color: var(--primary-color);
 }
 
-/* Benchmark Results Section */
+
 #benchmark-results {
     max-width: 1200px;
     margin: 4rem auto;
@@ -998,7 +986,7 @@ select:focus {
     text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
 }
 
-/* Game Simulation Section */
+
 #game-simulation {
     max-width: 1200px;
     margin: 4rem auto;
@@ -1062,7 +1050,6 @@ select:focus {
     color: var(--text-color);
 }
 
-/* FPS Results Display */
 #fps-results {
     max-width: 600px;
     margin: 4rem auto;
