@@ -1,0 +1,99 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif; 
+    background: #020617; 
+    color: white;
+}
+
+.auth-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124,58,237,.12), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 80%,  rgba(147,51,234,.08), transparent);
+}
+
+.auth-box {
+    background: #0B1120; 
+    padding: 35px;
+    width: 360px;
+    border-radius: 12px;
+    border: 1px solid rgba(124, 58, 237, 0.3); 
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #7C3AED; 
+    text-align: center;
+}
+
+label {
+    font-size: 14px;
+    color: #94A3B8;
+    display: block;
+    margin-top: 10px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    background: #0F172A;
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    color: white;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #7C3AED;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: #7C3AED; 
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    background: #6D28D9; 
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+}
+
+.switch {
+    text-align: center;
+    margin-top: 20px;
+    color: #94A3B8;
+    font-size: 14px;
+}
+
+.switch a {
+    color: #7C3AED;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.switch a:hover {
+    text-decoration: underline;
+    color: #9333EA;
+}
