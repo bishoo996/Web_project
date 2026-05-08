@@ -14,9 +14,26 @@
   --border:        rgba(124, 58, 237, 0.3); 
   --border-hover:  rgba(124, 58, 237, 0.6);
 }
+
+@font-face {
+  font-family: 'Work Sans';
+  src: url('./assets/fonts/WorkSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('./assets/fonts/JetBrainsMono-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'JetBrains Mono', 'Work Sans', monospace;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;

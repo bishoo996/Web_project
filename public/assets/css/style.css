@@ -22,7 +22,7 @@
 
 @font-face {
   font-family: 'Work Sans';
-  src: url('/External\ Recources/fonts/WorkSans-VariableFont_wght.ttf') format('truetype');
+  src: url('./assets/fonts/WorkSans-VariableFont_wght.ttf') format('truetype');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -30,14 +30,14 @@
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/External\ Recources/fonts/JetBrainsMono-VariableFont_wght.ttf') format('truetype');
+  src: url('./assets/fonts/JetBrainsMono-VariableFont_wght.ttf') format('truetype');
   font-weight: 100 800;
   font-style: normal;
   font-display: swap;
 }
 
 body {
-    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'JetBrains Mono', 'Work Sans', monospace;
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.6;
