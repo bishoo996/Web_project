@@ -10,18 +10,21 @@
 <body>
 
 <div class="auth-page">
-
     <div class="auth-box">
 
         <h2>Sign In</h2>
 
-        <label>Email / Username</label>
-        <input type="text" placeholder="Enter Email">
+        <form action="/api/login" method="POST">
+            
+            <label>Email / Username</label>
+            <input type="text" name="identifier" placeholder="Enter Email or Username" required>
 
-        <label>Password</label>
-        <input type="password" placeholder="Enter Password">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter Password" required>
 
-        <button class="login-btn">Login</button>
+            <button type="submit" class="login-btn">Login</button>
+            
+        </form>
 
         <p class="switch">
             Don't have account?
@@ -34,7 +37,7 @@
 
     </div>
 
-</div>
+
 
 <script src="./assets/js/log.js"></script>
 </body>
