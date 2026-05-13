@@ -1,8 +1,15 @@
 const express = require('express'); //Express el framework el bey simplify el server creation w routing w handling requests
 const mongoose = require('mongoose'); //mongoose el bouncer el bey enforce el schema w el validation
 const bcrypt = require('bcrypt'); //hash passwords for security
-const User = require('./models/Users'); //import User model
 const session = require('express-session'); //handle user sessions
+
+
+//import models
+const CPU = require('./models/CPU'); 
+const GPU = require('./models/GPU');
+const Game = require('./models/Game');
+const User = require('./models/Users'); 
+
 
 const app = express();
 const PORT = 3000;
@@ -84,10 +91,92 @@ app.post('/api/login' , async (req, res) => {
 // A quick route to check who is currently logged in
 app.get('/api/me', (req, res) => {
     // Check if the session has a userId
-    if (req.session.userId) {
-        res.send(`You are logged in as ${req.session.firstName} with a ${req.session.role} account.`);
+    if (req.session.userId) {   //sends json response with user data
+        res.json({
+            isLoggedIn: true,
+            firstName: req.session.firstName,
+            role: req.session.role
+        });
     } else {
-        res.send('You are not logged in.');
+        res.json({
+            isLoggedIn: false,
+            role: 'guest'
+        });
+    }
+});
+
+function requireAdmin(req, res, next) {
+    if (req.session.role === 'admin') {
+        next(); 
+    } else {
+        res.status(403).send('Access denied. Admins only.'); 
+    }
+}
+
+
+//cpu route
+app.post('/api/admin/add-cpu', requireAdmin, async (req, res) => {
+    try {
+        const { name, brand, socket, price, computeScore } = req.body;
+
+        const newCPU = new CPU({
+            name: name,
+            brand: brand,
+            socket: socket,
+            price: price,
+            computeScore: computeScore
+        });
+
+        await newCPU.save();
+        console.log('Admin added CPU: ', name);
+        res.send('CPU added successfully');
+
+    } catch (err) {
+        console.error('Error adding CPU', err);
+        res.status(500).send('Server error during CPU addition');
+    }
+});
+
+app.post('/api/admin/add-gpu', requireAdmin, async (req, res) => {
+    try {
+        const { name, brand, vram, price, renderScores } = req.body;
+
+        const newGPU = new GPU({
+            name: name,
+            brand: brand,
+            vram: vram,
+            price: price,
+            renderScores: renderScores
+        });
+
+        await newGPU.save();
+        console.log('Admin added GPU: ', name);
+        res.send('GPU added successfully');
+
+    } catch (err) {
+        console.error('Error adding GPU', err);
+        res.status(500).send('Server error during GPU addition');
+    }
+});
+
+
+app.post('/api/admin/add-game', requireAdmin, async (req, res) => { 
+    try {
+        const { title, optimizationFactor, cpuIntensive } = req.body;
+        
+        const newGame = new Game({
+            title: title,
+            optimizationFactor: optimizationFactor,
+            cpuIntensive: cpuIntensive
+        });
+
+        await newGame.save();
+
+        console.log('Admin added Game: ', title);
+        res.send('Game added successfully');
+    } catch (err) {
+        console.error('Error adding Game', err);
+        res.status(500).send('Server error during Game addition');
     }
 });
 

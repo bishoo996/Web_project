@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/assets/css/log.css">
+    <style>
+        /* Dashboard Layout Overrides */
+        body { margin: 0; background-color: #121212; color: #fff; font-family: sans-serif; }
+        .dashboard-container { display: flex; min-height: 100vh; }
+        
+        /* The Sidebar Navigation */
+        .sidebar { width: 250px; background-color: #1e1e1e; padding: 20px; border-right: 1px solid #333; }
+        .sidebar h2 { color: #ffaa00; text-align: center; margin-bottom: 30px; }
+        .nav-btn { display: block; width: 100%; padding: 15px; margin-bottom: 10px; background: transparent; border: 1px solid #444; color: white; cursor: pointer; text-align: left; border-radius: 5px; transition: 0.3s; }
+        .nav-btn:hover, .nav-btn.active { background-color: #ffaa00; color: #000; font-weight: bold; }
+        
+        /* The Main Content Area */
+        .main-content { flex: 1; padding: 40px; }
+        .content-section { display: none; max-width: 600px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .content-section.active { display: block; } /* This class controls visibility! */
+        
+        /* Form Styling */
+        input, select { width: 100%; padding: 10px; margin: 8px 0 20px 0; border-radius: 5px; border: 1px solid #444; background: #2a2a2a; color: white; box-sizing: border-box; }
+        .message-box { margin-top: 15px; font-weight: bold; text-align: center; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <button class="nav-btn active" data-target="cpu-section">Add CPU</button>
+        <button class="nav-btn" data-target="gpu-section">Add GPU</button>
+        <button class="nav-btn" data-target="game-section">Add Game</button>
+        <hr style="border-color: #333; margin: 20px 0;">
+        <button class="nav-btn" onclick="window.location.href='/index.html'">← Back Home</button>
+    </div>
+
+    <div class="main-content">
+        
+        <div id="cpu-section" class="content-section active">
+            <h3>Add New CPU</h3>
+            <form id="addCpuForm">
+                <label>Name</label> <input type="text" id="cpuName" required>
+                <label>Brand</label> <select id="cpuBrand"><option>Intel</option><option>AMD</option></select>
+                <label>Socket</label> <input type="text" id="cpuSocket" required>
+                <label>Price ($)</label> <input type="number" id="cpuPrice" required>
+                <label>Compute Score</label> <input type="number" id="cpuScore" required>
+                <button type="submit" class="login-btn" style="width: 100%;">Save CPU</button>
+                <div id="cpuMessage" class="message-box"></div>
+            </form>
+        </div>
+
+        <div id="gpu-section" class="content-section">
+            <h3>Add New GPU</h3>
+            <form id="addGpuForm">
+                <label>Name</label> <input type="text" id="gpuName" required>
+                <label>Brand</label> <select id="gpuBrand"><option>NVIDIA</option><option>AMD</option><option>Intel</option></select>
+                <div class="grid-3">
+                    <div><label>VRAM (GB)</label> <input type="number" id="gpuVram" required></div>
+                    <div><label>Price ($)</label> <input type="number" id="gpuPrice" required></div>
+                </div>
+                <label>Render Scores (FPS baseline)</label>
+                <div class="grid-3">
+                    <div><label>1080p</label><input type="number" id="gpu1080" required></div>
+                    <div><label>1440p</label><input type="number" id="gpu1440" required></div>
+                    <div><label>4K</label><input type="number" id="gpu4k" required></div>
+                </div>
+                <button type="submit" class="login-btn" style="width: 100%;">Save GPU</button>
+                <div id="gpuMessage" class="message-box"></div>
+            </form>
+        </div>
+
+        <div id="game-section" class="content-section">
+            <h3>Add New Game Benchmark</h3>
+            <form id="addGameForm">
+                <label>Game Title</label> <input type="text" id="gameTitle" required>
+                <label>Optimization Factor (e.g., 1.2 for good, 0.8 for poor)</label> 
+                <input type="number" step="0.1" id="gameOpt" required>
+                
+                <div style="margin-bottom: 20px;">
+                    <input type="checkbox" id="gameCpuIntensive" style="width: auto; display: inline-block;">
+                    <label style="display: inline-block;">Is this game heavily CPU intensive? (e.g., CS:GO, Valorant)</label>
+                </div>
+
+                <button type="submit" class="login-btn" style="width: 100%;">Save Game</button>
+                <div id="gameMessage" class="message-box"></div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script src="/assets/js/admin.js"></script>
+</body>
+</html>

@@ -437,3 +437,29 @@ document.querySelectorAll('.banner-buttons .btn-outline').forEach(btn => {
 // START
 renderProducts();
 showQuestion();
+
+
+async function configureNavigation() {
+    try {
+        const response = await fetch('/api/me');
+        const userData = await response.json();
+
+        if(userData.isLoggedIn && userData.role === 'admin') {
+            const adminLink = document.getElementById('adminNavLink');
+            if(adminLink) {
+                adminLink.style.display = 'inline-block';
+            }
+        }
+
+        if(userData.isLoggedIn) {
+            document.getElementById('signInBtn').style.display = 'none';
+            document.getElementById('signUpBtn').style.display = 'none';
+        }
+    }
+    catch (error) {
+        console.error('Error fetching user data for navigation', error);
+    }
+
+}
+
+configureNavigation();
