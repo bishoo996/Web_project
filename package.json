@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "express-session": "^1.19.0",
     "express.js": "^1.0.0",
     "mongoose": "^9.6.2"
   }
