@@ -45,6 +45,11 @@ async function handleFormSubmit(event, endpoint, payload, messageDivId) {
             msgDiv.style.color = '#00ff00'; // Success green
             msgDiv.innerText = resultText;
             event.target.reset(); // Clear the form
+            
+            // Notify benchmark page to refresh data
+            if (window.refreshBenchmarkData) {
+                window.refreshBenchmarkData();
+            }
         } else {
             msgDiv.style.color = '#ff4444'; // Error red
             msgDiv.innerText = resultText;
@@ -87,7 +92,61 @@ document.getElementById('addGameForm').addEventListener('submit', (e) => {
     const payload = {
         title: document.getElementById('gameTitle').value,
         optimizationFactor: Number(document.getElementById('gameOpt').value),
-        cpuIntensive: document.getElementById('gameCpuIntensive').checked
+        cpuIntensive: document.getElementById('gameCpuIntensive').checked,
+        imageUrl: document.getElementById('gameImage').value
     };
     handleFormSubmit(e, '/api/admin/add-game', payload, 'gameMessage');
 });
+
+
+async function loadLiveHardware() {  //fetch DB data and populate dropdowns
+    try {
+        const response = await fetch('/api/hardware');
+        const data = await response.json();
+        
+        renderAdminLists('adminCpuList', data.cpus, 'cpu');
+        renderAdminLists('adminGpuList', data.gpus, 'gpu');
+        renderAdminLists('adminGameList', data.games, 'game');
+
+        } catch (err) {
+        console.error('Error fetching hardware data', err);
+        }
+    } 
+
+function renderAdminLists(containerId, items, type) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = ''; // Clear existing list
+
+    items.forEach(item => {
+        const li = document.createElement('li');
+        li.style.marginBottom = '10px';
+        li.style.display = 'flex';
+        li.style.justifyContent = 'space-between';
+        li.style.alignItems = 'center';
+
+        const displayName = item.title ? item.title : `${item.brand} ${item.name}`;
+
+        li.innerHTML = `<span>${displayName}</span> 
+        <button onclick="deleteItem('${item._id}', '${type}')" style="background-color: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Delete</button>`;
+        container.appendChild(li);
+    });
+}
+
+async function deleteItem(id, type) {
+    if (!confirm('Are you sure you want to delete this item?')) return;
+    try {
+        const response = await fetch(`/api/admin/delete-${type}/${id}`, { method: 'DELETE' });
+        
+        if (response.ok) {
+            alert('Item deleted successfully');
+            loadLiveHardware(); //Refresh the lists after deletion
+        } else {
+            alert('Error deleting item');
+        }
+    } catch (err) {
+        console.error('Error deleting item', err);
+        alert('Network error during deletion');
+    }
+}
+
+loadLiveHardware(); 

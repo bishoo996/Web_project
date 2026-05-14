@@ -88,7 +88,8 @@ app.post('/api/login' , async (req, res) => {
     }
 });
         
-// A quick route to check who is currently logged in
+
+// A route to check who is currently logged in
 app.get('/api/me', (req, res) => {
     // Check if the session has a userId
     if (req.session.userId) {   //sends json response with user data
@@ -104,6 +105,26 @@ app.get('/api/me', (req, res) => {
         });
     }
 });
+
+
+app.get('/api/hardware', async (req, res) => {
+    try {
+        const cpus = await CPU.find(); //find() = get every doc in collection
+        const gpus = await GPU.find();  
+        const games = await Game.find();
+
+        res.json({   //package all into json response to frontend
+            cpus: cpus,
+            gpus: gpus,
+            games: games
+        });
+    } catch (err) {
+        console.error('Error fetching hardware data', err);
+        res.status(500).send('Server error fetching hardware data');
+    }
+    });
+
+
 
 function requireAdmin(req, res, next) {
     if (req.session.role === 'admin') {
@@ -162,12 +183,13 @@ app.post('/api/admin/add-gpu', requireAdmin, async (req, res) => {
 
 app.post('/api/admin/add-game', requireAdmin, async (req, res) => { 
     try {
-        const { title, optimizationFactor, cpuIntensive } = req.body;
+        const { title, optimizationFactor, cpuIntensive, imageUrl } = req.body;
         
         const newGame = new Game({
             title: title,
             optimizationFactor: optimizationFactor,
-            cpuIntensive: cpuIntensive
+            cpuIntensive: cpuIntensive,
+            imageUrl: imageUrl
         });
 
         await newGame.save();
@@ -179,6 +201,38 @@ app.post('/api/admin/add-game', requireAdmin, async (req, res) => {
         res.status(500).send('Server error during Game addition');
     }
 });
+
+
+app.delete('/api/admin/delete-cpu/:id', requireAdmin, async (req, res) => {
+    try {
+        await CPU.findByIdAndDelete(req.params.id);
+        res.send('CPU deleted successfully');
+    } catch (err) {
+        console.error('Error deleting CPU', err);
+        res.status(500).send('Server error during CPU deletion');
+    }
+});
+
+app.delete('/api/admin/delete-gpu/:id', requireAdmin, async (req, res) => {
+    try {
+        await GPU.findByIdAndDelete(req.params.id);
+        res.send('GPU deleted successfully');
+    } catch (err) {
+        console.error('Error deleting GPU', err);
+        res.status(500).send('Server error during GPU deletion');
+    }
+});
+
+app.delete('/api/admin/delete-game/:id', requireAdmin, async (req, res) => {
+    try {
+        await Game.findByIdAndDelete(req.params.id);
+        res.send('Game deleted successfully');
+    } catch (err) {
+        console.error('Error deleting Game', err);
+        res.status(500).send('Server error during Game deletion');
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
