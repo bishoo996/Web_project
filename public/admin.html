@@ -31,85 +31,165 @@
 <div class="dashboard-container">
     <div class="sidebar">
         <h2>Admin Panel</h2>
-        <button class="nav-btn active" data-target="cpu-section">Add CPU</button>
-        <button class="nav-btn" data-target="gpu-section">Add GPU</button>
-        <button class="nav-btn" data-target="game-section">Add Game</button>
+        <button class="nav-btn active" data-target="product-section">Add Product</button>
+        <button class="nav-btn" data-target="inventory-section">Manage Inventory</button>
+        
+        <button class="nav-btn" data-target="benchmark-section">Benchmark Engine</button>
+        
         <hr style="border-color: #333; margin: 20px 0;">
         <button class="nav-btn" onclick="window.location.href='/index.html'">← Back Home</button>
     </div>
 
     <div class="main-content">
         
-        <div id="cpu-section" class="content-section active">
-            <h3>Add New CPU</h3>
-            <form id="addCpuForm">
-                <label>Name</label> <input type="text" id="cpuName" required>
-                <label>Brand</label> <select id="cpuBrand"><option>Intel</option><option>AMD</option></select>
-                <label>Socket</label> <input type="text" id="cpuSocket" required>
-                <label>Price ($)</label> <input type="number" id="cpuPrice" required>
-                <label>Compute Score</label> <input type="number" id="cpuScore" required>
-                <button type="submit" class="login-btn" style="width: 100%;">Save CPU</button>
-                <div id="cpuMessage" class="message-box"></div>
-            </form>
-        </div>
-
-        <div id="gpu-section" class="content-section">
-            <h3>Add New GPU</h3>
-            <form id="addGpuForm">
-                <label>Name</label> <input type="text" id="gpuName" required>
-                <label>Brand</label> <select id="gpuBrand"><option>NVIDIA</option><option>AMD</option><option>Intel</option></select>
+        <div id="product-section" class="content-section active">
+            <h3>Add New Product (Inventory)</h3>
+            <form id="addProductForm">
+                <label>Product Title</label> <input type="text" id="prodTitle" placeholder="e.g., ASUS TUF Gaming RTX 4070" required>
+                
                 <div class="grid-3">
-                    <div><label>VRAM (GB)</label> <input type="number" id="gpuVram" required></div>
-                    <div><label>Price ($)</label> <input type="number" id="gpuPrice" required></div>
+                    <div><label>Manufacturer</label> <input type="text" id="prodMfg" placeholder="e.g., ASUS" required></div>
+                    <div><label>Category</label> 
+                        <select id="prodCategory" required>
+                            <option value="cpu">CPU</option>
+                            <option value="gpu">GPU</option>
+                            <option value="motherboard">Motherboard</option>
+                            <option value="memory">Memory (RAM)</option>
+                            <option value="storage">Storage</option>
+                            <option value="psu">Power Supply</option>
+                            <option value="case">Case</option>
+                            <option value="cooler">Cooler</option>
+                            <option value="monitor">Monitor</option>
+                            <option value="keyboard">Keyboard</option>
+                            <option value="mouse">Mouse</option>
+                            <option value="headset">Headset</option>
+                        </select>
+                    </div>
+                    <div><label>Price ($)</label> <input type="number" id="prodPrice" required></div>
                 </div>
-                <label>Render Scores (FPS baseline)</label>
+
                 <div class="grid-3">
-                    <div><label>1080p</label><input type="number" id="gpu1080" required></div>
-                    <div><label>1440p</label><input type="number" id="gpu1440" required></div>
-                    <div><label>4K</label><input type="number" id="gpu4k" required></div>
-                </div>
-                <button type="submit" class="login-btn" style="width: 100%;">Save GPU</button>
-                <div id="gpuMessage" class="message-box"></div>
-            </form>
-        </div>
-
-        <div id="game-section" class="content-section">
-            <h3>Add New Game Benchmark</h3>
-            <form id="addGameForm">
-                <label>Game Title</label> <input type="text" id="gameTitle" required>
-                <label>Optimization Factor (e.g., 1.2 for good, 0.8 for poor)</label> 
-                <input type="number" step="0.1" id="gameOpt" required>
-                <label>Image URL</label> <input type="text" id="gameImage" placeholder="Optional URL for game image">
-
-                <div style="margin-bottom: 20px;">
-                    <input type="checkbox" id="gameCpuIntensive" style="width: auto; display: inline-block;">
-                    <label style="display: inline-block;">Is this game heavily CPU intensive? (e.g., CS:GO, Valorant)</label>
+                    <div><label>Stock Status</label> 
+                        <select id="prodStock">
+                            <option value="in">In Stock</option>
+                            <option value="low">Low Stock</option>
+                            <option value="out">Out of Stock</option>
+                        </select>
+                    </div>
+                    <div style="grid-column: span 2;"><label>Image URL</label> <input type="text" id="prodImage" placeholder="Paste image link here"></div>
                 </div>
 
-                <button type="submit" class="login-btn" style="width: 100%;">Save Game</button>
-                <div id="gameMessage" class="message-box"></div>
+                <div id="magicLinkContainer" style="display: none; background: rgba(124, 58, 237, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #7C3AED;">
+                    <h4 style="color: #7C3AED; margin-top: 0;">🔗 Benchmark Magic Link</h4>
+                    <p style="font-size: 12px; color: #94A3B8; margin-bottom: 10px;">Link this retail box to its raw silicon so the Bottleneck Calculator works!</p>
+                    <select id="prodBaselineId">
+                        <option value="">-- Do Not Link (No Benchmark) --</option>
+                        </select>
+                </div>
+
+                <hr style="margin: 20px 0; border-color: #444;">
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h4 style="margin: 0;">Custom Specifications</h4>
+                    <button type="button" id="addSpecBtn" style="background: #2a2a2a; color: white; border: 1px solid #444; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">+ Add Spec Row</button>
+                </div>
+                
+                <div id="specsContainer">
+                    </div>
+
+                <button type="submit" class="login-btn" style="width: 100%; margin-top: 20px;">Save Product</button>
+                <div id="productMessage" class="message-box"></div>
             </form>
         </div>
+        
 
-        <hr style="margin: 40px 0; border-color: #444;">
-
-        <h2 style="color: #ffaa00; text-align: center;">Manage Existing Database</h2>
-
-        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; color: white;">
-            <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; width: 30%;">
-               <h3>CPUs</h3>
-                <ul id="adminCpuList" style="list-style: none; padding: 0;"></ul>
+        <div id="inventory-section" class="content-section">
+            <h3 style="color: #ffaa00; margin-bottom: 20px;">Store Inventory</h3>
+            
+            <div style="background: #2a2a2a; border-radius: 8px; padding: 20px; overflow-x: auto;">
+                <table style="width: 100%; text-align: left; border-collapse: collapse; color: white;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #444;">
+                            <th style="padding: 12px; color: #94A3B8;">Product</th>
+                            <th style="padding: 12px; color: #94A3B8;">Category</th>
+                            <th style="padding: 12px; color: #94A3B8;">Price</th>
+                            <th style="padding: 12px; color: #94A3B8;">Stock</th>
+                            <th style="padding: 12px; color: #94A3B8; text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody">
+                        </tbody>
+                </table>
+            </div>
         </div>
 
-        <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; width: 30%;">
-            <h3>GPUs</h3>
-            <ul id="adminGpuList" style="list-style: none; padding: 0;"></ul>
+
+        <div id="benchmark-section" class="content-section">
+            <h3 style="color: #ffaa00; margin-bottom: 20px;">The Benchmark Engine</h3>
+            <p style="font-size: 13px; color: #94A3B8; margin-bottom: 30px;">Add raw silicon data here. You can link store inventory to these profiles later.</p>
+            
+            <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h4 style="color: #7C3AED; margin-top: 0;">1. Add Raw CPU</h4>
+                <form id="addCpuForm">
+                    <div class="grid-3">
+                        <div><label>Name</label> <input type="text" id="cpuName" required></div>
+                        <div><label>Brand</label> <select id="cpuBrand"><option>Intel</option><option>AMD</option></select></div>
+                        <div><label>Socket</label> <input type="text" id="cpuSocket" required></div>
+                    </div>
+                    <div class="grid-3">
+                        <div><label>MSRP ($)</label> <input type="number" id="cpuPrice" required></div>
+                        <div><label>Compute Score</label> <input type="number" id="cpuScore" required></div>
+                    </div>
+                    <button type="submit" class="login-btn" style="width: 100%; padding: 10px;">Save Raw CPU</button>
+                    <div id="cpuMessage" class="message-box"></div>
+                </form>
+            </div>
+
+            <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h4 style="color: #7C3AED; margin-top: 0;">2. Add Raw GPU</h4>
+                <form id="addGpuForm">
+                    <div class="grid-3">
+                        <div><label>Name</label> <input type="text" id="gpuName" required></div>
+                        <div><label>Brand</label> <select id="gpuBrand"><option>NVIDIA</option><option>AMD</option><option>Intel</option></select></div>
+                        <div><label>VRAM (GB)</label> <input type="number" id="gpuVram" required></div>
+                    </div>
+                    <div class="grid-3">
+                        <div><label>MSRP ($)</label> <input type="number" id="gpuPrice" required></div>
+                        <div style="grid-column: span 2;">
+                            <label>Render Scores (1080p, 1440p, 4K)</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="number" id="gpu1080" placeholder="1080p" required>
+                                <input type="number" id="gpu1440" placeholder="1440p" required>
+                                <input type="number" id="gpu4k" placeholder="4K" required>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="login-btn" style="width: 100%; padding: 10px;">Save Raw GPU</button>
+                    <div id="gpuMessage" class="message-box"></div>
+                </form>
+            </div>
+
+            <div style="background: #2a2a2a; padding: 20px; border-radius: 8px;">
+                <h4 style="color: #7C3AED; margin-top: 0;">3. Add Game Profile</h4>
+                <form id="addGameForm">
+                    <div class="grid-3">
+                        <div><label>Title</label> <input type="text" id="gameTitle" required></div>
+                        <div><label>Optimization (e.g., 0.9)</label> <input type="number" step="0.1" id="gameOpt" required></div>
+                        <div><label style="display:block;">CPU Intensive?</label> <input type="checkbox" id="gameCpuIntensive" style="width: 20px; height: 20px; margin-top: 10px;"></div>
+                    </div>
+                    <label>Game Image URL</label> <input type="text" id="gameImage" required>
+                    <button type="submit" class="login-btn" style="width: 100%; padding: 10px;">Save Game</button>
+                    <div id="gameMessage" class="message-box"></div>
+                </form>
+            </div>
         </div>
 
-        <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; width: 30%;">
-            <h3>Games</h3>
-            <ul id="adminGameList" style="list-style: none; padding: 0;"></ul>
-        </div>
+        
+        
+
+        
+
+        
     </div>
 </div>
 

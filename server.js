@@ -9,6 +9,7 @@ const CPU = require('./models/CPU');
 const GPU = require('./models/GPU');
 const Game = require('./models/Game');
 const User = require('./models/Users'); 
+const Product = require('./models/Product');
 
 
 const app = express();
@@ -124,6 +125,29 @@ app.get('/api/hardware', async (req, res) => {
     }
     });
 
+app.get('/api/products/:categoryName', async (req, res) => {      //fetch products by category, :categoryName is a url parameter that can be accessed with req.params.categoryName
+    try{
+        const requestedCategory = req.params.categoryName; //get category name from url parameter
+
+        const products = await Product.find({ category: requestedCategory }).populate('baselineHardwareId'); //find products with matching category
+        res.json(products);
+
+    } catch (err) {
+        console.error('Error fetching products', err);
+        res.status(500).send('Server error fetching products');
+    }
+});
+
+app.get('/api/products', async (req, res) => { //fetch all products for homepage grid
+    try {
+        // Find all products, limit to 8 for the homepage grid
+        const products = await Product.find().limit(8);
+        res.json(products);
+    } catch (err) {
+        console.error('Error fetching all products:', err);
+        res.status(500).send('Server error fetching products');
+    }
+});
 
 
 function requireAdmin(req, res, next) {
@@ -199,6 +223,55 @@ app.post('/api/admin/add-game', requireAdmin, async (req, res) => {
     } catch (err) {
         console.error('Error adding Game', err);
         res.status(500).send('Server error during Game addition');
+    }
+});
+
+app.post('/api/admin/add-product', requireAdmin, async (req, res) => {
+    try {
+        const { title, manufacturer, category, price, stockStatus, imageUrl, specs, badges, baselineHardwareId, hardwareModel } = req.body;
+
+        const newProduct = new Product({
+            title: title,
+            manufacturer: manufacturer,
+            category: category,
+            price: price,
+            stockStatus: stockStatus,
+            imageUrl: imageUrl,
+            specs: specs,
+            badges: badges,
+
+            baselineHardwareId: baselineHardwareId || undefined,
+            hardwareModel: hardwareModel || undefined
+        });
+
+        await newProduct.save();
+        console.log(`Admin added ${category}: ${title}`);
+        res.send('Product added successfully');
+
+    } catch (err) {
+        console.error('Error adding Product', err);
+        res.status(500).send('Server error during Product addition');
+    }
+});
+
+app.get('/api/admin/products', requireAdmin, async (req, res) => {
+    try {
+        // Sorts by category alphabetically to keep the table organized
+        const products = await Product.find().sort({ category: 1 });
+        res.json(products);
+    } catch (err) {
+        console.error('Error fetching inventory:', err);
+        res.status(500).send('Failed to load inventory');
+    }
+});
+
+app.delete('/api/admin/delete-product/:id', requireAdmin, async (req, res) => {
+    try {
+        await Product.findByIdAndDelete(req.params.id);
+        res.send('Product deleted successfully');
+    } catch (err) {
+        console.error('Error deleting product:', err);
+        res.status(500).send('Failed to delete product');
     }
 });
 

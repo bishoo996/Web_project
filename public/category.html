@@ -14,7 +14,7 @@
           <ul class="nav-links">
     <li><a href="./index.html">Home</a></li>
     <li><a href="./builder_index.html">Build Your Own PC</a></li>
-    <li><a href="./index.html#categories">Categories</a></li>
+    <li><a href="./category.html">Categories</a></li>
     <li><a href="./benchmark.html">Benchmark</a></li>
     <li><a href="./index.html#quiz">Quiz</a></li>
 </ul>
@@ -26,28 +26,24 @@
   </nav>
 <div class="page">
 
-  <!-- Back bar -->
-  <div class="back-bar">
-    <a class="back-btn" id="backBtn" href="./builder_index.html">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-      Back to Builder
-    </a>
-    <div class="breadcrumb">
-      <a href="./builder_index.html">Builder</a>
-      <span class="breadcrumb-sep">›</span>
-      <span id="breadcrumbCat">Choose Component</span>
-    </div>
-  </div>
-
   <!-- Category header -->
   <div class="cat-header">
     <div class="cat-title-wrap">
-      <div class="cat-icon" id="catIcon">📦</div>
+      <div class="cat-icon" id="catIcon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+      </div>
       <div>
-        <div class="cat-title" id="catTitle">Select a Component</div>
-        <div class="cat-subtitle" id="catSubtitle">Pick the best part for your build</div>
+        <div class="cat-title" id="catTitle">Component Marketplace</div>
+        <div class="cat-subtitle" id="catSubtitle">Browse and compare PC parts</div>
       </div>
     </div>
+    <button class="btn-go-builder" onclick="window.location.href='./builder_index.html'">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      Go to Builder
+    </button>
   </div>
 
   <!-- Toolbar -->
@@ -70,22 +66,38 @@
     <span class="results-count" id="resultsCount"><span>0</span> results</span>
   </div>
 
-  <!-- Parts table -->
-  <div class="parts-card">
-    <table class="parts-table">
-      <thead>
-        <tr>
-          <th class="col-info">Part</th>
-          <th class="col-specs">Key Specs</th>
-          <th class="col-watt2 c">Wattage</th>
-          <th class="col-bench2 c">Benchmark</th>
-          <th class="col-avail2 c">Availability</th>
-          <th class="col-price2 r">Price</th>
-          <th class="col-act r">Add to Build</th>
-        </tr>
-      </thead>
-      <tbody id="partsBody"></tbody>
-    </table>
+  <div class="shop-container" style="display: flex; gap: 24px; align-items: flex-start; margin-top: 20px;">
+      
+      <aside class="filter-sidebar" id="filterSidebar">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+              <h3 style="margin: 0; color: var(--primary-color);">Filters</h3>
+              <button id="closeSidebarBtn" class="close-btn" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer; display: none;">&times;</button>
+          </div>
+
+          <div class="filter-section" style="margin-bottom: 24px;">
+              <h4 style="margin-bottom: 12px; font-size: 14px; color: var(--text-secondary);">CATEGORY</h4>
+              <div id="categoryFilters" style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+                  </div>
+          </div>
+
+          <div class="filter-section">
+              <h4 style="margin-bottom: 12px; font-size: 14px; color: var(--text-secondary);">MAX PRICE</h4>
+              <input type="range" id="priceRange" min="0" max="3000" value="3000" step="50" style="width: 100%; accent-color: var(--primary-color);">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-top: 8px; color: var(--text-secondary);">
+                  <span>$0</span>
+                  <span id="priceValue" style="color: var(--text-primary); font-weight: bold;">$3000</span>
+              </div>
+          </div>
+      </aside>
+
+      <main style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+              <button id="mobileFilterBtn" style="display: none; background: var(--bg-secondary); color: white; border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px;">🛒 Filters</button>
+          </div>
+          
+          <div id="productGrid" class="ecommerce-grid">
+              </div>
+      </main>
   </div>
 
 </div>

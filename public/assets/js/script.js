@@ -35,97 +35,6 @@ const questions = [
     }
 ];
 
-// PRODUCT DATA
-const products = [
-    {
-        id: 1,
-        name: "Acer Predator Helios",
-        image: "/External Recources/images/acer-predator.jpg",
-        fallbackIcon: "💻",
-        specs: "RTX 4060 · i7-13620H · 16GB RAM",
-        description: "Powerful gaming laptop with a high refresh rate display and top-tier cooling for long gaming sessions.",
-        fullSpecs: [
-            { label: "GPU", value: "NVIDIA RTX 4060 8GB" },
-            { label: "CPU", value: "Intel i7-13620H" },
-            { label: "RAM", value: "16GB DDR5" },
-            { label: "Storage", value: "1TB NVMe SSD" },
-            { label: "Display", value: "16\" QHD 240Hz" },
-            { label: "Weight", value: "2.6 kg" }
-        ],
-        rating: 5,
-        reviews: 128,
-        oldPrice: "$1,599",
-        newPrice: "$1,199",
-        badge: "-25%",
-        badgeType: "sale"
-    },
-    {
-        id: 2,
-        name: "Custom Gaming Rig",
-        image: "/External Recources/images/custom-gaming-rig.jpg",
-        fallbackIcon: "🖥️",
-        specs: "RTX 4070 Ti · Ryzen 7 7700X · 32GB",
-        description: "A hand-picked custom desktop with high-end parts, perfect for gaming and streaming at max settings.",
-        fullSpecs: [
-            { label: "GPU", value: "NVIDIA RTX 4070 Ti 12GB" },
-            { label: "CPU", value: "AMD Ryzen 7 7700X" },
-            { label: "RAM", value: "32GB DDR5 6000MHz" },
-            { label: "Storage", value: "2TB NVMe SSD" },
-            { label: "Power Supply", value: "850W 80+ Gold" },
-            { label: "Cooling", value: "360mm AIO Liquid" }
-        ],
-        rating: 5,
-        reviews: 204,
-        oldPrice: "$2,099",
-        newPrice: "$1,779",
-        badge: "-15%",
-        badgeType: "sale"
-    },
-    {
-        id: 3,
-        name: "MacBook Pro 14\"",
-        image: "/External Recources/images/macbook-pro.jpg",
-        fallbackIcon: "💻",
-        specs: "M3 Pro · 18GB RAM · 512GB SSD",
-        description: "Apple's flagship laptop with the M3 Pro chip — incredible battery life, stunning Liquid Retina display, and silent performance.",
-        fullSpecs: [
-            { label: "Chip", value: "Apple M3 Pro (12-core CPU)" },
-            { label: "GPU", value: "18-core integrated GPU" },
-            { label: "RAM", value: "18GB Unified Memory" },
-            { label: "Storage", value: "512GB SSD" },
-            { label: "Display", value: "14.2\" Liquid Retina XDR" },
-            { label: "Battery", value: "Up to 18 hours" }
-        ],
-        rating: 5,
-        reviews: 512,
-        oldPrice: "$1,999",
-        newPrice: "$1,849",
-        badge: "⚡ Limited",
-        badgeType: "limited"
-    },
-    {
-        id: 4,
-        name: "Office Desktop Pro",
-        image: "/External Recources/images/office-desktop.jpg",
-        fallbackIcon: "🖥️",
-        specs: "Intel i5-13400 · 16GB · 1TB SSD",
-        description: "Reliable office desktop built for productivity. Fast enough for multitasking, programming, and everyday work.",
-        fullSpecs: [
-            { label: "CPU", value: "Intel i5-13400 (10 cores)" },
-            { label: "GPU", value: "Intel UHD Graphics 730" },
-            { label: "RAM", value: "16GB DDR4 3200MHz" },
-            { label: "Storage", value: "1TB NVMe SSD" },
-            { label: "Ports", value: "USB-C, 4x USB-A, HDMI" },
-            { label: "OS", value: "Windows 11 Pro" }
-        ],
-        rating: 4,
-        reviews: 86,
-        oldPrice: "$899",
-        newPrice: "$719",
-        badge: "-20%",
-        badgeType: "sale"
-    }
-];
 
 // QUIZ 
 let currentQuestion = 0;
@@ -280,40 +189,45 @@ restartBtn.addEventListener('click', restartQuiz);
 // RENDER PRODUCT CARDS
 const offersGrid = document.getElementById('offersGrid');
 
-function renderProducts() {
-    let html = '';
+// ==========================================
+// HOMEPAGE DYNAMIC OFFERS GRID
+// ==========================================
+async function renderLiveProducts() {
+    const offersGrid = document.getElementById('offersGrid');
+    
+    try {
+        const response = await fetch('/api/products'); 
+        const products = await response.json();
 
-    products.forEach(product => {
-        // Build star rating
-        const stars = '⭐'.repeat(product.rating);
-
-        // Build badge class based on type
-        const badgeClass = product.badgeType === 'limited' ? 'badge-limited' : 'badge-sale';
-
-        html += `
-            <div class="product-card">
-                <span class="${badgeClass}">${product.badge}</span>
-                <div class="product-image">
-                    <img src="${product.image}" alt="${product.name}"
-                         onerror="this.style.display='none'">
-                    <span class="image-fallback">${product.fallbackIcon}</span>
+        let html = '';
+        products.forEach(product => {
+            html += `
+                <div class="product-card">
+                    <span class="badge-sale">${product.stockStatus.toUpperCase()}</span>
+                    <div class="product-image">
+                        <img src="${product.imageUrl || ''}" alt="${product.title}" onerror="this.style.display='none'">
+                        <span class="image-fallback">📦</span>
+                    </div>
+                    <h3>${product.title}</h3>
+                    <p class="product-specs">${product.manufacturer} | ${product.category.toUpperCase()}</p>
+                    <div class="product-price">
+                        <span class="new-price">$${product.price}</span>
+                    </div>
+                    <button class="btn-primary btn-full" onclick="alert('View Product functionality coming soon!')">
+                        View Product
+                    </button>
                 </div>
-                <h3>${product.name}</h3>
-                <p class="product-specs">${product.specs}</p>
-                <div class="product-rating">${stars} <span>(${product.reviews})</span></div>
-                <div class="product-price">
-                    <span class="old-price">${product.oldPrice}</span>
-                    <span class="new-price">${product.newPrice}</span>
-                </div>
-                <button class="btn-primary btn-full" onclick="openProductModal(${product.id})">
-                    View Product
-                </button>
-            </div>
-        `;
-    });
+            `;
+        });
 
-    offersGrid.innerHTML = html;
+        offersGrid.innerHTML = html;
+    } catch (error) {
+        console.error('Failed to load home products', error);
+    }
 }
+
+// Ensure this gets called at the bottom of script.js instead of the old function
+renderLiveProducts();
 
 // PRODUCT DETAIL MODAL
 const modal = document.getElementById('productModal');
