@@ -202,7 +202,7 @@ async function renderLiveProducts() {
         let html = '';
         products.forEach(product => {
             html += `
-                <div class="product-card">
+                <div class="product-card" style="cursor: pointer;" onclick="window.location.href='product.html?id=${product._id}'">
                     <span class="badge-sale">${product.stockStatus.toUpperCase()}</span>
                     <div class="product-image">
                         <img src="${product.imageUrl || ''}" alt="${product.title}" onerror="this.style.display='none'">
@@ -213,8 +213,8 @@ async function renderLiveProducts() {
                     <div class="product-price">
                         <span class="new-price">$${product.price}</span>
                     </div>
-                    <button class="btn-primary btn-full" onclick="alert('View Product functionality coming soon!')">
-                        View Product
+                    <button class="btn-primary btn-full" onclick="event.stopPropagation(); alert('${product.title} added to cart!');">
+                        Add to Cart
                     </button>
                 </div>
             `;

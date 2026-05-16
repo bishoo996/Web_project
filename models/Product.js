@@ -24,6 +24,14 @@ const productSchema = new mongoose.Schema({
         color: { type: String }
     }],
 
+    reviews: [{
+        rating: { type: Number, required: true, min: 0, max: 5 },
+        title: { type: String, required: true },
+        comment: { type: String, required: true },
+        author: { type: String, default: 'Anonymous' },
+        date: { type: Date, default: Date.now }
+    }],
+
     baselineHardwareId: {   //34an y link CPU/GPU performance bel product
         type: mongoose.Schema.Types.ObjectId,
         required: false,

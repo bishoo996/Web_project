@@ -120,9 +120,14 @@ function renderGrid() {
     }
 
     // E. Build the Cards
+    // D. Build the Cards
     filteredProducts.forEach(p => {
         const card = document.createElement('div');
         card.className = 'product-card';
+        card.style.cursor = 'pointer'; // Make it look clickable
+        
+        // 1. Make the whole card redirect
+        card.onclick = () => window.location.href = `product.html?id=${p._id}`;
 
         // Determine stock styling
         let stockClass = 'stock-in';
@@ -130,22 +135,21 @@ function renderGrid() {
         if (p.stockStatus === 'low') { stockClass = 'stock-low'; stockText = 'Low Stock'; }
         if (p.stockStatus === 'out') { stockClass = 'stock-out'; stockText = 'Out of Stock'; }
 
-        // Determine image (use emoji if no URL)
         const imageHTML = p.imageUrl 
-            ? `<img src="${p.imageUrl}" alt="${p.title}" onerror="this.style.display='none'; this.nextElementSibling?.style.display='flex';">` 
+            ? `<img src="${p.imageUrl}" alt="${p.title}">` 
             : `<span style="font-size: 50px;">📦</span>`;
 
+        // 2. Add stopPropagation to the Add to Cart button
         card.innerHTML = `
             <div class="card-img-box">
                 ${imageHTML}
-                <span style="font-size: 50px; display: none;">📦</span>
             </div>
             <div class="card-brand">${p.manufacturer}</div>
             <div class="card-title">${p.title}</div>
             <div class="card-price">$${p.price.toFixed(2)}</div>
             <div class="card-stock ${stockClass}">${stockText}</div>
             
-            <button class="card-btn" onclick="alert('${p.title} added to cart!')">Add to Cart</button>
+            <button class="card-btn" onclick="event.stopPropagation(); alert('${p.title} added to cart!');">Add to Cart</button>
         `;
 
         grid.appendChild(card);

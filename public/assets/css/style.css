@@ -525,6 +525,7 @@ nav {
     padding: 20px;
     position: relative;
     transition: transform 0.2s, border-color 0.2s;
+    cursor: pointer;
 }
 
 .product-card:hover {

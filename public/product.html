@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Overclocked - Product Details</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <style>
+        .product-page-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        .product-image-large {
+            background: var(--surface-color);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1;
+        }
+        .product-image-large img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .product-info h1 {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+        .product-brand-cat {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+        .product-price-large {
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--success-color);
+            margin-bottom: 10px;
+        }
+        .reviews { margin-bottom: 30px; font-size: 14px; color: var(--text-muted); }
+        .reviews span { color: #F59E0B; letter-spacing: 2px; }
+        
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background: var(--surface-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .specs-table tr { border-bottom: 1px solid #333; }
+        .specs-table td { padding: 12px 16px; }
+        .specs-table td:first-child { color: var(--text-muted); width: 40%; font-weight: bold; }
+        
+        @media (max-width: 768px) {
+            .product-page-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div style="max-width: 1200px; margin: 20px auto 0; padding: 0 24px;">
+        <a class="back-btn" href="javascript:history.back()" style="display: inline-flex; align-items: center; gap: 6px; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-secondary); padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all .2s;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+        </a>
+    </div>
+
+    <div class="product-page-container" id="productDetailsContent">
+        <h2 style="text-align: center; grid-column: 1 / -1; color: var(--text-muted);">Loading Product Details...</h2>
+    </div>
+
+    <div style="max-width: 1200px; margin: 40px auto; padding: 0 24px;">
+        <h2 style="color: var(--primary-color); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px;">Customer Reviews</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 40px;">
+            
+            <div style="background: var(--surface-color); padding: 24px; border-radius: 8px; border: 1px solid var(--border); height: fit-content;">
+                <h3 style="margin-bottom: 15px;">Write a Review</h3>
+                <form id="reviewForm">
+                    <label style="display: block; margin-bottom: 5px; color: var(--text-muted);">Rating (Out of 5)</label>
+                    <select id="reviewRating" style="width: 100%; padding: 10px; margin-bottom: 15px; background: var(--bg-color); border: 1px solid #444; color: white; border-radius: 4px;" required>
+                        <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                        <option value="4">⭐⭐⭐⭐ (4/5)</option>
+                        <option value="3">⭐⭐⭐ (3/5)</option>
+                        <option value="2">⭐⭐ (2/5)</option>
+                        <option value="1">⭐ (1/5)</option>
+                    </select>
+
+                    <label style="display: block; margin-bottom: 5px; color: var(--text-muted);">Review Title</label>
+                    <input type="text" id="reviewTitle" placeholder="e.g., Best purchase ever!" style="width: 100%; padding: 10px; margin-bottom: 15px; background: var(--bg-color); border: 1px solid #444; color: white; border-radius: 4px;" required>
+
+                    <label style="display: block; margin-bottom: 5px; color: var(--text-muted);">Your Comment</label>
+                    <textarea id="reviewComment" rows="4" placeholder="What did you like or dislike?" style="width: 100%; padding: 10px; margin-bottom: 15px; background: var(--bg-color); border: 1px solid #444; color: white; border-radius: 4px; resize: vertical;" required></textarea>
+
+                    <button type="submit" class="btn-primary" style="width: 100%;">Submit Review</button>
+                    <div id="reviewMessage" style="margin-top: 10px; font-weight: bold; text-align: center;"></div>
+                </form>
+            </div>
+
+            <div id="reviewsList" style="display: flex; flex-direction: column; gap: 15px;">
+                </div>
+
+        </div>
+    </div>
+
+    <script src="./assets/js/product.js"></script>
+</body>
+</html>

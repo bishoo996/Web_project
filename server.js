@@ -125,6 +125,54 @@ app.get('/api/hardware', async (req, res) => {
     }
     });
 
+app.get('/api/product/:id', async (req, res) => {  //fetch single product by id, :id is a url parameter that can be accessed with req.params.id
+    try {
+        // Find the specific product and populate the benchmark magic link if it exists
+        const product = await Product.findById(req.params.id).populate('baselineHardwareId');
+        
+        if (!product) {
+            return res.status(404).send('Product not found');
+        }
+        
+        res.json(product);
+    } catch (err) {
+        console.error('Error fetching single product:', err);
+        res.status(500).send('Server error fetching product details');
+    }
+});
+
+// ==========================================
+// SUBMIT REVIEW ROUTE (PUBLIC / LOGGED IN)
+// ==========================================
+app.post('/api/product/:id/review', async (req, res) => {
+    try {
+        const { rating, title, comment } = req.body;
+        
+        // 1. Find the specific product
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).send('Product not found');
+
+        // 2. See if the user is logged in. If not, call them "Guest"
+        const authorName = req.session.firstName ? req.session.firstName : 'Guest Buyer';
+
+        // 3. Push the new review into the product's array
+        product.reviews.push({
+            rating: Number(rating),
+            title: title,
+            comment: comment,
+            author: authorName
+        });
+
+        // 4. Save the product back to the database
+        await product.save();
+        res.send('Review added successfully!');
+
+    } catch (err) {
+        console.error('Error saving review:', err);
+        res.status(500).send('Failed to save review');
+    }
+});
+
 app.get('/api/products/:categoryName', async (req, res) => {      //fetch products by category, :categoryName is a url parameter that can be accessed with req.params.categoryName
     try{
         const requestedCategory = req.params.categoryName; //get category name from url parameter
