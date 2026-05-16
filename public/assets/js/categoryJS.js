@@ -14,13 +14,30 @@ async function initStore() {
         setupCategoryFilters();
         setupPriceSlider();
         
-        // 3. Render the initial grid
+        // 3. Apply URL category filter if present
+        applyURLCategoryFilter();
+        
+        // 4. Render the initial grid
         renderGrid();
 
     } catch (error) {
         console.error('Failed to load store:', error);
         document.getElementById('productGrid').innerHTML = '<p>Error loading store inventory.</p>';
     }
+}
+
+// --- URL PARAMETER HANDLING ---
+
+function applyURLCategoryFilter() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = (urlParams.get('category') || '').toLowerCase();
+    if (!categoryParam) return;
+
+    const normalizedCategory = categoryParam === 'memory2' ? 'memory' : categoryParam;
+
+    document.querySelectorAll('.cat-checkbox').forEach(box => {
+        box.checked = box.value === normalizedCategory;
+    });
 }
 
 // --- FILTERING LOGIC ---
