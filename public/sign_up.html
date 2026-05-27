@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Up</title>
+
+<link rel="stylesheet" href="./assets/css/log.css">
+</head>
+
+<body>
+
+
+<div class="auth-page">
+    <div class="auth-box">
+
+        <h2>Create Account</h2>
+        <form action="/api/register" method="POST">  
+
+            <label>First Name</label>
+            <input type="text" name="firstName" required>
+
+            <label>Last Name</label>
+            <input type="text" name="lastName" required>
+
+            <label>Email</label>
+            <input type="email" name="email" required>
+
+            <label>Phone</label>
+            <input type="tel" name="phoneNumber">
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <button class="login-btn" type="submit">Create Account</button>
+        
+        </form>
+
+        <p class="switch">
+            Already have account?
+            <a href="./sign_in.html">Login</a>
+        </p>
+
+        <p class="switch">
+            <a href="./index.html">← Back Home</a>
+        </p>
+
+    </div>
+
+
+<script src="./assets/js/log.js"></script>
+</body>
+</html>

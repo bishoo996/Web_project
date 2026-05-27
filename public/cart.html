@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overclocked — Shopping Cart</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/cart.css">
+</head>
+<body>
+
+<!-- ═══════════════════════ NAV ═══════════════════════ -->
+<nav>
+    <div class="nav-container">
+        <div class="brand">Overclocked</div>
+        <ul class="nav-links">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./builder_index.html">Build Your Own PC</a></li>
+            <li><a href="./category.html">Categories</a></li>
+            <li><a href="./benchmark.html">Benchmark</a></li>
+            <li><a href="./index.html#quiz">Quiz</a></li>
+            <li><a href="/admin.html" id="adminNavLink" style="display:none; color:#ffaa00; font-weight:bold;">Admin Portal</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="btn-icon" style="position:relative;" onclick="window.location.href='./cart.html'">
+                🛒
+                <span id="navCartBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#7C3AED; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;"></span>
+            </button>
+            <button class="btn-primary" id="navSignIn" onclick="window.location.href='./sign_in.html'" style="display:none;">Sign In</button>
+            <a class="btn-primary" id="navMyAccount" href="./account.html" style="display:none; text-decoration:none; align-items:center; gap:6px;">
+                👤 <span class="nav-user-name">Account</span>
+            </a>
+            <button class="btn-outline" id="navLogout" style="display:none;">Logout</button>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════════ PAGE ═══════════════════════ -->
+<div class="cart-page" id="cartPageRoot">
+
+    <!-- Auth banner (shown when not logged in) -->
+    <div class="cart-auth-banner" id="cartAuthBanner" style="display:none;">
+        <p>🔒 <strong>Sign in</strong> to save your cart across devices and complete checkout.</p>
+        <a href="./sign_in.html" class="btn-primary" style="white-space:nowrap; text-decoration:none;">Sign In</a>
+    </div>
+
+    <!-- Title row -->
+    <div class="cart-page-title" id="cartTitle">
+        🛒 Shopping Cart <span class="cart-count-badge" id="cartCountBadge">0</span>
+    </div>
+
+    <!-- Items column -->
+    <div class="cart-items-col" id="cartItemsCol">
+        <!-- Populated by JS -->
+    </div>
+
+    <!-- Summary column -->
+    <div class="cart-summary-col" id="cartSummaryCol" style="display:none;">
+        <div class="cart-summary-card">
+            <div class="cart-summary-title">Order Summary</div>
+
+            <div class="summary-line">
+                <span class="label">Items (<span id="summaryItemCount">0</span>)</span>
+                <span class="value" id="summarySubtotal">$0.00</span>
+            </div>
+            <div class="summary-line">
+                <span class="label">Shipping</span>
+                <span class="value" id="summaryShipping">Free</span>
+            </div>
+            <div class="summary-line">
+                <span class="label">Tax (est.)</span>
+                <span class="value" id="summaryTax">$0.00</span>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-total-line">
+                <span class="label">Total</span>
+                <span class="value" id="summaryTotal">$0.00</span>
+            </div>
+
+            <button class="btn-checkout" id="checkoutBtn">
+                🔐 Proceed to Checkout
+            </button>
+
+            <div class="secure-badge">🔒 Secure checkout — SSL encrypted</div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ CHECKOUT MODAL ═══════════════════════ -->
+<div class="checkout-modal-overlay" id="checkoutModal">
+    <div class="checkout-modal">
+        <h3>Complete Your Order</h3>
+        <p>Fill in your details to place the order.</p>
+
+        <div class="checkout-form-group">
+            <label>Shipping Address</label>
+            <input type="text" class="checkout-input" id="checkoutAddress" placeholder="123 Main St, City, Country">
+        </div>
+
+        <div class="checkout-form-group">
+            <label>Payment Method</label>
+            <select class="checkout-input" id="checkoutPayment">
+                <option value="card">💳 Credit / Debit Card</option>
+                <option value="paypal">🅿️ PayPal</option>
+                <option value="bank">🏦 Bank Transfer</option>
+                <option value="cash">💵 Cash on Delivery</option>
+            </select>
+        </div>
+
+        <div class="checkout-form-group">
+            <label>Order Notes (optional)</label>
+            <input type="text" class="checkout-input" id="checkoutNotes" placeholder="Any special instructions?">
+        </div>
+
+        <div class="checkout-btn-row">
+            <button class="btn-checkout-cancel" id="checkoutModalCancel">Cancel</button>
+            <button class="btn-checkout-confirm" id="checkoutModalConfirm">Place Order</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ SUCCESS OVERLAY ═══════════════════════ -->
+<div class="order-success-overlay" id="orderSuccessOverlay">
+    <div class="order-success-box">
+        <div class="success-checkmark">✅</div>
+        <h3>Order Placed!</h3>
+        <p>Your order has been confirmed and is being processed. You can track it in <strong>My Account → Orders</strong>.</p>
+        <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <a href="./account.html" class="btn-account-primary" style="display:inline-block; text-decoration:none; padding:11px 24px; background:var(--primary-color); color:white; border-radius:8px; font-weight:700;">View My Orders</a>
+            <a href="./category.html" style="display:inline-block; padding:11px 24px; border:1px solid rgba(124,58,237,0.3); color:var(--text-muted); border-radius:8px; font-weight:600; text-decoration:none;">Continue Shopping</a>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ TOAST ═══════════════════════ -->
+<div class="cart-toast" id="cartToast"></div>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-section">
+            <div class="brand">PCMarket</div>
+            <p class="footer-description">Your trusted source for PC parts, laptops, and gaming gear since 2020.</p>
+        </div>
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./builder_index.html">Build Your Own PC</a></li>
+                <li><a href="./category.html">Categories</a></li>
+                <li><a href="./benchmark.html">Benchmark</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>Support</h4>
+            <ul>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">Shipping Info</a></li>
+                <li><a href="#">Returns</a></li>
+                <li><a href="#">Warranty</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 PCMarket. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="./assets/js/nav-auth.js"></script>
+<script src="./assets/js/cart.js"></script>
+</body>
+</html>
