@@ -213,7 +213,7 @@ async function renderLiveProducts() {
                     <div class="product-price">
                         <span class="new-price">$${product.price}</span>
                     </div>
-                    <button class="btn-primary btn-full" onclick="event.stopPropagation(); alert('${product.title} added to cart!');">
+                    <button class="btn-primary btn-full" onclick="event.stopPropagation(); CartWidget.add('${product._id}');">
                         Add to Cart
                     </button>
                 </div>
@@ -358,7 +358,7 @@ async function configureNavigation() {
         const response = await fetch('/api/me');
         const userData = await response.json();
 
-        if(userData.isLoggedIn && userData.role === 'admin') {
+        if(userData.isLoggedIn && (userData.role === 'admin' || userData.role === 'superadmin')) {
             const adminLink = document.getElementById('adminNavLink');
             if(adminLink) {
                 adminLink.style.display = 'inline-block';

@@ -236,34 +236,88 @@ app.post('/api/cart/add', requireAuth, async (req, res) => {
         const { productId, quantity = 1 } = req.body;
 
         const product = await Product.findById(productId);
-        if (!product) return res.status(404).send('Product not found');
+        if (!product) return res.status(404).json({ error: 'Product not found' });
 
         let cart = await Cart.findOne({ userId: req.session.userId });
+        if (!cart) cart = new Cart({ userId: req.session.userId, items: [] });
 
-        if (!cart) {
-            cart = new Cart({ userId: req.session.userId, items: [] });
-        }
-
-        const existing = cart.items.find(i =>
-            i.productId.toString() === productId
-        );
-
+        const existing = cart.items.find(i => i.productId.toString() === productId);
         if (existing) {
             existing.quantity += quantity;
         } else {
             cart.items.push({
                 productId,
                 title: product.title,
+                manufacturer: product.manufacturer || '',
+                imageUrl: product.imageUrl || '',
                 price: product.price,
+                category: product.category || '',
                 quantity
             });
         }
 
         await cart.save();
-        res.json({ success: true });
+        const itemCount = cart.items.reduce((s, i) => s + i.quantity, 0);
+        res.json({ success: true, itemCount });
 
     } catch (err) {
-        res.status(500).send('Add to cart error');
+        res.status(500).json({ error: 'Add to cart error' });
+    }
+});
+
+
+app.get('/api/cart/count', requireAuth, async (req, res) => {
+    try {
+        const cart = await Cart.findOne({ userId: req.session.userId });
+        const count = cart ? cart.items.reduce((s, i) => s + i.quantity, 0) : 0;
+        res.json({ count });
+    } catch (err) {
+        res.status(500).json({ count: 0 });
+    }
+});
+
+
+app.put('/api/cart/item/:productId', requireAuth, async (req, res) => {
+    try {
+        const { quantity } = req.body;
+        if (!quantity || quantity < 1) return res.status(400).json({ error: 'Invalid quantity' });
+
+        const cart = await Cart.findOne({ userId: req.session.userId });
+        if (!cart) return res.status(404).json({ error: 'Cart not found' });
+
+        const item = cart.items.find(i => i.productId.toString() === req.params.productId);
+        if (!item) return res.status(404).json({ error: 'Item not in cart' });
+
+        item.quantity = quantity;
+        await cart.save();
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Update error' });
+    }
+});
+
+
+app.delete('/api/cart/item/:productId', requireAuth, async (req, res) => {
+    try {
+        const cart = await Cart.findOne({ userId: req.session.userId });
+        if (!cart) return res.status(404).json({ error: 'Cart not found' });
+
+        cart.items = cart.items.filter(i => i.productId.toString() !== req.params.productId);
+        await cart.save();
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Remove error' });
+    }
+});
+
+
+app.delete('/api/cart', requireAuth, async (req, res) => {
+    try {
+        const cart = await Cart.findOne({ userId: req.session.userId });
+        if (cart) { cart.items = []; await cart.save(); }
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Clear cart error' });
     }
 });
 
@@ -310,26 +364,32 @@ app.put('/api/account/password', requireAuth, async (req, res) => {
 
 app.post('/api/cart/checkout', requireAuth, async (req, res) => {
     try {
-        const cart = await Cart.findOne({ userId: req.session.userId });
+        const { shippingAddress = '', paymentMethod = 'card', notes = '' } = req.body;
 
-        const total = cart.items.reduce(
-            (sum, i) => sum + i.price * i.quantity, 0
-        );
+        const cart = await Cart.findOne({ userId: req.session.userId });
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).json({ error: 'Your cart is empty' });
+        }
+
+        const total = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
         const order = new Order({
             userId: req.session.userId,
             items: cart.items,
-            total
+            total,
+            shippingAddress,
+            paymentMethod,
+            notes
         });
 
         await order.save();
         cart.items = [];
         await cart.save();
 
-        res.json({ success: true });
+        res.json({ success: true, orderId: order._id });
 
     } catch (err) {
-        res.status(500).send('Checkout error');
+        res.status(500).json({ error: 'Checkout error' });
     }
 });
 
@@ -357,6 +417,170 @@ app.post('/api/benchmark/save', async (req, res) => {
 app.get('/api/benchmark/history', requireAuth, async (req, res) => {
     const results = await BenchmarkResult.find({ userId: req.session.userId });
     res.json(results);
+});
+
+
+/* ========================= LOGOUT ========================= */
+
+app.post('/api/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) return res.status(500).send('Logout failed');
+        res.clearCookie('connect.sid');
+        res.json({ success: true });
+    });
+});
+
+
+/* ========================= ADMIN MIDDLEWARE ========================= */
+
+function requireAdmin(req, res, next) {
+    if (req.session.userId && (req.session.role === 'admin' || req.session.role === 'superadmin')) {
+        next();
+    } else {
+        res.status(403).send('Admin access required');
+    }
+}
+
+function requireSuperAdmin(req, res, next) {
+    if (req.session.userId && req.session.role === 'superadmin') {
+        next();
+    } else {
+        res.status(403).send('Super Admin access required');
+    }
+}
+
+
+/* ========================= ADMIN - PRODUCTS ========================= */
+
+app.get('/api/admin/products', requireAdmin, async (req, res) => {
+    try {
+        const products = await Product.find().sort({ _id: -1 });
+        res.json(products);
+    } catch (err) {
+        res.status(500).send('Error fetching products');
+    }
+});
+
+app.post('/api/admin/add-product', requireAdmin, async (req, res) => {
+    try {
+        const product = new Product(req.body);
+        await product.save();
+        res.send('Product saved successfully!');
+    } catch (err) {
+        res.status(500).send('Error saving product: ' + err.message);
+    }
+});
+
+app.put('/api/admin/edit-product/:id', requireAdmin, async (req, res) => {
+    try {
+        await Product.findByIdAndUpdate(req.params.id, req.body);
+        res.send('Product updated!');
+    } catch (err) {
+        res.status(500).send('Error updating product');
+    }
+});
+
+app.delete('/api/admin/delete-product/:id', requireAdmin, async (req, res) => {
+    try {
+        await Product.findByIdAndDelete(req.params.id);
+        res.send('Product deleted!');
+    } catch (err) {
+        res.status(500).send('Error deleting product');
+    }
+});
+
+
+/* ========================= ADMIN - HARDWARE ========================= */
+
+app.post('/api/admin/add-cpu', requireAdmin, async (req, res) => {
+    try {
+        const cpu = new CPU(req.body);
+        await cpu.save();
+        res.send('CPU saved successfully!');
+    } catch (err) {
+        res.status(500).send('Error saving CPU: ' + err.message);
+    }
+});
+
+app.post('/api/admin/add-gpu', requireAdmin, async (req, res) => {
+    try {
+        const gpu = new GPU(req.body);
+        await gpu.save();
+        res.send('GPU saved successfully!');
+    } catch (err) {
+        res.status(500).send('Error saving GPU: ' + err.message);
+    }
+});
+
+app.post('/api/admin/add-game', requireAdmin, async (req, res) => {
+    try {
+        const game = new Game(req.body);
+        await game.save();
+        res.send('Game saved successfully!');
+    } catch (err) {
+        res.status(500).send('Error saving game: ' + err.message);
+    }
+});
+
+
+/* ========================= ADMIN - USERS ========================= */
+
+app.get('/api/admin/users', requireAdmin, async (req, res) => {
+    try {
+        const users = await User.find().select('-password').sort({ _id: -1 });
+        res.json(users);
+    } catch (err) {
+        res.status(500).send('Error fetching users');
+    }
+});
+
+app.put('/api/admin/users/:id/role', requireSuperAdmin, async (req, res) => {
+    try {
+        const { role } = req.body;
+        if (!['customer', 'vendor', 'admin', 'superadmin'].includes(role)) {
+            return res.status(400).send('Invalid role');
+        }
+        await User.findByIdAndUpdate(req.params.id, { role });
+        res.send('Role updated!');
+    } catch (err) {
+        res.status(500).send('Error updating role');
+    }
+});
+
+app.delete('/api/admin/users/:id', requireSuperAdmin, async (req, res) => {
+    try {
+        if (req.params.id === req.session.userId.toString()) {
+            return res.status(400).send('Cannot delete your own account');
+        }
+        await User.findByIdAndDelete(req.params.id);
+        res.send('User deleted!');
+    } catch (err) {
+        res.status(500).send('Error deleting user');
+    }
+});
+
+
+/* ========================= ADMIN - ORDERS ========================= */
+
+app.get('/api/admin/orders', requireAdmin, async (req, res) => {
+    try {
+        const orders = await Order.find()
+            .populate('userId', 'firstName lastName email')
+            .sort({ createdAt: -1 });
+        res.json(orders);
+    } catch (err) {
+        res.status(500).send('Error fetching orders');
+    }
+});
+
+app.put('/api/admin/orders/:id/status', requireAdmin, async (req, res) => {
+    try {
+        const { status } = req.body;
+        await Order.findByIdAndUpdate(req.params.id, { status });
+        res.send('Status updated!');
+    } catch (err) {
+        res.status(500).send('Error updating order status');
+    }
 });
 
 

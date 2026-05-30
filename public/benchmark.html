@@ -20,8 +20,13 @@
     <li><a href="./index.html#quiz">Quiz</a></li>
 </ul>
 <div class="nav-buttons">
-    <button class="btn-icon" onclick="window.location.href='./builder_index.html'">🛒</button>
-    <button class="btn-primary" onclick="window.location.href='./sign_in.html'">Sign In</button>
+    <button class="btn-icon" style="position:relative;" onclick="window.location.href='./cart.html'">
+        🛒
+        <span id="navCartBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#7C3AED; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;"></span>
+    </button>
+    <button class="btn-primary" id="navSignIn" onclick="window.location.href='./sign_in.html'">Sign In</button>
+    <a class="btn-primary" id="navMyAccount" href="./account.html" style="display:none; text-decoration:none; align-items:center; gap:6px;">👤 <span class="nav-user-name">Account</span></a>
+    <button class="btn-outline" id="navLogout" style="display:none;">Logout</button>
 </div>
         </div>
     </nav>
@@ -155,6 +160,8 @@
         </div>
     </footer>
 
+    <script src="./assets/js/nav-auth.js"></script>
+    <script src="./assets/js/cart-widget.js"></script>
     <script src="./assets/js/benchmark-script.js"></script>
 </body>
 </html>

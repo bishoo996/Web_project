@@ -67,6 +67,30 @@
     </style>
 </head>
 <body>
+
+<nav>
+    <div class="nav-container">
+        <div class="brand">Overclocked</div>
+        <ul class="nav-links">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./builder_index.html">Build Your Own PC</a></li>
+            <li><a href="./category.html">Categories</a></li>
+            <li><a href="./benchmark.html">Benchmark</a></li>
+            <li><a href="./index.html#quiz">Quiz</a></li>
+            <li><a href="/admin.html" id="adminNavLink" style="display:none; color:#ffaa00; font-weight:bold;">Admin Portal</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="btn-icon" style="position:relative;" onclick="window.location.href='./cart.html'">
+                🛒
+                <span id="navCartBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#7C3AED; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;"></span>
+            </button>
+            <button class="btn-primary" id="navSignIn" onclick="window.location.href='./sign_in.html'">Sign In</button>
+            <a class="btn-primary" id="navMyAccount" href="./account.html" style="display:none; text-decoration:none; align-items:center; gap:6px;">👤 <span class="nav-user-name">Account</span></a>
+            <button class="btn-outline" id="navLogout" style="display:none;">Logout</button>
+        </div>
+    </div>
+</nav>
+
     <div style="max-width: 1200px; margin: 20px auto 0; padding: 0 24px;">
         <a class="back-btn" href="javascript:history.back()" style="display: inline-flex; align-items: center; gap: 6px; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-secondary); padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all .2s;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
@@ -112,6 +136,8 @@
         </div>
     </div>
 
+    <script src="./assets/js/nav-auth.js"></script>
+    <script src="./assets/js/cart-widget.js"></script>
     <script src="./assets/js/product.js"></script>
 </body>
 </html>

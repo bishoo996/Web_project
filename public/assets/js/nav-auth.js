@@ -38,7 +38,7 @@
             if (logout)    logout.style.display    = 'inline-flex';
 
             // Admin link
-            if (adminLink && user.role === 'admin') {
+            if (adminLink && (user.role === 'admin' || user.role === 'superadmin')) {
                 adminLink.style.display = 'inline-block';
             }
 

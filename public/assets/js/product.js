@@ -59,7 +59,7 @@ async function loadProductDetails() {
                     ● ${stockText}
                 </div>
 
-                <button class="btn-primary btn-large" style="width: 100%; margin-bottom: 10px;" onclick="alert('Added to Cart!'); window.location.href='category.html';">
+                <button class="btn-primary btn-large" style="width: 100%; margin-bottom: 10px;" onclick="CartWidget.add('${p._id}');">
                     Add to Cart
                 </button>
                 <button class="btn-outline btn-large" style="width: 100%;">

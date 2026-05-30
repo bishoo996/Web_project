@@ -5,7 +5,7 @@ async function configureNavigation() {
 
         const userData = await response.json();
         const adminLink = document.getElementById('adminNavLink');
-        if (adminLink && userData.isLoggedIn && userData.role === 'admin') {
+        if (adminLink && userData.isLoggedIn && (userData.role === 'admin' || userData.role === 'superadmin')) {
             adminLink.style.display = 'inline-block';
         }
     }
