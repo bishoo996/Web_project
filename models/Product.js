@@ -14,6 +14,17 @@ const productSchema = new mongoose.Schema({
     stockStatus: { type: String, default: 'in', enum: ['in', 'out', 'low'] },
     imageUrl: { type: String },
 
+    vendorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false
+    },
+
+    supplierName: {
+        type: String,
+        required: false
+    },
+
     specs: [{      //flexibles ll specifics zay DPI refresh rate etc
         k: { type: String},
         v: { type: String}
@@ -43,6 +54,6 @@ const productSchema = new mongoose.Schema({
         required: false,
         enum: ['CPU', 'GPU']  //34an y link CPU/GPU performance bel product
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);

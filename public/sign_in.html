@@ -16,11 +16,14 @@
 
         <form action="/api/login" method="POST">
             
-            <label>Email</label>s
-            <input type="email" name="identifier" placeholder="Enter Email" required>
+            <label>Email</label>
+            <input type="email" id="loginEmail" name="identifier" placeholder="Enter Email" required>
 
             <label>Password</label>
-            <input type="password" name="password" placeholder="Enter Password" required>
+            <div style="position:relative;">
+                <input type="password" id="loginPassword" name="password" placeholder="Enter Password" required>
+                <button type="button" id="toggleLoginPassword" style="position:absolute; right:8px; top:8px; background:transparent; border:none; color:#94A3B8; cursor:pointer;">👁️</button>
+            </div>
 
             <button type="submit" class="login-btn">Login</button>
             

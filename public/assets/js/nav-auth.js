@@ -9,6 +9,7 @@
  *   #navMyAccount    — My Account link (hidden by default)
  *   #navLogout       — Logout button (hidden by default)
  *   #adminNavLink    — Admin link (handled here too, so nav.js is not needed)
+ *   #vendorNavLink   — Vendor panel link (optional)
  *   #navCartCount    — Cart badge count span
  *
  * Pages only need to include these IDs in their nav HTML.
@@ -21,12 +22,13 @@
         if (!res.ok) return;
         const user = await res.json();
 
-        const signIn    = document.getElementById('navSignIn');
-        const signUp    = document.getElementById('navSignUp');
-        const myAccount = document.getElementById('navMyAccount');
-        const logout    = document.getElementById('navLogout');
-        const adminLink = document.getElementById('adminNavLink');
-        const cartBadge = document.getElementById('navCartBadge');
+        const signIn     = document.getElementById('navSignIn');
+        const signUp     = document.getElementById('navSignUp');
+        const myAccount  = document.getElementById('navMyAccount');
+        const logout     = document.getElementById('navLogout');
+        const adminLink  = document.getElementById('adminNavLink');
+        const vendorLink = document.getElementById('vendorNavLink');
+        const cartBadge  = document.getElementById('navCartBadge');
 
         if (user.isLoggedIn) {
             // Hide auth buttons
@@ -40,6 +42,11 @@
             // Admin link
             if (adminLink && (user.role === 'admin' || user.role === 'superadmin')) {
                 adminLink.style.display = 'inline-block';
+            }
+
+            // Vendor link
+            if (vendorLink && user.role === 'vendor') {
+                vendorLink.style.display = 'inline-block';
             }
 
             // Update account button label with first name

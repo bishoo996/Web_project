@@ -14,22 +14,27 @@
     <div class="auth-box">
 
         <h2>Create Account</h2>
-        <form action="/api/register" method="POST">  
+        <form id="signupForm" action="/api/register" method="POST">
 
             <label>First Name</label>
-            <input type="text" name="firstName" required>
+            <input type="text" id="firstName" name="firstName" required>
 
             <label>Last Name</label>
-            <input type="text" name="lastName" required>
+            <input type="text" id="lastName" name="lastName" required>
 
             <label>Email</label>
-            <input type="email" name="email" required>
+            <input type="email" id="email" name="email" required>
 
             <label>Phone</label>
-            <input type="tel" name="phoneNumber">
+            <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="e.g., 01012345678">
 
             <label>Password</label>
-            <input type="password" name="password" required>
+            <div style="position:relative;">
+                <input type="password" id="password" name="password" required>
+                <button type="button" id="togglePassword" style="position:absolute; right:8px; top:8px; background:transparent; border:none; color:#94A3B8; cursor:pointer;">👁️</button>
+            </div>
+
+            <div id="signupError" class="message-box" style="color:#ff4444; display:none;"></div>
 
             <button class="login-btn" type="submit">Create Account</button>
         
