@@ -10,6 +10,12 @@ async function checkVendorStatus() {
             window.location.href = '/index.html';
         }
         currentUserRole = data.role;
+
+        const supplierField = document.getElementById('prodSupplier');
+        if (supplierField) {
+            supplierField.value = data.companyName || `${data.firstName} ${data.lastName}`;
+            supplierField.readOnly = true;
+        }
     } catch (error) { window.location.href = '/sign_in.html'; }
 }
 checkVendorStatus();

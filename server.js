@@ -95,8 +95,10 @@ app.post('/api/login' , async (req, res) => {
             return res.status(400).send('Invalid email or password'); 
         }
 
-        req.session.userId = user._id; 
-        req.session.firstName = user.firstName; 
+        req.session.userId = user._id;
+        req.session.firstName = user.firstName;
+        req.session.lastName = user.lastName;
+        req.session.companyName = user.companyName;
         req.session.role = user.role;
 
         console.log('User logged in successfully');
@@ -114,6 +116,8 @@ app.get('/api/me', (req, res) => {
         res.json({
             isLoggedIn: true,
             firstName: req.session.firstName,
+            lastName: req.session.lastName,
+            companyName: req.session.companyName,
             role: req.session.role
         });
     } else {
@@ -618,7 +622,8 @@ app.get('/api/vendor/products', requireVendor, async (req, res) => {
 
 app.post('/api/vendor/add-product', requireVendor, async (req, res) => {
     try {
-        await new Product({ ...req.body, vendorId: req.session.userId }).save();
+        const supplierName = req.session.companyName || `${req.session.firstName} ${req.session.lastName}`;
+        await new Product({ ...req.body, supplierName, vendorId: req.session.userId }).save();
         res.send('Product saved successfully!');
     } catch (err) {
         res.status(500).send('Error saving product: ' + err.message);
