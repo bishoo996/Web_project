@@ -10,61 +10,67 @@ const GPU = require('./models/GPU');
 const Game = require('./models/Game');
 const User = require('./models/Users'); 
 const Product = require('./models/Product');
+const Cart = require('./models/Cart');
+const Order = require('./models/Order');
+const BenchmarkResult = require('./models/BenchmarkResult');
 
 
 const app = express();
 const PORT = 3000;
 
+
 app.use(session({
-    secret: 'your_secret_key', //secret key for signing session ID cookies
-    resave: false, //don't save session if unmodified
-    saveUninitialized: false, //don't create session until something stored
-    cookie: { secure: false, 
+    secret: 'your_secret_key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        secure: false, 
         maxAge: 1000 * 60 * 60 * 24 
     } 
-}));    
+}));
 
-app.use(express.static('public'));  //serve static files awel ma el web yetlobo mel server
+app.use(express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.json()); //parse JSON bodies
-
-app.use(express.urlencoded({ extended: true })); //parse URL-encoded bodies el gaya mel <form>
 
 mongoose.connect('mongodb://localhost:27017/web_projectDB')
 .then(() => console.log('Connected to MongoDB'))
-.catch((err) => console.error('Could not connect to MongoDB', err));  
+.catch((err) => console.error('Could not connect to MongoDB', err));
 
+
+/* ========================= AUTH ========================= */
 
 app.post('/api/register' , async (req, res) => {
     try {
         const { firstName, lastName, email, phoneNumber, password } = req.body;
 
-        const hashedPassword = await bcrypt.hash(password, 10); //hash password with salt rounds of 10 (complexity)
+        const hashedPassword = await bcrypt.hash(password, 10);
         
         const newUser = new User({
-            firstName : firstName,
-            lastName : lastName,
-            email: email,
-            phoneNumber: phoneNumber,
+            firstName,
+            lastName,
+            email,
+            phoneNumber,
             password: hashedPassword
         });
 
-        await newUser.save(); //save user to database
+        await newUser.save();
 
         console.log('User registered successfully');
-        res.redirect('/sign_in.html'); //redirect to sign in page after successful registration
+        res.redirect('/sign_in.html');
     }
     catch (err) {
         console.error('Error registering user', err); 
     }
+});
 
-})
 
 app.post('/api/login' , async (req, res) => {
     try {
         const {identifier, password} = req.body; 
 
-        const user = await User.findOne({ email: identifier }); //find user by email
+        const user = await User.findOne({ email: identifier });
 
         if(!user) {
             return res.status(400).send('Invalid email or password'); 
@@ -88,12 +94,10 @@ app.post('/api/login' , async (req, res) => {
         res.status(500).send('Server error during login'); 
     }
 });
-        
 
-// A route to check who is currently logged in
+
 app.get('/api/me', (req, res) => {
-    // Check if the session has a userId
-    if (req.session.userId) {   //sends json response with user data
+    if (req.session.userId) {
         res.json({
             isLoggedIn: true,
             firstName: req.session.firstName,
@@ -108,13 +112,15 @@ app.get('/api/me', (req, res) => {
 });
 
 
+/* ========================= HARDWARE ========================= */
+
 app.get('/api/hardware', async (req, res) => {
     try {
-        const cpus = await CPU.find(); //find() = get every doc in collection
+        const cpus = await CPU.find();
         const gpus = await GPU.find();  
         const games = await Game.find();
 
-        res.json({   //package all into json response to frontend
+        res.json({
             cpus: cpus,
             gpus: gpus,
             games: games
@@ -123,12 +129,15 @@ app.get('/api/hardware', async (req, res) => {
         console.error('Error fetching hardware data', err);
         res.status(500).send('Server error fetching hardware data');
     }
-    });
+});
 
-app.get('/api/product/:id', async (req, res) => {  //fetch single product by id, :id is a url parameter that can be accessed with req.params.id
+
+/* ========================= PRODUCTS ========================= */
+
+app.get('/api/product/:id', async (req, res) => {
     try {
-        // Find the specific product and populate the benchmark magic link if it exists
-        const product = await Product.findById(req.params.id).populate('baselineHardwareId');
+        const product = await Product.findById(req.params.id)
+            .populate('baselineHardwareId');
         
         if (!product) {
             return res.status(404).send('Product not found');
@@ -141,43 +150,12 @@ app.get('/api/product/:id', async (req, res) => {  //fetch single product by id,
     }
 });
 
-// ==========================================
-// SUBMIT REVIEW ROUTE (PUBLIC / LOGGED IN)
-// ==========================================
-app.post('/api/product/:id/review', async (req, res) => {
-    try {
-        const { rating, title, comment } = req.body;
-        
-        // 1. Find the specific product
-        const product = await Product.findById(req.params.id);
-        if (!product) return res.status(404).send('Product not found');
 
-        // 2. See if the user is logged in. If not, call them "Guest"
-        const authorName = req.session.firstName ? req.session.firstName : 'Guest Buyer';
-
-        // 3. Push the new review into the product's array
-        product.reviews.push({
-            rating: Number(rating),
-            title: title,
-            comment: comment,
-            author: authorName
-        });
-
-        // 4. Save the product back to the database
-        await product.save();
-        res.send('Review added successfully!');
-
-    } catch (err) {
-        console.error('Error saving review:', err);
-        res.status(500).send('Failed to save review');
-    }
-});
-
-app.get('/api/products/:categoryName', async (req, res) => {      //fetch products by category, :categoryName is a url parameter that can be accessed with req.params.categoryName
+app.get('/api/products/:categoryName', async (req, res) => {
     try{
-        const requestedCategory = req.params.categoryName; //get category name from url parameter
+        const products = await Product.find({ category: req.params.categoryName })
+            .populate('baselineHardwareId');
 
-        const products = await Product.find({ category: requestedCategory }).populate('baselineHardwareId'); //find products with matching category
         res.json(products);
 
     } catch (err) {
@@ -186,9 +164,9 @@ app.get('/api/products/:categoryName', async (req, res) => {      //fetch produc
     }
 });
 
-app.get('/api/products', async (req, res) => { //fetch all products for homepage grid
+
+app.get('/api/products', async (req, res) => {
     try {
-        // Find all products, limit to 8 for the homepage grid
         const products = await Product.find().limit(8);
         res.json(products);
     } catch (err) {
@@ -198,162 +176,191 @@ app.get('/api/products', async (req, res) => { //fetch all products for homepage
 });
 
 
-function requireAdmin(req, res, next) {
-    if (req.session.role === 'admin') {
-        next(); 
+/* ========================= REVIEWS ========================= */
+
+app.post('/api/product/:id/review', async (req, res) => {
+    try {
+        const { rating, title, comment } = req.body;
+
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).send('Product not found');
+
+        const authorName = req.session.firstName ? req.session.firstName : 'Guest Buyer';
+
+        product.reviews.push({
+            rating: Number(rating),
+            title,
+            comment,
+            author: authorName
+        });
+
+        await product.save();
+        res.send('Review added successfully!');
+
+    } catch (err) {
+        console.error('Error saving review:', err);
+        res.status(500).send('Failed to save review');
+    }
+});
+
+
+/* ========================= AUTH CHECK ========================= */
+
+function requireAuth(req, res, next) {
+    if (req.session.userId) {
+        next();
     } else {
-        res.status(403).send('Access denied. Admins only.'); 
+        res.status(401).send('Not logged in');
     }
 }
 
 
-//cpu route
-app.post('/api/admin/add-cpu', requireAdmin, async (req, res) => {
-    try {
-        const { name, brand, socket, price, computeScore } = req.body;
+/* ========================= CART ========================= */
 
-        const newCPU = new CPU({
-            name: name,
-            brand: brand,
-            socket: socket,
-            price: price,
-            computeScore: computeScore
+app.get('/api/cart', requireAuth, async (req, res) => {
+    try {
+        let cart = await Cart.findOne({ userId: req.session.userId })
+            .populate('items.productId');
+
+        if (!cart) cart = { items: [] };
+
+        res.json(cart);
+    } catch (err) {
+        res.status(500).send('Cart error');
+    }
+});
+
+
+app.post('/api/cart/add', requireAuth, async (req, res) => {
+    try {
+        const { productId, quantity = 1 } = req.body;
+
+        const product = await Product.findById(productId);
+        if (!product) return res.status(404).send('Product not found');
+
+        let cart = await Cart.findOne({ userId: req.session.userId });
+
+        if (!cart) {
+            cart = new Cart({ userId: req.session.userId, items: [] });
+        }
+
+        const existing = cart.items.find(i =>
+            i.productId.toString() === productId
+        );
+
+        if (existing) {
+            existing.quantity += quantity;
+        } else {
+            cart.items.push({
+                productId,
+                title: product.title,
+                price: product.price,
+                quantity
+            });
+        }
+
+        await cart.save();
+        res.json({ success: true });
+
+    } catch (err) {
+        res.status(500).send('Add to cart error');
+    }
+});
+
+
+/* ========================= ACCOUNT ========================= */
+
+app.get('/api/account/profile', requireAuth, async (req, res) => {
+    const user = await User.findById(req.session.userId).select('-password');
+    res.json(user);
+});
+
+
+app.put('/api/account/profile', requireAuth, async (req, res) => {
+    const user = await User.findByIdAndUpdate(
+        req.session.userId,
+        req.body,
+        { new: true }
+    ).select('-password');
+
+    res.json(user);
+});
+
+
+app.put('/api/account/password', requireAuth, async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        const user = await User.findById(req.session.userId);
+
+        const match = await bcrypt.compare(currentPassword, user.password);
+        if (!match) return res.status(400).send('Wrong password');
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        await user.save();
+
+        res.send('Password updated');
+    } catch (err) {
+        res.status(500).send('Password error');
+    }
+});
+
+
+/* ========================= ORDERS ========================= */
+
+app.post('/api/cart/checkout', requireAuth, async (req, res) => {
+    try {
+        const cart = await Cart.findOne({ userId: req.session.userId });
+
+        const total = cart.items.reduce(
+            (sum, i) => sum + i.price * i.quantity, 0
+        );
+
+        const order = new Order({
+            userId: req.session.userId,
+            items: cart.items,
+            total
         });
 
-        await newCPU.save();
-        console.log('Admin added CPU: ', name);
-        res.send('CPU added successfully');
+        await order.save();
+        cart.items = [];
+        await cart.save();
+
+        res.json({ success: true });
 
     } catch (err) {
-        console.error('Error adding CPU', err);
-        res.status(500).send('Server error during CPU addition');
+        res.status(500).send('Checkout error');
     }
 });
 
-app.post('/api/admin/add-gpu', requireAdmin, async (req, res) => {
+
+app.get('/api/account/orders', requireAuth, async (req, res) => {
+    const orders = await Order.find({ userId: req.session.userId });
+    res.json(orders);
+});
+
+
+/* ========================= BENCHMARK ========================= */
+
+app.post('/api/benchmark/save', async (req, res) => {
     try {
-        const { name, brand, vram, price, renderScores } = req.body;
+        const result = new BenchmarkResult(req.body);
+        await result.save();
 
-        const newGPU = new GPU({
-            name: name,
-            brand: brand,
-            vram: vram,
-            price: price,
-            renderScores: renderScores
-        });
-
-        await newGPU.save();
-        console.log('Admin added GPU: ', name);
-        res.send('GPU added successfully');
-
+        res.json({ success: true });
     } catch (err) {
-        console.error('Error adding GPU', err);
-        res.status(500).send('Server error during GPU addition');
+        res.status(500).send('Benchmark error');
     }
 });
 
 
-app.post('/api/admin/add-game', requireAdmin, async (req, res) => { 
-    try {
-        const { title, optimizationFactor, cpuIntensive, imageUrl } = req.body;
-        
-        const newGame = new Game({
-            title: title,
-            optimizationFactor: optimizationFactor,
-            cpuIntensive: cpuIntensive,
-            imageUrl: imageUrl
-        });
-
-        await newGame.save();
-
-        console.log('Admin added Game: ', title);
-        res.send('Game added successfully');
-    } catch (err) {
-        console.error('Error adding Game', err);
-        res.status(500).send('Server error during Game addition');
-    }
-});
-
-app.post('/api/admin/add-product', requireAdmin, async (req, res) => {
-    try {
-        const { title, manufacturer, category, price, stockStatus, imageUrl, specs, badges, baselineHardwareId, hardwareModel } = req.body;
-
-        const newProduct = new Product({
-            title: title,
-            manufacturer: manufacturer,
-            category: category,
-            price: price,
-            stockStatus: stockStatus,
-            imageUrl: imageUrl,
-            specs: specs,
-            badges: badges,
-
-            baselineHardwareId: baselineHardwareId || undefined,
-            hardwareModel: hardwareModel || undefined
-        });
-
-        await newProduct.save();
-        console.log(`Admin added ${category}: ${title}`);
-        res.send('Product added successfully');
-
-    } catch (err) {
-        console.error('Error adding Product', err);
-        res.status(500).send('Server error during Product addition');
-    }
-});
-
-app.get('/api/admin/products', requireAdmin, async (req, res) => {
-    try {
-        // Sorts by category alphabetically to keep the table organized
-        const products = await Product.find().sort({ category: 1 });
-        res.json(products);
-    } catch (err) {
-        console.error('Error fetching inventory:', err);
-        res.status(500).send('Failed to load inventory');
-    }
-});
-
-app.delete('/api/admin/delete-product/:id', requireAdmin, async (req, res) => {
-    try {
-        await Product.findByIdAndDelete(req.params.id);
-        res.send('Product deleted successfully');
-    } catch (err) {
-        console.error('Error deleting product:', err);
-        res.status(500).send('Failed to delete product');
-    }
+app.get('/api/benchmark/history', requireAuth, async (req, res) => {
+    const results = await BenchmarkResult.find({ userId: req.session.userId });
+    res.json(results);
 });
 
 
-app.delete('/api/admin/delete-cpu/:id', requireAdmin, async (req, res) => {
-    try {
-        await CPU.findByIdAndDelete(req.params.id);
-        res.send('CPU deleted successfully');
-    } catch (err) {
-        console.error('Error deleting CPU', err);
-        res.status(500).send('Server error during CPU deletion');
-    }
-});
-
-app.delete('/api/admin/delete-gpu/:id', requireAdmin, async (req, res) => {
-    try {
-        await GPU.findByIdAndDelete(req.params.id);
-        res.send('GPU deleted successfully');
-    } catch (err) {
-        console.error('Error deleting GPU', err);
-        res.status(500).send('Server error during GPU deletion');
-    }
-});
-
-app.delete('/api/admin/delete-game/:id', requireAdmin, async (req, res) => {
-    try {
-        await Game.findByIdAndDelete(req.params.id);
-        res.send('Game deleted successfully');
-    } catch (err) {
-        console.error('Error deleting Game', err);
-        res.status(500).send('Server error during Game deletion');
-    }
-});
-
+/* ========================= START SERVER ========================= */
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
