@@ -2,7 +2,11 @@
 // STOREFRONT FILTER & GRID LOGIC
 // ==========================================
 
-let allProducts = []; // Stores the raw database data
+let allProducts = [];
+
+const _urlParams = new URLSearchParams(window.location.search);
+const _fromBuilder = _urlParams.get('from') === 'builder';
+const _componentId = (_urlParams.get('category') || '').toLowerCase();
 
 async function initStore() {
     try {
@@ -126,8 +130,14 @@ function renderGrid() {
         card.className = 'product-card';
         card.style.cursor = 'pointer'; // Make it look clickable
         
-        // 1. Make the whole card redirect
-        card.onclick = () => window.location.href = `product.html?id=${p._id}`;
+        // 1. Make the whole card redirect (pass builder context when applicable)
+        card.onclick = () => {
+            if (_fromBuilder) {
+                window.location.href = `product.html?id=${p._id}&from=builder&componentId=${_componentId}`;
+            } else {
+                window.location.href = `product.html?id=${p._id}`;
+            }
+        };
 
         // Determine stock styling
         let stockClass = 'stock-in';

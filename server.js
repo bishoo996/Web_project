@@ -287,7 +287,7 @@ app.delete('/api/account/reviews/:productId/:reviewId', requireAuth, async (req,
             return res.status(403).send('Unauthorized');
         }
 
-        review.remove();
+        product.reviews.pull(review._id);
         await product.save();
         res.json({ success: true });
     } catch (err) {
@@ -480,19 +480,26 @@ app.delete('/api/cart', requireAuth, async (req, res) => {
 /* ========================= ACCOUNT ========================= */
 
 app.get('/api/account/profile', requireAuth, async (req, res) => {
-    const user = await User.findById(req.session.userId).select('-password');
-    res.json(user);
+    try {
+        const user = await User.findById(req.session.userId).select('-password');
+        res.json(user);
+    } catch (err) {
+        res.status(500).send('Error fetching profile');
+    }
 });
 
 
 app.put('/api/account/profile', requireAuth, async (req, res) => {
-    const user = await User.findByIdAndUpdate(
-        req.session.userId,
-        req.body,
-        { new: true }
-    ).select('-password');
-
-    res.json(user);
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.session.userId,
+            req.body,
+            { new: true }
+        ).select('-password');
+        res.json(user);
+    } catch (err) {
+        res.status(500).send('Error updating profile');
+    }
 });
 
 
@@ -562,8 +569,12 @@ app.post('/api/cart/checkout', requireAuth, async (req, res) => {
 
 
 app.get('/api/account/orders', requireAuth, async (req, res) => {
-    const orders = await Order.find({ userId: req.session.userId });
-    res.json(orders);
+    try {
+        const orders = await Order.find({ userId: req.session.userId });
+        res.json(orders);
+    } catch (err) {
+        res.status(500).send('Error fetching orders');
+    }
 });
 
 
@@ -582,8 +593,12 @@ app.post('/api/benchmark/save', async (req, res) => {
 
 
 app.get('/api/benchmark/history', requireAuth, async (req, res) => {
-    const results = await BenchmarkResult.find({ userId: req.session.userId });
-    res.json(results);
+    try {
+        const results = await BenchmarkResult.find({ userId: req.session.userId });
+        res.json(results);
+    } catch (err) {
+        res.status(500).send('Error fetching benchmark history');
+    }
 });
 
 
@@ -969,7 +984,7 @@ app.get('/api/vendor/sales-stats', requireVendor, async (req, res) => {
         let sales = 0, revenue = 0, byProduct = {};
         orders.forEach(o => {
             o.items.forEach(item => {
-                if (ids.includes(item.productId)) {
+                if (ids.some(id => id.equals(item.productId))) {
                     const key = item.title;
                     byProduct[key] = byProduct[key] || { quantity: 0, revenue: 0 };
                     byProduct[key].quantity += item.quantity;
@@ -1000,7 +1015,7 @@ app.get('/api/vendor/orders', requireVendor, async (req, res) => {
         
         res.json(orders.map(o => ({
             ...o.toObject(),
-            items: o.items.filter(i => ids.includes(i.productId))
+            items: o.items.filter(i => ids.some(id => id.equals(i.productId)))
         })));
     } catch (err) {
         res.status(500).send('Error fetching orders');

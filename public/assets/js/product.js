@@ -4,6 +4,15 @@
 
 const params = new URLSearchParams(window.location.search);
 const productId = params.get('id');
+const fromBuilder = params.get('from') === 'builder';
+const builderComponentId = params.get('componentId') || '';
+
+const BUILDER_ICON_MAP = {
+    cpu: 'memory', gpu: 'sports_esports', motherboard: 'desktop_windows',
+    memory: 'memory', memory2: 'memory', storage: 'storage', psu: 'power',
+    case: 'desktop_windows', cooler: 'ac_unit', monitor: 'desktop_mac',
+    keyboard: 'keyboard', mouse: 'mouse', headset: 'headset'
+};
 
 async function loadProductDetails() {
     if (!productId) {
@@ -41,6 +50,11 @@ async function loadProductDetails() {
         const imageHTML = p.imageUrl ? `<img src="${p.imageUrl}" alt="${p.title}">` : `<div style="font-size: 16px; color: var(--text-muted);">No Image Available</div>`;
 
         // 3. Draw the main product section
+        const addToBuilderHTML = (fromBuilder && builderComponentId) ? `
+            <button class="btn-primary btn-large" id="addToBuilderBtn" style="width: 100%; margin-bottom: 10px; background: #059669; border-color: #059669;">
+                + Add to Builder
+            </button>` : '';
+
         container.innerHTML = `
             <div class="product-image-large">
                 ${imageHTML}
@@ -48,17 +62,18 @@ async function loadProductDetails() {
             <div class="product-info">
                 <div class="product-brand-cat">${p.manufacturer} | ${p.category}</div>
                 <h1>${p.title}</h1>
-                
+
                 <div class="reviews">
                     <span style="color: #F59E0B;">★</span> ${avgRating} (${reviewCount} Reviews)
                 </div>
-                
+
                 <div class="product-price-large">$${p.price.toFixed(2)}</div>
-                
+
                 <div style="color: ${stockColor}; font-weight: bold; margin-bottom: 24px; font-size: 14px;">
                     ● ${stockText}
                 </div>
 
+                ${addToBuilderHTML}
                 <button class="btn-primary btn-large" style="width: 100%; margin-bottom: 10px;" onclick="CartWidget.add('${p._id}');">
                     Add to Cart
                 </button>
@@ -72,6 +87,33 @@ async function loadProductDetails() {
                 </table>
             </div>
         `;
+
+        if (fromBuilder && builderComponentId) {
+            document.getElementById('addToBuilderBtn')?.addEventListener('click', () => {
+                const wattSpec = (p.specs || []).find(s => {
+                    const k = (s.k || '').toLowerCase();
+                    return k.includes('tdp') || k.includes('watt') || k.includes('power');
+                });
+                const rawWatts = wattSpec ? parseInt(wattSpec.v) : null;
+
+                const part = {
+                    name: p.title,
+                    specs: (p.specs || []).slice(0, 3).map(s => `${s.k}: ${s.v}`).join(' · '),
+                    badges: p.badges || [],
+                    icon: BUILDER_ICON_MAP[builderComponentId] || BUILDER_ICON_MAP[p.category] || 'inventory_2',
+                    watts: (!isNaN(rawWatts) && rawWatts > 0) ? rawWatts : null,
+                    bench: null,
+                    avail: p.stockStatus || 'in',
+                    price: `$${p.price.toFixed(2)}`,
+                    formFactor: (p.specs || []).find(s => (s.k || '').toLowerCase().includes('form'))?.v || null
+                };
+
+                try {
+                    sessionStorage.setItem('pendingPart', JSON.stringify({ componentId: builderComponentId, part }));
+                } catch (_) {}
+                window.location.href = './builder_index.html';
+            });
+        }
         document.title = `Overclocked - ${p.title}`;
 
         const wishlistBtn = document.getElementById('wishlistButton');

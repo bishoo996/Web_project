@@ -35,6 +35,36 @@ function makeToggle(btnId, inputId) {
 makeToggle('toggleLoginPassword', 'loginPassword');
 makeToggle('togglePassword', 'password');
 
+// Login form handler
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const errDiv = document.getElementById('loginError');
+        const identifier = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        if (errDiv) errDiv.style.display = 'none';
+
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ identifier, password })
+            });
+
+            if (res.ok) {
+                window.location.href = '/index.html';
+            } else {
+                const msg = await res.text();
+                if (errDiv) { errDiv.style.display = 'block'; errDiv.textContent = msg; }
+            }
+        } catch {
+            if (errDiv) { errDiv.style.display = 'block'; errDiv.textContent = 'Network error. Please try again.'; }
+        }
+    });
+}
+
 // Signup form handler
 const signupForm = document.getElementById('signupForm');
 if (signupForm) {

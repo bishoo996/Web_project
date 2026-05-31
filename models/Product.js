@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { collection } = require('./CPU');
 
 const productSchema = new mongoose.Schema({
 
@@ -34,12 +33,6 @@ const productSchema = new mongoose.Schema({
         text: { type: String },
         color: { type: String }
     }],
-
-    vendorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: false
-    },
 
     approvalStatus: {
         type: String,

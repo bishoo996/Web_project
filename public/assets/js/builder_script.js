@@ -14,6 +14,34 @@ const TOP3 = {
   headset:     [],
 };
 
+const _ICON_MAP = {
+  cpu: 'memory', gpu: 'sports_esports', motherboard: 'desktop_windows',
+  memory: 'memory', storage: 'storage', psu: 'power', case: 'desktop_windows',
+  cooler: 'ac_unit', monitor: 'desktop_mac', keyboard: 'keyboard',
+  mouse: 'mouse', headset: 'headset'
+};
+
+async function loadPreviewProducts() {
+  try {
+    const res = await fetch('/api/products');
+    if (!res.ok) return;
+    const products = await res.json();
+    products.forEach(p => {
+      const key = p.category;
+      if (TOP3[key] && TOP3[key].length < 3) {
+        TOP3[key].push({
+          name:  p.title,
+          specs: (p.specs || []).slice(0, 2).map(s => `${s.k}: ${s.v}`).join(' · '),
+          price: `$${p.price.toFixed(2)}`,
+          icon:  _ICON_MAP[key] || 'inventory_2',
+        });
+      }
+    });
+    TOP3['memory2'] = [...TOP3['memory']];
+  } catch (_) {}
+  render();
+}
+
 
 const CORE = [
   { id: 'cpu',         label: 'CPU',           sub: 'Processor',        icon: 'memory', btn: 'Choose A CPU' },
@@ -35,7 +63,13 @@ const PERIPH = [
 
 
 function getParts() { try { return JSON.parse(sessionStorage.getItem('builderParts') || '{}'); } catch { return {}; } }
-function saveParts(p) { sessionStorage.setItem('builderParts', JSON.stringify(p)); }
+function saveParts(p) {
+  try {
+    sessionStorage.setItem('builderParts', JSON.stringify(p));
+  } catch (_) {
+    showToast('Storage limit reached — some changes may not be saved.');
+  }
+}
 
 
 (function applyPending() {
@@ -53,6 +87,7 @@ function saveParts(p) { sessionStorage.setItem('builderParts', JSON.stringify(p)
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
+  if (!t) return;
   t.textContent = msg; t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
@@ -68,10 +103,12 @@ function wattageHTML(watts) {
 }
 
 function benchHTML(bench) {
-  if (!bench) return '<span class="dash">—</span>';
+  if (!bench || bench.score === undefined || bench.score === null) return '<span class="dash">—</span>';
+  const tier   = bench.tier   || 'mid';
+  const source = bench.source || '';
   return `<div class="bench-cell">
-    <span class="bench-score bench-${bench.tier}">${bench.score.toLocaleString()}</span>
-    <span class="bench-source">${bench.source}</span>
+    <span class="bench-score bench-${tier}">${bench.score.toLocaleString()}</span>
+    <span class="bench-source">${source}</span>
   </div>`;
 }
 
@@ -262,7 +299,7 @@ const totalWatts = Object.entries(parts)
   .reduce((sum, [, part]) => sum + (part.watts || 0), 0);
 
 let psuChip = '';
-if (psu && psuCapacity) {
+if (psu && psuCapacity > 0) {
   const loadPct = Math.round((totalWatts / psuCapacity) * 100);
   if (loadPct > 100) {
     psuChip = `<span class="chip chip-error">PSU Overloaded · ${totalWatts}W / ${psuCapacity}W (${loadPct}%)</span>`;
@@ -275,10 +312,12 @@ if (psu && psuCapacity) {
   psuChip = `<span class="chip chip-warn">No PSU · ${totalWatts}W needed</span>`;
 }
 
+const caseFormFactor = parts['case']?.formFactor || (parts['case'] ? 'ATX' : null);
+
 chips.innerHTML = count === 0
   ? '<span class="chip chip-info">No parts selected</span>'
   : `<span class="chip chip-ok">${count} Component${count !== 1 ? 's' : ''} Added</span>
-     <span class="chip chip-info">ATX Form Factor</span>
+     ${caseFormFactor ? `<span class="chip chip-info">${caseFormFactor} Form Factor</span>` : ''}
      ${hasDual ? '<span class="chip chip-ok">Dual Channel RAM</span>' : ''}
      ${psuChip}`;
   document.querySelectorAll('.action-btn.remove').forEach(btn =>
@@ -298,3 +337,4 @@ chips.innerHTML = count === 0
 }
 
 render();
+loadPreviewProducts();

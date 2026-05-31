@@ -54,13 +54,16 @@ async function handleFormSubmit(event, endpoint, payload, messageDivId) {
             msgDiv.style.color = '#00ff00'; // Success green
             msgDiv.innerText = resultText;
             event.target.reset(); // Clear the form
+            return true;
         } else {
             msgDiv.style.color = '#ff4444'; // Error red
             msgDiv.innerText = resultText;
+            return false;
         }
     } catch (error) {
         msgDiv.style.color = '#ff4444';
         msgDiv.innerText = 'Network Error.';
+        return false;
     }
 }
 
@@ -119,7 +122,7 @@ categorySelect.addEventListener('change', async (e) => {
 });
 
 // 3. Submit the Universal Form
-document.getElementById('addProductForm').addEventListener('submit', (e) => {
+document.getElementById('addProductForm').addEventListener('submit', async (e) => {
     
     // A. Gather the dynamic specs
     const specKeys = document.querySelectorAll('.spec-key');
@@ -155,8 +158,8 @@ document.getElementById('addProductForm').addEventListener('submit', (e) => {
         hardwareModel: hardwareModel
     };
 
-    handleFormSubmit(e, '/api/vendor/add-product', payload, 'productMessage');
-    specsContainer.innerHTML = ''; // Clear specs after submit
+    const success = await handleFormSubmit(e, '/api/vendor/add-product', payload, 'productMessage');
+    if (success) specsContainer.innerHTML = '';
 });
 
 

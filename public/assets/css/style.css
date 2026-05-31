@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -189,11 +191,29 @@ nav {
 .banner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 60px 24px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
+    padding: 100px 24px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.banner-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(124, 58, 237, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.banner-content {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
 }
 
 .banner-tag {
@@ -222,14 +242,15 @@ nav {
 .banner-subtitle {
     color: var(--text-muted);
     font-size: 17px;
-    margin-bottom: 32px;
-    max-width: 500px;
+    margin: 0 auto 32px;
+    max-width: 560px;
 }
 
 .banner-buttons {
     display: flex;
     gap: 16px;
     margin-bottom: 48px;
+    justify-content: center;
 }
 
 .banner-stats {
@@ -237,6 +258,7 @@ nav {
     gap: 40px;
     padding-top: 32px;
     border-top: 1px solid rgba(124, 58, 237, 0.3);
+    justify-content: center;
 }
 
 .stat h3 {
@@ -1185,11 +1207,6 @@ select:focus {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .banner {
-        grid-template-columns: 1fr;
-        gap: 40px;
-    }
-    
     .features-container {
         grid-template-columns: 1fr 1fr;
     }

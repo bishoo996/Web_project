@@ -292,8 +292,8 @@ async function deleteReview(productId, reviewId) {
     try {
         const res = await fetch(`/api/account/reviews/${productId}/${reviewId}`, { method: 'DELETE' });
         if (!res.ok) {
-            const d = await res.json();
-            alert(d.error || 'Failed to delete review');
+            const msg = await res.text();
+            alert(msg || 'Failed to delete review');
             return;
         }
         const card = document.getElementById(`review-${reviewId}`);
@@ -459,10 +459,10 @@ function initPasswordForm() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ currentPassword, newPassword })
             });
-            const data = await res.json();
+            const msg = await res.text();
 
             if (!res.ok) {
-                showFeedback(feedback, data.error || 'Failed to update password.', 'error');
+                showFeedback(feedback, msg || 'Failed to update password.', 'error');
                 return;
             }
 

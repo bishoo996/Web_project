@@ -151,7 +151,8 @@ function renderEmptyCart(message = '') {
 function updateSummary(items) {
     const subtotal  = items.reduce((s, i) => s + i.price * i.quantity, 0);
     const tax       = subtotal * taxRate;
-    const total     = subtotal + tax;
+    const shipping  = subtotal > 500 ? 0 : 29.99;
+    const total     = subtotal + tax + shipping;
     const itemCount = items.reduce((s, i) => s + i.quantity, 0);
 
     setEl('summaryItemCount', itemCount);
