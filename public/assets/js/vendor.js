@@ -292,37 +292,6 @@ document.getElementById('editModal').addEventListener('click', (e) => {
 });
 
 // ==========================================
-// BENCHMARK ENGINE LOGIC
-// ==========================================
-
-document.getElementById('addCpuForm').addEventListener('submit', (e) => {
-    const payload = {
-        name: document.getElementById('cpuName').value,
-        brand: document.getElementById('cpuBrand').value,
-        socket: document.getElementById('cpuSocket').value,
-        price: Number(document.getElementById('cpuPrice').value),
-        computeScore: Number(document.getElementById('cpuScore').value)
-    };
-    handleFormSubmit(e, '/api/vendor/add-cpu', payload, 'cpuMessage');
-});
-
-document.getElementById('addGpuForm').addEventListener('submit', (e) => {
-    const payload = {
-        name: document.getElementById('gpuName').value,
-        brand: document.getElementById('gpuBrand').value,
-        vram: Number(document.getElementById('gpuVram').value),
-        price: Number(document.getElementById('gpuPrice').value),
-        renderScores: {
-            p1080: Number(document.getElementById('gpu1080').value),
-            p1440: Number(document.getElementById('gpu1440').value),
-            p4k: Number(document.getElementById('gpu4k').value)
-        }
-    };
-    handleFormSubmit(e, '/api/vendor/add-gpu', payload, 'gpuMessage');
-});
-
-
-// ==========================================
 // SALES STATISTICS LOGIC
 // ==========================================
 

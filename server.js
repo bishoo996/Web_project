@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express'); //Express el framework el bey simplify el server creation w routing w handling requests
 const mongoose = require('mongoose'); //mongoose el bouncer el bey enforce el schema w el validation
 const bcrypt = require('bcrypt'); //hash passwords for security
@@ -12,6 +13,7 @@ const User = require('./models/Users');
 const Product = require('./models/Product');
 const Cart = require('./models/Cart');
 const Order = require('./models/Order');
+const Category = require('./models/Category');
 const BenchmarkResult = require('./models/BenchmarkResult');
 
 
@@ -28,6 +30,13 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 
     } 
 }));
+
+app.use((req, res, next) => {
+    if (['/admin.html', '/vendor.html', '/superadmin.html'].includes(req.path)) {
+        return res.status(403).send('Forbidden');
+    }
+    next();
+});
 
 app.use(express.static('public'));
 app.use(express.json());
@@ -159,6 +168,14 @@ app.get('/api/product/:id', async (req, res) => {
         if (!product) {
             return res.status(404).send('Product not found');
         }
+
+        const viewerRole = req.session && req.session.role;
+        const isOwner = req.session && product.vendorId && product.vendorId.toString() === req.session.userId?.toString();
+        const isStaff = viewerRole === 'admin' || viewerRole === 'superadmin';
+
+        if (product.approvalStatus !== 'approved' && !isOwner && !isStaff) {
+            return res.status(404).send('Product not found');
+        }
         
         res.json(product);
     } catch (err) {
@@ -170,7 +187,7 @@ app.get('/api/product/:id', async (req, res) => {
 
 app.get('/api/products/:categoryName', async (req, res) => {
     try{
-        const products = await Product.find({ category: req.params.categoryName })
+        const products = await Product.find({ category: req.params.categoryName, approvalStatus: 'approved' })
             .populate('baselineHardwareId');
 
         res.json(products);
@@ -184,11 +201,21 @@ app.get('/api/products/:categoryName', async (req, res) => {
 
 app.get('/api/products', async (req, res) => {
     try {
-        const products = await Product.find().limit(8);
+        const products = await Product.find({ approvalStatus: 'approved' }).limit(8);
         res.json(products);
     } catch (err) {
         console.error('Error fetching all products:', err);
         res.status(500).send('Server error fetching products');
+    }
+});
+
+app.get('/api/categories', async (req, res) => {
+    try {
+        const categories = await Category.find({ isActive: true }).sort({ name: 1 });
+        res.json(categories);
+    } catch (err) {
+        console.error('Error fetching categories:', err);
+        res.status(500).send('Failed to load categories');
     }
 });
 
@@ -202,13 +229,14 @@ app.post('/api/product/:id/review', async (req, res) => {
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).send('Product not found');
 
-        const authorName = req.session.firstName ? req.session.firstName : 'Guest Buyer';
+        const authorName = req.session.firstName ? `${req.session.firstName} ${req.session.lastName || ''}`.trim() : 'Guest Buyer';
 
         product.reviews.push({
             rating: Number(rating),
             title,
             comment,
-            author: authorName
+            author: authorName,
+            reviewerId: req.session.userId || undefined
         });
 
         await product.save();
@@ -217,6 +245,115 @@ app.post('/api/product/:id/review', async (req, res) => {
     } catch (err) {
         console.error('Error saving review:', err);
         res.status(500).send('Failed to save review');
+    }
+});
+
+app.get('/api/account/reviews', requireAuth, async (req, res) => {
+    try {
+        const products = await Product.find({ 'reviews.reviewerId': req.session.userId });
+        const reviews = [];
+
+        products.forEach(product => {
+            product.reviews.forEach(review => {
+                if (review.reviewerId && review.reviewerId.toString() === req.session.userId.toString()) {
+                    reviews.push({
+                        reviewId: review._id,
+                        productId: product._id,
+                        productTitle: product.title,
+                        rating: review.rating,
+                        title: review.title,
+                        comment: review.comment,
+                        date: review.date
+                    });
+                }
+            });
+        });
+
+        res.json(reviews);
+    } catch (err) {
+        console.error('Error fetching account reviews:', err);
+        res.status(500).send('Failed to load reviews');
+    }
+});
+
+app.delete('/api/account/reviews/:productId/:reviewId', requireAuth, async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.productId);
+        if (!product) return res.status(404).send('Product not found');
+
+        const review = product.reviews.id(req.params.reviewId);
+        if (!review) return res.status(404).send('Review not found');
+        if (!review.reviewerId || review.reviewerId.toString() !== req.session.userId.toString()) {
+            return res.status(403).send('Unauthorized');
+        }
+
+        review.remove();
+        await product.save();
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error deleting review:', err);
+        res.status(500).send('Failed to delete review');
+    }
+});
+
+app.get('/api/account/wishlist', requireAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.userId).populate('wishlist');
+        res.json(user.wishlist || []);
+    } catch (err) {
+        console.error('Error fetching wishlist:', err);
+        res.status(500).send('Failed to load wishlist');
+    }
+});
+
+app.post('/api/account/wishlist/:productId', requireAuth, async (req, res) => {
+    try {
+        const productId = req.params.productId;
+        const user = await User.findById(req.session.userId);
+        if (!user) return res.status(404).send('User not found');
+
+        const exists = user.wishlist.some(id => id.toString() === productId);
+        if (exists) {
+            user.wishlist = user.wishlist.filter(id => id.toString() !== productId);
+            await user.save();
+            return res.json({ action: 'removed' });
+        }
+
+        user.wishlist.push(productId);
+        await user.save();
+        res.json({ action: 'added' });
+    } catch (err) {
+        console.error('Error updating wishlist:', err);
+        res.status(500).send('Failed to update wishlist');
+    }
+});
+
+app.get('/api/account/recently-viewed', requireAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.userId).populate('recentlyViewed');
+        res.json(user.recentlyViewed || []);
+    } catch (err) {
+        console.error('Error fetching recently viewed:', err);
+        res.status(500).send('Failed to load recently viewed');
+    }
+});
+
+app.post('/api/account/recently-viewed/:productId', requireAuth, async (req, res) => {
+    try {
+        const productId = req.params.productId;
+        const user = await User.findById(req.session.userId);
+        if (!user) return res.status(404).send('User not found');
+
+        user.recentlyViewed = user.recentlyViewed.filter(id => id.toString() !== productId);
+        user.recentlyViewed.unshift(productId);
+        if (user.recentlyViewed.length > 12) {
+            user.recentlyViewed = user.recentlyViewed.slice(0, 12);
+        }
+        await user.save();
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error updating recently viewed:', err);
+        res.status(500).send('Failed to save recently viewed');
     }
 });
 
@@ -269,7 +406,8 @@ app.post('/api/cart/add', requireAuth, async (req, res) => {
                 imageUrl: product.imageUrl || '',
                 price: product.price,
                 category: product.category || '',
-                quantity
+                quantity,
+                vendorId: product.vendorId
             });
         }
 
@@ -390,9 +528,21 @@ app.post('/api/cart/checkout', requireAuth, async (req, res) => {
 
         const total = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
+        const expandedItems = cart.items.map(item => ({
+            productId: item.productId,
+            title: item.title,
+            manufacturer: item.manufacturer,
+            imageUrl: item.imageUrl,
+            price: item.price,
+            quantity: item.quantity,
+            category: item.category,
+            vendorId: item.vendorId,
+            fulfillmentStatus: 'pending'
+        }));
+
         const order = new Order({
             userId: req.session.userId,
-            items: cart.items,
+            items: expandedItems,
             total,
             shippingAddress,
             paymentMethod,
@@ -448,31 +598,35 @@ app.post('/api/logout', (req, res) => {
 });
 
 
-/* ========================= ADMIN MIDDLEWARE ========================= */
+/* ========================= RBAC HELPERS ========================= */
 
-function requireAdmin(req, res, next) {
-    if (req.session.userId && (req.session.role === 'admin' || req.session.role === 'superadmin')) {
+function requireRole(...roles) {
+    return (req, res, next) => {
+        if (!req.session.userId) {
+            return res.status(401).send('Not logged in');
+        }
+        if (!roles.includes(req.session.role)) {
+            return res.status(403).send('Forbidden');
+        }
         next();
-    } else {
-        res.status(403).send('Admin access required');
-    }
+    };
 }
 
-function requireSuperAdmin(req, res, next) {
-    if (req.session.userId && req.session.role === 'superadmin') {
-        next();
-    } else {
-        res.status(403).send('Super Admin access required');
-    }
-}
+const requireAdmin = requireRole('admin', 'superadmin');
+const requireSuperAdmin = requireRole('superadmin');
+const requireVendor = requireRole('vendor');
 
-function requireVendor(req, res, next) {
-    if (req.session.userId && req.session.role === 'vendor') {
-        next();
-    } else {
-        res.status(403).send('Vendor access required');
-    }
-}
+app.get('/admin', requireAuth, requireAdmin, (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'public', 'admin.html'));
+});
+
+app.get('/vendor', requireAuth, requireVendor, (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'public', 'vendor.html'));
+});
+
+app.get('/superadmin', requireAuth, requireSuperAdmin, (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'public', 'superadmin.html'));
+});
 
 
 /* ========================= ADMIN - PRODUCTS ========================= */
@@ -486,9 +640,9 @@ app.get('/api/admin/products', requireAdmin, async (req, res) => {
     }
 });
 
-app.post('/api/admin/add-product', requireAdmin, async (req, res) => {
+app.post('/api/admin/add-product', requireSuperAdmin, async (req, res) => {
     try {
-        const product = new Product(req.body);
+        const product = new Product({ ...req.body, approvalStatus: 'approved' });
         await product.save();
         res.send('Product saved successfully!');
     } catch (err) {
@@ -552,10 +706,28 @@ app.post('/api/admin/add-game', requireAdmin, async (req, res) => {
 
 app.get('/api/admin/users', requireAdmin, async (req, res) => {
     try {
-        const users = await User.find().select('-password').sort({ _id: -1 });
+        const query = req.session.role === 'admin'
+            ? { role: { $in: ['customer', 'vendor'] } }
+            : {};
+        const users = await User.find(query).select('-password').sort({ _id: -1 });
         res.json(users);
     } catch (err) {
         res.status(500).send('Error fetching users');
+    }
+});
+
+app.put('/api/admin/users/:id', requireAdmin, async (req, res) => {
+    try {
+        const target = await User.findById(req.params.id);
+        if (!target) return res.status(404).send('User not found');
+        if (req.session.role === 'admin' && ['admin', 'superadmin'].includes(target.role)) {
+            return res.status(403).send('Admins may only edit customers and vendors');
+        }
+        const allowed = (({ firstName, lastName, phoneNumber, address }) => ({ firstName, lastName, phoneNumber, address }))(req.body);
+        await User.findByIdAndUpdate(req.params.id, allowed);
+        res.send('User updated!');
+    } catch (err) {
+        res.status(500).send('Error updating user');
     }
 });
 
@@ -572,10 +744,15 @@ app.put('/api/admin/users/:id/role', requireSuperAdmin, async (req, res) => {
     }
 });
 
-app.delete('/api/admin/users/:id', requireSuperAdmin, async (req, res) => {
+app.delete('/api/admin/users/:id', requireAdmin, async (req, res) => {
     try {
-        if (req.params.id === req.session.userId.toString()) {
+        const target = await User.findById(req.params.id);
+        if (!target) return res.status(404).send('User not found');
+        if (target._id.equals(req.session.userId)) {
             return res.status(400).send('Cannot delete your own account');
+        }
+        if (req.session.role === 'admin' && ['admin', 'superadmin'].includes(target.role)) {
+            return res.status(403).send('Admins may only delete customers and vendors');
         }
         await User.findByIdAndDelete(req.params.id);
         res.send('User deleted!');
@@ -598,6 +775,85 @@ app.get('/api/admin/orders', requireAdmin, async (req, res) => {
     }
 });
 
+app.get('/api/admin/product-stats', requireAdmin, async (req, res) => {
+    try {
+        const products = await Product.find();
+        const orders = await Order.find();
+
+        let sales = 0, revenue = 0, byProduct = {};
+        orders.forEach(o => {
+            o.items.forEach(item => {
+                const key = item.title || 'Unknown Product';
+                byProduct[key] = byProduct[key] || { quantity: 0, revenue: 0 };
+                byProduct[key].quantity += item.quantity;
+                byProduct[key].revenue += item.price * item.quantity;
+                sales += item.quantity;
+                revenue += item.price * item.quantity;
+            });
+        });
+
+        res.json({
+            totalSales: sales,
+            totalRevenue: revenue,
+            salesByProduct: byProduct,
+            totalProducts: products.length,
+            totalOrders: orders.length,
+            approvedProducts: products.filter(p => p.approvalStatus === 'approved').length
+        });
+    } catch (err) {
+        res.status(500).send('Error fetching product stats');
+    }
+});
+
+app.get('/api/superadmin/users', requireSuperAdmin, async (req, res) => {
+    try {
+        const users = await User.find().select('-password').sort({ _id: -1 });
+        res.json(users);
+    } catch (err) {
+        res.status(500).send('Error fetching users');
+    }
+});
+
+app.get('/api/superadmin/orders', requireSuperAdmin, async (req, res) => {
+    try {
+        const orders = await Order.find()
+            .populate('userId', 'firstName lastName email')
+            .sort({ createdAt: -1 });
+        res.json(orders);
+    } catch (err) {
+        res.status(500).send('Error fetching orders');
+    }
+});
+
+app.post('/api/superadmin/categories', requireSuperAdmin, async (req, res) => {
+    try {
+        const { name, slug, description } = req.body;
+        const category = new Category({ name, slug, description });
+        await category.save();
+        res.send('Category created!');
+    } catch (err) {
+        res.status(500).send('Error creating category');
+    }
+});
+
+app.put('/api/superadmin/categories/:id', requireSuperAdmin, async (req, res) => {
+    try {
+        await Category.findByIdAndUpdate(req.params.id, req.body);
+        res.send('Category updated!');
+    } catch (err) {
+        res.status(500).send('Error updating category');
+    }
+});
+
+app.delete('/api/superadmin/categories/:id', requireSuperAdmin, async (req, res) => {
+    try {
+        await Category.findByIdAndDelete(req.params.id);
+        res.send('Category deleted!');
+    } catch (err) {
+        res.status(500).send('Error deleting category');
+    }
+});
+
 app.put('/api/admin/orders/:id/status', requireAdmin, async (req, res) => {
     try {
         const { status } = req.body;
@@ -605,6 +861,34 @@ app.put('/api/admin/orders/:id/status', requireAdmin, async (req, res) => {
         res.send('Status updated!');
     } catch (err) {
         res.status(500).send('Error updating order status');
+    }
+});
+
+app.get('/api/admin/products/pending', requireAdmin, async (req, res) => {
+    try {
+        const products = await Product.find({ approvalStatus: 'pending' }).sort({ _id: -1 });
+        res.json(products);
+    } catch (err) {
+        res.status(500).send('Error fetching pending products');
+    }
+});
+
+app.put('/api/admin/products/:id/approve', requireAdmin, async (req, res) => {
+    try {
+        await Product.findByIdAndUpdate(req.params.id, { approvalStatus: 'approved', moderationNotes: '' });
+        res.send('Product approved!');
+    } catch (err) {
+        res.status(500).send('Error approving product');
+    }
+});
+
+app.put('/api/admin/products/:id/reject', requireAdmin, async (req, res) => {
+    try {
+        const { notes = '' } = req.body;
+        await Product.findByIdAndUpdate(req.params.id, { approvalStatus: 'rejected', moderationNotes: notes });
+        res.send('Product rejected!');
+    } catch (err) {
+        res.status(500).send('Error rejecting product');
     }
 });
 
@@ -623,10 +907,30 @@ app.get('/api/vendor/products', requireVendor, async (req, res) => {
 app.post('/api/vendor/add-product', requireVendor, async (req, res) => {
     try {
         const supplierName = req.session.companyName || `${req.session.firstName} ${req.session.lastName}`;
-        await new Product({ ...req.body, supplierName, vendorId: req.session.userId }).save();
+        await new Product({ ...req.body, supplierName, vendorId: req.session.userId, approvalStatus: 'pending' }).save();
         res.send('Product saved successfully!');
     } catch (err) {
         res.status(500).send('Error saving product: ' + err.message);
+    }
+});
+
+app.put('/api/vendor/orders/:orderId/item/:itemId/status', requireVendor, async (req, res) => {
+    try {
+        const { status } = req.body;
+        const order = await Order.findById(req.params.orderId);
+        if (!order) return res.status(404).send('Order not found');
+
+        const item = order.items.id(req.params.itemId);
+        if (!item) return res.status(404).send('Order item not found');
+        if (!item.vendorId || item.vendorId.toString() !== req.session.userId.toString()) {
+            return res.status(403).send('Cannot modify this item');
+        }
+
+        item.fulfillmentStatus = status;
+        await order.save();
+        res.send('Item fulfillment status updated!');
+    } catch (err) {
+        res.status(500).send('Error updating item status');
     }
 });
 
@@ -703,23 +1007,6 @@ app.get('/api/vendor/orders', requireVendor, async (req, res) => {
     }
 });
 
-app.post('/api/vendor/add-cpu', requireVendor, async (req, res) => {
-    try {
-        await new CPU(req.body).save();
-        res.send('CPU saved successfully!');
-    } catch (err) {
-        res.status(500).send('Error saving CPU: ' + err.message);
-    }
-});
-
-app.post('/api/vendor/add-gpu', requireVendor, async (req, res) => {
-    try {
-        await new GPU(req.body).save();
-        res.send('GPU saved successfully!');
-    } catch (err) {
-        res.status(500).send('Error saving GPU: ' + err.message);
-    }
-});
 
 
 /* ========================= START SERVER ========================= */

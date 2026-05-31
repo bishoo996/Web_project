@@ -19,17 +19,17 @@
             <li><a href="./category.html">Categories</a></li>
             <li><a href="./benchmark.html">Benchmark</a></li>
             <li><a href="./index.html#quiz">Quiz</a></li>
-            <li><a href="/admin.html" id="adminNavLink" style="display:none; color:#ffaa00; font-weight:bold;">Admin Portal</a></li>
-            <li><a href="/vendor.html" id="vendorNavLink" style="display:none; color:#ffaa00; font-weight:bold;">Vendor Panel</a></li>
+            <li><a href="/admin" id="adminNavLink" style="display:none; color:#ffaa00; font-weight:bold;">Admin Portal</a></li>
+            <li><a href="/vendor" id="vendorNavLink" style="display:none; color:#ffaa00; font-weight:bold;">Vendor Panel</a></li>
         </ul>
         <div class="nav-buttons">
             <button class="btn-icon" style="position:relative;" onclick="window.location.href='./cart.html'">
-                🛒
+                <span class="material-icons icon-inline" aria-hidden="true">shopping_cart</span>
                 <span id="navCartBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#7C3AED; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;"></span>
             </button>
             <button class="btn-primary" id="navSignIn" onclick="window.location.href='./sign_in.html'" style="display:none;">Sign In</button>
             <a class="btn-primary" id="navMyAccount" href="./account.html" style="display:none; text-decoration:none; align-items:center; gap:6px;">
-                👤 <span class="nav-user-name">Account</span>
+                <span class="material-icons icon-inline" aria-hidden="true">person</span> <span class="nav-user-name">Account</span>
             </a>
             <button class="btn-outline" id="navLogout" style="display:none;">Logout</button>
         </div>
@@ -41,13 +41,13 @@
 
     <!-- Auth banner (shown when not logged in) -->
     <div class="cart-auth-banner" id="cartAuthBanner" style="display:none;">
-        <p>🔒 <strong>Sign in</strong> to save your cart across devices and complete checkout.</p>
+        <p><span class="material-icons icon-inline" aria-hidden="true">lock</span> <strong>Sign in</strong> to save your cart across devices and complete checkout.</p>
         <a href="./sign_in.html" class="btn-primary" style="white-space:nowrap; text-decoration:none;">Sign In</a>
     </div>
 
     <!-- Title row -->
     <div class="cart-page-title" id="cartTitle">
-        🛒 Shopping Cart <span class="cart-count-badge" id="cartCountBadge">0</span>
+        <span class="material-icons icon-inline" aria-hidden="true">shopping_cart</span> Shopping Cart <span class="cart-count-badge" id="cartCountBadge">0</span>
     </div>
 
     <!-- Items column -->
@@ -81,10 +81,10 @@
             </div>
 
             <button class="btn-checkout" id="checkoutBtn">
-                🔐 Proceed to Checkout
+                <span class="material-icons icon-inline" aria-hidden="true">lock</span> Proceed to Checkout
             </button>
 
-            <div class="secure-badge">🔒 Secure checkout — SSL encrypted</div>
+            <div class="secure-badge"><span class="material-icons icon-inline" aria-hidden="true">lock</span> Secure checkout — SSL encrypted</div>
         </div>
     </div>
 </div>
@@ -103,10 +103,10 @@
         <div class="checkout-form-group">
             <label>Payment Method</label>
             <select class="checkout-input" id="checkoutPayment">
-                <option value="card">💳 Credit / Debit Card</option>
-                <option value="paypal">🅿️ PayPal</option>
-                <option value="bank">🏦 Bank Transfer</option>
-                <option value="cash">💵 Cash on Delivery</option>
+                <option value="card">Credit / Debit Card</option>
+                <option value="paypal">PayPal</option>
+                <option value="bank">Bank Transfer</option>
+                <option value="cash">Cash on Delivery</option>
             </select>
         </div>
 

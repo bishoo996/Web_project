@@ -3,34 +3,34 @@ const questions = [
     {
         question: "What will you mainly use your PC for?",
         options: [
-            { text: "Gaming", icon: "🎮", value: "gaming" },
-            { text: "Work / Office", icon: "💼", value: "office" },
-            { text: "Programming", icon: "💻", value: "programming" },
-            { text: "Content Creation", icon: "🎬", value: "creation" }
+            { text: "Gaming", icon: "sports_esports", value: "gaming" },
+            { text: "Work / Office", icon: "work", value: "office" },
+            { text: "Programming", icon: "laptop", value: "programming" },
+            { text: "Content Creation", icon: "movie", value: "creation" }
         ]
     },
     {
         question: "What is your budget?",
         options: [
-            { text: "Under $800", icon: "💰", value: "low" },
-            { text: "$800 - $1500", icon: "💵", value: "mid" },
-            { text: "$1500 - $2500", icon: "💸", value: "high" },
-            { text: "$2500+", icon: "🤑", value: "premium" }
+            { text: "Under $800", icon: "attach_money", value: "low" },
+            { text: "$800 - $1500", icon: "price_change", value: "mid" },
+            { text: "$1500 - $2500", icon: "trending_up", value: "high" },
+            { text: "$2500+", icon: "star", value: "premium" }
         ]
     },
     {
         question: "Do you prefer a desktop or laptop?",
         options: [
-            { text: "Desktop", icon: "🖥️", value: "desktop" },
-            { text: "Laptop", icon: "💻", value: "laptop" }
+            { text: "Desktop", icon: "desktop_windows", value: "desktop" },
+            { text: "Laptop", icon: "laptop", value: "laptop" }
         ]
     },
     {
         question: "How important is performance to you?",
         options: [
-            { text: "Basic is fine", icon: "🙂", value: "basic" },
-            { text: "Good balance", icon: "👍", value: "balanced" },
-            { text: "Maximum power", icon: "🚀", value: "max" }
+            { text: "Basic is fine", icon: "sentiment_satisfied", value: "basic" },
+            { text: "Good balance", icon: "thumb_up", value: "balanced" },
+            { text: "Maximum power", icon: "rocket_launch", value: "max" }
         ]
     }
 ];
@@ -52,7 +52,7 @@ function showQuestion() {
     q.options.forEach((option) => {
         optionsHTML += `
             <button class="quiz-option" onclick="selectAnswer('${option.value}')">
-                <span class="option-icon">${option.icon}</span>
+                <span class="option-icon material-icons" aria-hidden="true">${option.icon}</span>
                 ${option.text}
             </button>
         `;
@@ -87,7 +87,7 @@ function getRecommendation() {
 
     let recommendation = {
         title: "Your Perfect PC",
-        icon: "💻",
+        icon: "laptop",
         name: "",
         description: "",
         price: ""
@@ -98,40 +98,40 @@ function getRecommendation() {
             recommendation.name = form === 'laptop' ? "ROG Strix Scar 18" : "Alienware Aurora R16";
             recommendation.description = "RTX 4090 · Intel i9-14900K · 32GB DDR5 RAM";
             recommendation.price = "$3,499";
-            recommendation.icon = "🎮";
+            recommendation.icon = "sports_esports";
         } else if (budget === 'high') {
             recommendation.name = form === 'laptop' ? "Acer Predator Helios 16" : "Custom Gaming Rig Pro";
             recommendation.description = "RTX 4070 Ti · Ryzen 7 7700X · 32GB RAM";
             recommendation.price = "$1,899";
-            recommendation.icon = "🎮";
+            recommendation.icon = "sports_esports";
         } else {
             recommendation.name = form === 'laptop' ? "Lenovo Legion 5" : "Budget Gaming Desktop";
             recommendation.description = "RTX 4060 · Ryzen 5 7600 · 16GB RAM";
             recommendation.price = "$1,099";
-            recommendation.icon = "🎮";
+            recommendation.icon = "sports_esports";
         }
     } else if (usage === 'programming') {
         if (budget === 'premium' || budget === 'high') {
             recommendation.name = form === 'laptop' ? "MacBook Pro 14\" M3 Pro" : "Dev Workstation Pro";
             recommendation.description = "M3 Pro · 32GB RAM · 1TB SSD";
             recommendation.price = "$2,199";
-            recommendation.icon = "💻";
+            recommendation.icon = "laptop";
         } else {
             recommendation.name = form === 'laptop' ? "ThinkPad T14" : "Dev Starter Desktop";
             recommendation.description = "Intel i7-13700 · 16GB RAM · 512GB SSD";
             recommendation.price = "$1,099";
-            recommendation.icon = "💻";
+            recommendation.icon = "laptop";
         }
     } else if (usage === 'creation') {
         recommendation.name = form === 'laptop' ? "MacBook Pro 16\" M3 Max" : "Creator Workstation";
         recommendation.description = "M3 Max · 36GB RAM · 1TB SSD · ProRes Engine";
         recommendation.price = budget === 'premium' ? "$3,499" : "$2,499";
-        recommendation.icon = "🎬";
+        recommendation.icon = "movie";
     } else {
         recommendation.name = form === 'laptop' ? "HP Pavilion 15" : "Office Desktop Pro";
         recommendation.description = "Intel i5-13400 · 16GB RAM · 512GB SSD";
         recommendation.price = "$719";
-        recommendation.icon = "💼";
+        recommendation.icon = "work";
     }
 
     return recommendation;
@@ -146,7 +146,7 @@ function showResult() {
 
     quizQuestion.innerHTML = `
         <div class="quiz-result">
-            <div class="result-icon">${rec.icon}</div>
+            <div class="result-icon"><span class="material-icons icon-inline" aria-hidden="true">${rec.icon}</span></div>
             <h3>We Found Your Perfect Match!</h3>
             <p>Based on your answers, we recommend:</p>
             <div class="recommendation-card">
@@ -206,7 +206,7 @@ async function renderLiveProducts() {
                     <span class="badge-sale">${product.stockStatus.toUpperCase()}</span>
                     <div class="product-image">
                         <img src="${product.imageUrl || ''}" alt="${product.title}" onerror="this.style.display='none'">
-                        <span class="image-fallback">📦</span>
+                        <span class="image-fallback"><span class="material-icons icon-inline" aria-hidden="true">inventory_2</span></span>
                     </div>
                     <h3>${product.title}</h3>
                     <p class="product-specs">${product.manufacturer} | ${product.category.toUpperCase()}</p>
@@ -267,7 +267,7 @@ function openProductModal(productId) {
     modalBadge.className = 'modal-badge ' + (product.badgeType === 'limited' ? 'limited' : 'sale');
 
     // Rating
-    const stars = '⭐'.repeat(product.rating);
+    const stars = Array.from({ length: product.rating }, () => '<span class="material-icons" style="font-size:16px; vertical-align:middle;">star</span>').join('');
     modalRating.innerHTML = `${stars} <span>(${product.reviews} reviews)</span>`;
 
     // Full specs list

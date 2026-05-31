@@ -47,6 +47,7 @@
         <h2>Admin Panel</h2>
         <button class="nav-btn active" data-target="product-section">Add Product</button>
         <button class="nav-btn" data-target="inventory-section">Manage Inventory</button>
+        <button class="nav-btn" data-target="stats-section">Product Statistics</button>
         
         <button class="nav-btn" data-target="benchmark-section">Benchmark Engine</button>
 
@@ -98,7 +99,7 @@
                 </div>
 
                 <div id="magicLinkContainer" style="display: none; background: rgba(124, 58, 237, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #7C3AED;">
-                    <h4 style="color: #7C3AED; margin-top: 0;">🔗 Benchmark Magic Link</h4>
+                    <h4 style="color: #7C3AED; margin-top: 0;"><span class="material-icons icon-inline" aria-hidden="true">link</span> Benchmark Magic Link</h4>
                     <p style="font-size: 12px; color: #94A3B8; margin-bottom: 10px;">Link this retail box to its raw silicon so the Bottleneck Calculator works!</p>
                     <select id="prodBaselineId">
                         <option value="">-- Do Not Link (No Benchmark) --</option>
@@ -137,6 +138,45 @@
                     </thead>
                     <tbody id="inventoryTableBody">
                         </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="stats-section" class="content-section">
+            <h3 style="color: #ffaa00; margin-bottom: 30px;">Product Statistics</h3>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>Total Sales</h4>
+                    <div class="value" id="adminTotalSalesValue">0<span class="unit">units</span></div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Revenue</h4>
+                    <div class="value" id="adminTotalRevenueValue">$0<span class="unit"></span></div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Products</h4>
+                    <div class="value" id="adminTotalProductsValue">0<span class="unit">products</span></div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Orders</h4>
+                    <div class="value" id="adminTotalOrdersValue">0<span class="unit">orders</span></div>
+                </div>
+            </div>
+
+            <h4 style="color: #ffaa00; margin-bottom: 15px;">Sales by Product</h4>
+            <div style="background: #2a2a2a; border-radius: 8px; padding: 20px; overflow-x: auto;">
+                <table style="width: 100%; text-align: left; border-collapse: collapse; color: white;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #444;">
+                            <th style="padding: 12px; color: #94A3B8;">Product</th>
+                            <th style="padding: 12px; color: #94A3B8;">Units Sold</th>
+                            <th style="padding: 12px; color: #94A3B8;">Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminSalesTableBody">
+                        <tr><td colspan="3" style="text-align: center; padding: 20px; color: #94A3B8;">Loading statistics...</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>

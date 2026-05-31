@@ -117,7 +117,7 @@
             const added = data.action === 'added';
             showToast(added ? '❤️ Added to wishlist!' : '💔 Removed from wishlist', 'success');
             if (btnEl) {
-                btnEl.textContent = added ? '❤️' : '🤍';
+                btnEl.textContent = added ? '❤️ Remove from Wishlist' : 'Add to Wishlist';
                 btnEl.title       = added ? 'Remove from Wishlist' : 'Add to Wishlist';
             }
         } catch {

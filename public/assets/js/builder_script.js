@@ -16,21 +16,21 @@ const TOP3 = {
 
 
 const CORE = [
-  { id: 'cpu',         label: 'CPU',           sub: 'Processor',        emoji: '🔲', btn: 'Choose A CPU' },
-  { id: 'motherboard', label: 'Motherboard',   sub: 'Main Board',       emoji: '🖥️', btn: 'Choose A Motherboard' },
-  { id: 'gpu',         label: 'Video Card',    sub: 'GPU',              emoji: '🎮', btn: 'Choose A Video Card' },
-  { id: 'memory',      label: 'Memory',        sub: 'Slot 1',           emoji: '💾', btn: 'Choose Memory' },
-  { id: 'storage',     label: 'Storage',       sub: 'SSD / HDD',        emoji: '💿', btn: 'Choose Storage' },
-  { id: 'psu',         label: 'Power Supply',  sub: 'PSU',              emoji: '🔌', btn: 'Choose A Power Supply' },
-  { id: 'case',        label: 'Case',          sub: 'Enclosure',        emoji: '🗄️', btn: 'Choose A Case' },
-  { id: 'cooler',      label: 'CPU Cooler',    sub: 'Thermal Solution', emoji: '❄️', btn: 'Choose A CPU Cooler' },
+  { id: 'cpu',         label: 'CPU',           sub: 'Processor',        icon: 'memory', btn: 'Choose A CPU' },
+  { id: 'motherboard', label: 'Motherboard',   sub: 'Main Board',       icon: 'desktop_windows', btn: 'Choose A Motherboard' },
+  { id: 'gpu',         label: 'Video Card',    sub: 'GPU',              icon: 'sports_esports', btn: 'Choose A Video Card' },
+  { id: 'memory',      label: 'Memory',        sub: 'Slot 1',           icon: 'memory', btn: 'Choose Memory' },
+  { id: 'storage',     label: 'Storage',       sub: 'SSD / HDD',        icon: 'storage', btn: 'Choose Storage' },
+  { id: 'psu',         label: 'Power Supply',  sub: 'PSU',              icon: 'power', btn: 'Choose A Power Supply' },
+  { id: 'case',        label: 'Case',          sub: 'Enclosure',        icon: 'desktop_windows', btn: 'Choose A Case' },
+  { id: 'cooler',      label: 'CPU Cooler',    sub: 'Thermal Solution', icon: 'ac_unit', btn: 'Choose A CPU Cooler' },
 ];
 
 const PERIPH = [
-  { id: 'monitor',  label: 'Monitor',  sub: 'Display', emoji: '🖥',  btn: 'Choose A Monitor' },
-  { id: 'keyboard', label: 'Keyboard', sub: 'Input',   emoji: '⌨️', btn: 'Choose A Keyboard' },
-  { id: 'mouse',    label: 'Mouse',    sub: 'Input',   emoji: '🖱️', btn: 'Choose A Mouse' },
-  { id: 'headset',  label: 'Headset',  sub: 'Audio',   emoji: '🎧', btn: 'Choose A Headset' },
+  { id: 'monitor',  label: 'Monitor',  sub: 'Display', icon: 'desktop_mac',  btn: 'Choose A Monitor' },
+  { id: 'keyboard', label: 'Keyboard', sub: 'Input',   icon: 'keyboard', btn: 'Choose A Keyboard' },
+  { id: 'mouse',    label: 'Mouse',    sub: 'Input',   icon: 'mouse', btn: 'Choose A Mouse' },
+  { id: 'headset',  label: 'Headset',  sub: 'Audio',   icon: 'headset', btn: 'Choose A Headset' },
 ];
 
 
@@ -92,7 +92,7 @@ function previewCardHTML(compId, label) {
   } else {
     itemsHTML = items.slice(0, 3).map(item => `
       <a class="preview-item" href="${catUrl}">
-        <div class="preview-emoji">${item.emoji || '📦'}</div>
+        <div class="preview-emoji">${renderIcon(item.icon || 'inventory_2')}</div>
         <div class="preview-info">
           <div class="preview-name">${item.name}</div>
           <div class="preview-specs">${item.specs || ''}</div>
@@ -113,6 +113,10 @@ function previewCardHTML(compId, label) {
 
 const plusSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
 const cartSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>`;
+
+function renderIcon(iconName) {
+  return `<span class="material-icons icon-inline" aria-hidden="true">${iconName}</span>`;
+}
 
 function makeRow(comp, parts) {
   const sel     = parts[comp.id];
@@ -136,14 +140,14 @@ function makeRow(comp, parts) {
   if (sel) {
     const badges = (sel.badges||[]).map(b=>`<span class="badge badge-${b.color}">${b.text}</span>`).join('');
     tdSel.innerHTML = `<div class="part-cell">
-      <div class="part-thumb">${sel.emoji || comp.emoji}</div>
+      <div class="part-thumb">${renderIcon(sel.icon || comp.icon)}</div>
       <div class="part-info">
         <div class="part-name">${sel.name}</div>
         <div class="part-specs">${sel.specs || ''}</div>
         ${badges ? `<div class="part-badges">${badges}</div>` : ''}
         <div class="part-actions">
-          <a class="action-btn change" href="${catUrl}">✎ Change</a>
-          <button class="action-btn remove" data-id="${comp.id}">✕ Remove</button>
+          <a class="action-btn change" href="${catUrl}">${renderIcon('edit')} Change</a>
+          <button class="action-btn remove" data-id="${comp.id}">${renderIcon('close')} Remove</button>
         </div>
       </div>
     </div>`;
@@ -197,14 +201,14 @@ function makeMemory2Row(parts) {
   if (sel) {
     const badges = (sel.badges||[]).map(b=>`<span class="badge badge-${b.color}">${b.text}</span>`).join('');
     tdSel.innerHTML = `<div class="part-cell">
-      <div class="part-thumb sm">${sel.emoji || '💾'}</div>
+      <div class="part-thumb sm">${renderIcon(sel.icon || 'memory')}</div>
       <div class="part-info">
         <div class="part-name sm">${sel.name} <span class="badge badge-purple" style="margin-left:4px">Slot 2</span></div>
         <div class="part-specs">${sel.specs || ''}</div>
         ${badges ? `<div class="part-badges">${badges}</div>` : ''}
         <div class="part-actions">
-          <a class="action-btn change" href="${catUrl}">✎ Change</a>
-          <button class="action-btn remove" data-id="memory2">✕ Remove</button>
+          <a class="action-btn change" href="${catUrl}">${renderIcon('edit')} Change</a>
+          <button class="action-btn remove" data-id="memory2">${renderIcon('close')} Remove</button>
         </div>
       </div>
     </div>`;
@@ -261,21 +265,21 @@ let psuChip = '';
 if (psu && psuCapacity) {
   const loadPct = Math.round((totalWatts / psuCapacity) * 100);
   if (loadPct > 100) {
-    psuChip = `<span class="chip chip-error">✕ PSU Overloaded · ${totalWatts}W / ${psuCapacity}W (${loadPct}%)</span>`;
+    psuChip = `<span class="chip chip-error">PSU Overloaded · ${totalWatts}W / ${psuCapacity}W (${loadPct}%)</span>`;
   } else if (loadPct >= 80) {
-    psuChip = `<span class="chip chip-warn">⚠ PSU Near Limit · ${totalWatts}W / ${psuCapacity}W (${loadPct}%)</span>`;
+    psuChip = `<span class="chip chip-warn">PSU Near Limit · ${totalWatts}W / ${psuCapacity}W (${loadPct}%)</span>`;
   } else {
-    psuChip = `<span class="chip chip-ok">✓ PSU OK · ${totalWatts}W / ${psuCapacity}W (${loadPct}%)</span>`;
+    psuChip = `<span class="chip chip-ok">PSU OK · ${totalWatts}W / ${psuCapacity}W (${loadPct}%)</span>`;
   }
 } else if (totalWatts > 0 && !psu) {
-  psuChip = `<span class="chip chip-warn">⚠ No PSU · ${totalWatts}W needed</span>`;
+  psuChip = `<span class="chip chip-warn">No PSU · ${totalWatts}W needed</span>`;
 }
 
 chips.innerHTML = count === 0
   ? '<span class="chip chip-info">No parts selected</span>'
-  : `<span class="chip chip-ok">✓ ${count} Component${count !== 1 ? 's' : ''} Added</span>
+  : `<span class="chip chip-ok">${count} Component${count !== 1 ? 's' : ''} Added</span>
      <span class="chip chip-info">ATX Form Factor</span>
-     ${hasDual ? '<span class="chip chip-ok">✓ Dual Channel RAM</span>' : ''}
+     ${hasDual ? '<span class="chip chip-ok">Dual Channel RAM</span>' : ''}
      ${psuChip}`;
   document.querySelectorAll('.action-btn.remove').forEach(btn =>
     btn.addEventListener('click', () => {
@@ -284,7 +288,7 @@ chips.innerHTML = count === 0
       delete p[btn.dataset.id];
       if (btn.dataset.id === 'memory') delete p['memory2'];
       saveParts(p); render();
-      showToast(`✕ ${name} removed`);
+      showToast(`${name} removed`);
     })
   );
 

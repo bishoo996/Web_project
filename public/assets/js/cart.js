@@ -82,7 +82,7 @@ function renderCart() {
     // Actions bar
     const actionsHTML = `
         <div class="cart-actions-bar">
-            <button class="btn-clear-cart" onclick="clearCart()">🗑 Clear Cart</button>
+            <button class="btn-clear-cart" onclick="clearCart()"><span class="material-icons icon-inline" aria-hidden="true">delete</span> Clear Cart</button>
             <a class="btn-continue-shopping" href="./category.html">← Continue Shopping</a>
         </div>
     `;
@@ -97,13 +97,12 @@ function renderCartItem(item) {
     const productId = item.productId?._id || item.productId;
     const subtotal  = (item.price * item.quantity).toLocaleString('en-US', { minimumFractionDigits: 2 });
     const each      = item.price.toLocaleString('en-US', { minimumFractionDigits: 2 });
-    const emoji     = getCategoryEmoji(item.category);
 
     return `
         <div class="cart-item" id="cart-item-${productId}">
             <!-- Product cell -->
             <div class="cart-product-cell">
-                <div class="cart-product-img-ph">${emoji}</div>
+                <div class="cart-product-img-ph">${renderIcon(getCategoryIcon(item.category))}</div>
                 <div class="cart-product-info">
                     <div class="cart-product-brand">${escHtml(item.manufacturer || '')}</div>
                     <div class="cart-product-name">${escHtml(item.title)}</div>
@@ -138,7 +137,7 @@ function renderEmptyCart(message = '') {
     const itemsCol = document.getElementById('cartItemsCol');
     itemsCol.innerHTML = `
         <div class="cart-empty">
-            <div class="empty-icon">🛒</div>
+            <div class="empty-icon material-icons" aria-hidden="true">shopping_cart</div>
             <h3>Your cart is empty</h3>
             <p>${message || 'Looks like you haven\'t added anything yet.'}</p>
             <a href="./category.html" class="btn-primary" style="text-decoration:none;display:inline-block;padding:12px 28px;">Browse Products</a>
@@ -159,7 +158,7 @@ function updateSummary(items) {
     setEl('summarySubtotal', '$' + subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 }));
     setEl('summaryTax',      '$' + tax.toLocaleString('en-US',      { minimumFractionDigits: 2 }));
     setEl('summaryTotal',    '$' + total.toLocaleString('en-US',    { minimumFractionDigits: 2 }));
-    setEl('summaryShipping', subtotal > 500 ? 'Free 🎉' : '$29.99');
+    setEl('summaryShipping', subtotal > 500 ? 'Free' : '$29.99');
 }
 
 // ── Cart actions ──────────────────────────────────────────────────────────────
@@ -178,7 +177,7 @@ async function changeQty(productId, newQty) {
         if (!res.ok) throw new Error('update failed');
         await fetchAndRender();
     } catch {
-        showToast('❌ Failed to update quantity', 'error');
+        showToast('Failed to update quantity', 'error');
     }
 }
 
@@ -194,9 +193,9 @@ async function removeItem(productId) {
     try {
         await fetch(`/api/cart/item/${productId}`, { method: 'DELETE' });
         await fetchAndRender();
-        showToast('🗑 Item removed from cart', 'success');
+        showToast('Item removed from cart', 'success');
     } catch {
-        showToast('❌ Failed to remove item', 'error');
+        showToast('Failed to remove item', 'error');
         await fetchAndRender();   // re-render to restore
     }
 }
@@ -207,9 +206,9 @@ async function clearCart() {
         await fetch('/api/cart', { method: 'DELETE' });
         cartData = { items: [], total: 0 };
         renderCart();
-        showToast('🧹 Cart cleared', 'success');
+        showToast('Cart cleared', 'success');
     } catch {
-        showToast('❌ Failed to clear cart', 'error');
+        showToast('Failed to clear cart', 'error');
     }
 }
 
@@ -274,7 +273,7 @@ function initCheckoutModal() {
             if (window.updateCartBadge) window.updateCartBadge(0);
 
         } catch {
-            showToast('❌ Network error. Please try again.', 'error');
+            showToast('Network error. Please try again.', 'error');
             confirmBtn.disabled    = false;
             confirmBtn.textContent = 'Place Order';
         }
@@ -291,6 +290,10 @@ function showToast(message, type = 'success') {
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
+function renderIcon(iconName) {
+    return `<span class="material-icons icon-inline" aria-hidden="true">${iconName}</span>`;
+}
+
 function setEl(id, text) {
     const el = document.getElementById(id);
     if (el) el.textContent = text;
@@ -305,10 +308,20 @@ function escHtml(str) {
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function getCategoryEmoji(cat) {
-    const map = { cpu:'🧠', gpu:'🎮', ram:'💾', storage:'💿', motherboard:'🔌',
-                  psu:'⚡', case:'🖥️', cooling:'❄️', laptop:'💻', monitor:'🖥️' };
-    return map[(cat || '').toLowerCase()] || '📦';
+function getCategoryIcon(cat) {
+    const map = {
+        cpu: 'memory',
+        gpu: 'sports_esports',
+        ram: 'memory',
+        storage: 'storage',
+        motherboard: 'settings_input_component',
+        psu: 'power',
+        case: 'desktop_windows',
+        cooling: 'ac_unit',
+        laptop: 'laptop',
+        monitor: 'desktop_mac'
+    };
+    return map[(cat || '').toLowerCase()] || 'inventory_2';
 }
 
 // ── Expose addToCart globally ─────────────────────────────────────────────────
@@ -323,19 +336,19 @@ window.addToCart = async function(productId, quantity = 1) {
         const data = await res.json();
 
         if (res.status === 401) {
-            showToast('🔒 Please sign in to add items to cart', 'error');
+            showToast('Please sign in to add items to cart', 'error');
             return false;
         }
         if (!res.ok) {
-            showToast(data.error || '❌ Failed to add to cart', 'error');
+            showToast(data.error || 'Failed to add to cart', 'error');
             return false;
         }
 
         if (window.updateCartBadge) window.updateCartBadge(data.itemCount);
-        showToast('✅ Added to cart!', 'success');
+        showToast('Added to cart!', 'success');
         return true;
     } catch {
-        showToast('❌ Network error', 'error');
+        showToast('Network error', 'error');
         return false;
     }
 };

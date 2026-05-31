@@ -35,11 +35,26 @@ const productSchema = new mongoose.Schema({
         color: { type: String }
     }],
 
+    vendorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false
+    },
+
+    approvalStatus: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending'
+    },
+
+    moderationNotes: { type: String, default: '' },
+
     reviews: [{
         rating: { type: Number, required: true, min: 0, max: 5 },
         title: { type: String, required: true },
         comment: { type: String, required: true },
         author: { type: String, default: 'Anonymous' },
+        reviewerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
         date: { type: Date, default: Date.now }
     }],
 

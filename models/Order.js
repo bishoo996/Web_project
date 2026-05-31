@@ -7,7 +7,13 @@ const orderItemSchema = new mongoose.Schema({
     imageUrl:     { type: String, default: '' },
     price:        { type: Number, required: true },
     quantity:     { type: Number, required: true, min: 1 },
-    category:     { type: String, default: '' }
+    category:     { type: String, default: '' },
+    vendorId:     { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
+    fulfillmentStatus: {
+        type: String,
+        enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+        default: 'pending'
+    }
 }, { _id: false });
 
 const orderSchema = new mongoose.Schema({

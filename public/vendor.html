@@ -50,8 +50,6 @@
         <h2>Vendor Panel</h2>
         <button class="nav-btn active" data-target="product-section">Add Product</button>
         <button class="nav-btn" data-target="products-section">My Products</button>
-        
-        <button class="nav-btn" data-target="benchmark-section">Benchmark Engine</button>
 
         <hr style="border-color: #333; margin: 20px 0;">
         <button class="nav-btn" data-target="stats-section">Sales Statistics</button>
@@ -102,7 +100,7 @@
                 </div>
 
                 <div id="magicLinkContainer" style="display: none; background: rgba(124, 58, 237, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #7C3AED;">
-                    <h4 style="color: #7C3AED; margin-top: 0;">🔗 Benchmark Magic Link</h4>
+                    <h4 style="color: #7C3AED; margin-top: 0;"><span class="material-icons icon-inline" aria-hidden="true">link</span> Benchmark Magic Link</h4>
                     <p style="font-size: 12px; color: #94A3B8; margin-bottom: 10px;">Link this retail box to its raw silicon so the Bottleneck Calculator works!</p>
                     <select id="prodBaselineId">
                         <option value="">-- Do Not Link (No Benchmark) --</option>
@@ -147,54 +145,6 @@
                     <tbody id="productsTableBody">
                         </tbody>
                 </table>
-            </div>
-        </div>
-
-
-        <!-- BENCHMARK ENGINE SECTION -->
-        <div id="benchmark-section" class="content-section">
-            <h3 style="color: #ffaa00; margin-bottom: 20px;">The Benchmark Engine</h3>
-            <p style="font-size: 13px; color: #94A3B8; margin-bottom: 30px;">Add raw silicon data here. You can link your store products to these profiles later.</p>
-            
-            <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                <h4 style="color: #7C3AED; margin-top: 0;">1. Add Raw CPU</h4>
-                <form id="addCpuForm">
-                    <div class="grid-3">
-                        <div><label>Name</label> <input type="text" id="cpuName" required></div>
-                        <div><label>Brand</label> <select id="cpuBrand"><option>Intel</option><option>AMD</option></select></div>
-                        <div><label>Socket</label> <input type="text" id="cpuSocket" required></div>
-                    </div>
-                    <div class="grid-3">
-                        <div><label>MSRP ($)</label> <input type="number" id="cpuPrice" required></div>
-                        <div><label>Compute Score</label> <input type="number" id="cpuScore" required></div>
-                    </div>
-                    <button type="submit" class="login-btn" style="width: 100%; padding: 10px;">Save Raw CPU</button>
-                    <div id="cpuMessage" class="message-box"></div>
-                </form>
-            </div>
-
-            <div style="background: #2a2a2a; padding: 20px; border-radius: 8px;">
-                <h4 style="color: #7C3AED; margin-top: 0;">2. Add Raw GPU</h4>
-                <form id="addGpuForm">
-                    <div class="grid-3">
-                        <div><label>Name</label> <input type="text" id="gpuName" required></div>
-                        <div><label>Brand</label> <select id="gpuBrand"><option>NVIDIA</option><option>AMD</option><option>Intel</option></select></div>
-                        <div><label>VRAM (GB)</label> <input type="number" id="gpuVram" required></div>
-                    </div>
-                    <div class="grid-3">
-                        <div><label>MSRP ($)</label> <input type="number" id="gpuPrice" required></div>
-                        <div style="grid-column: span 2;">
-                            <label>Render Scores (1080p, 1440p, 4K)</label>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="number" id="gpu1080" placeholder="1080p" required>
-                                <input type="number" id="gpu1440" placeholder="1440p" required>
-                                <input type="number" id="gpu4k" placeholder="4K" required>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" class="login-btn" style="width: 100%; padding: 10px;">Save Raw GPU</button>
-                    <div id="gpuMessage" class="message-box"></div>
-                </form>
             </div>
         </div>
 

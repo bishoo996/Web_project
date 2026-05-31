@@ -11,7 +11,8 @@ const cartItemSchema = new mongoose.Schema({
     imageUrl: { type: String, default: '' },
     price:    { type: Number, required: true },
     quantity: { type: Number, required: true, min: 1, default: 1 },
-    category: { type: String, default: '' }
+    category: { type: String, default: '' },
+    vendorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false }
 }, { _id: false });
 
 const cartSchema = new mongoose.Schema({

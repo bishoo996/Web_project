@@ -62,7 +62,7 @@ async function loadProductDetails() {
                 <button class="btn-primary btn-large" style="width: 100%; margin-bottom: 10px;" onclick="CartWidget.add('${p._id}');">
                     Add to Cart
                 </button>
-                <button class="btn-outline btn-large" style="width: 100%;">
+                <button id="wishlistButton" class="btn-outline btn-large" style="width: 100%;" type="button">
                     Add to Wishlist
                 </button>
 
@@ -73,6 +73,35 @@ async function loadProductDetails() {
             </div>
         `;
         document.title = `Overclocked - ${p.title}`;
+
+        const wishlistBtn = document.getElementById('wishlistButton');
+        if (wishlistBtn) {
+            wishlistBtn.addEventListener('click', () => CartWidget.toggleWishlist(p._id, wishlistBtn));
+
+            try {
+                const meRes = await fetch('/api/me');
+                if (meRes.ok) {
+                    const me = await meRes.json();
+                    if (me.isLoggedIn) {
+                        const wRes = await fetch('/api/account/wishlist');
+                        if (wRes.ok) {
+                            const wishlist = await wRes.json();
+                            const inWishlist = wishlist.some(item => String(item._id) === String(p._id));
+                            wishlistBtn.textContent = inWishlist ? '❤️ Remove from Wishlist' : 'Add to Wishlist';
+                            wishlistBtn.title = inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist';
+                        }
+                    }
+                }
+            } catch (err) {
+                // ignore
+            }
+        }
+
+        try {
+            await CartWidget.trackView(p._id);
+        } catch (err) {
+            // ignore
+        }
 
         // 4. Draw the Reviews List at the bottom
         const reviewsContainer = document.getElementById('reviewsList');

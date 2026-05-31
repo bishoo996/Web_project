@@ -137,7 +137,7 @@ function renderGrid() {
 
         const imageHTML = p.imageUrl 
             ? `<img src="${p.imageUrl}" alt="${p.title}">` 
-            : `<span style="font-size: 50px;">📦</span>`;
+            : `<span style="font-size: 50px;"><span class="material-icons icon-inline" aria-hidden="true">inventory_2</span></span>`;
 
         // 2. Add stopPropagation to the Add to Cart button
         card.innerHTML = `

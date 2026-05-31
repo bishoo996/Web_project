@@ -12,6 +12,11 @@ async function checkAdminStatus() {
         currentUserRole = data.role;
         if (data.role === 'superadmin') {
             document.querySelector('.sidebar h2').textContent = 'Super Admin';
+        } else {
+            const addProductSection = document.getElementById('product-section');
+            const addProductButton = document.querySelector('.nav-btn[data-target="product-section"]');
+            if (addProductSection) addProductSection.style.display = 'none';
+            if (addProductButton) addProductButton.style.display = 'none';
         }
     } catch (error) { window.location.href = '/sign_in.html'; }
 }
@@ -209,6 +214,39 @@ async function loadInventory() {
     }
 }
 
+async function loadProductStats() {
+    try {
+        const response = await fetch('/api/admin/product-stats');
+        const stats = await response.json();
+
+        document.getElementById('adminTotalSalesValue').innerHTML = `${stats.totalSales}<span class="unit">units</span>`;
+        document.getElementById('adminTotalRevenueValue').innerHTML = `$${stats.totalRevenue.toFixed(2)}<span class="unit"></span>`;
+        document.getElementById('adminTotalProductsValue').innerHTML = `${stats.totalProducts}<span class="unit">products</span>`;
+        document.getElementById('adminTotalOrdersValue').innerHTML = `${stats.totalOrders}<span class="unit">orders</span>`;
+
+        const tbody = document.getElementById('adminSalesTableBody');
+        tbody.innerHTML = '';
+
+        if (Object.keys(stats.salesByProduct).length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 20px; color: #94A3B8;">No sales yet.</td></tr>`;
+            return;
+        }
+
+        Object.keys(stats.salesByProduct).forEach(productName => {
+            const sale = stats.salesByProduct[productName];
+            tbody.innerHTML += `
+                <tr style="border-bottom: 1px solid #333;">
+                    <td style="padding: 12px; font-weight: bold;">${productName}</td>
+                    <td style="padding: 12px;">${sale.quantity} units</td>
+                    <td style="padding: 12px; color: #10B981; font-weight: bold;">$${sale.revenue.toFixed(2)}</td>
+                </tr>
+            `;
+        });
+    } catch (err) {
+        console.error('Error loading product stats:', err);
+    }
+}
+
 async function deleteProduct(id) {
     if (!confirm('Are you absolutely sure you want to delete this product?')) return;
     
@@ -272,6 +310,7 @@ document.getElementById('addGameForm').addEventListener('submit', (e) => {
 // Load inventory on page load and on tab click
 loadInventory();
 document.querySelector('[data-target="inventory-section"]').addEventListener('click', loadInventory);
+document.querySelector('[data-target="stats-section"]').addEventListener('click', loadProductStats);
 
 
 // ==========================================

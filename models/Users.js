@@ -28,8 +28,10 @@ const userSchema = new mongoose.Schema({
 
     phoneNumber: {type: String},
 
-    address: {type: String}
+    address: {type: String},
 
+    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    recentlyViewed: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }]
 
 }, { timestamps: true }); //bet add createdAt w updatedAt automatically
 
