@@ -18,20 +18,19 @@
             <li><a href="./builder_index.html">Build Your Own PC</a></li>
             <li><a href="./category.html">Categories</a></li>
             <li><a href="./benchmark.html">Benchmark</a></li>
-            <li><a href="./index.html#quiz">Quiz</a></li>
             <li><a href="/admin" id="adminNavLink" style="display:none; color:#ffaa00; font-weight:bold;">Admin Portal</a></li>
             <li><a href="/vendor" id="vendorNavLink" style="display:none; color:#ffaa00; font-weight:bold;">Vendor Panel</a></li>
         </ul>
         <div class="nav-buttons">
             <!-- Cart -->
             <button class="btn-icon" style="position:relative;" onclick="window.location.href='./cart.html'">
-                🛒
+                <span class="material-icons icon-inline" aria-hidden="true">shopping_cart</span>
                 <span id="navCartBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#7C3AED; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;"></span>
             </button>
             <!-- Auth-aware buttons -->
             <button class="btn-primary" id="navSignIn" onclick="window.location.href='./sign_in.html'" style="display:none;">Sign In</button>
             <a class="btn-primary" id="navMyAccount" href="./account.html" style="display:none; text-decoration:none; align-items:center; gap:6px;">
-                👤 <span class="nav-user-name">Account</span>
+                <span class="material-icons icon-inline" aria-hidden="true">person</span> <span class="nav-user-name">Account</span>
             </a>
             <button class="btn-outline" id="navLogout" style="display:none;">Logout</button>
         </div>
@@ -52,29 +51,29 @@
 
         <nav class="account-nav">
             <button class="account-nav-item active" data-section="overview">
-                <span class="nav-icon">🏠</span> Overview
+                <span class="nav-icon"><span class="material-icons icon-inline">home</span></span> Overview
             </button>
             <button class="account-nav-item" data-section="profile">
-                <span class="nav-icon">👤</span> Edit Profile
+                <span class="nav-icon"><span class="material-icons icon-inline">person</span></span> Edit Profile
             </button>
             <button class="account-nav-item" data-section="orders">
-                <span class="nav-icon">📦</span> My Orders
+                <span class="nav-icon"><span class="material-icons icon-inline">inventory_2</span></span> My Orders
             </button>
             <button class="account-nav-item" data-section="reviews">
-                <span class="nav-icon">⭐</span> My Reviews
+                <span class="nav-icon"><span class="material-icons icon-inline">star</span></span> My Reviews
             </button>
             <button class="account-nav-item" data-section="wishlist">
-                <span class="nav-icon">❤️</span> Wishlist
+                <span class="nav-icon"><span class="material-icons icon-inline">favorite</span></span> Wishlist
             </button>
             <button class="account-nav-item" data-section="recent">
-                <span class="nav-icon">🕐</span> Recently Viewed
+                <span class="nav-icon"><span class="material-icons icon-inline">history</span></span> Recently Viewed
             </button>
             <div class="account-nav-divider"></div>
             <button class="account-nav-item" data-section="security">
-                <span class="nav-icon">🔒</span> Change Password
+                <span class="nav-icon"><span class="material-icons icon-inline">lock</span></span> Change Password
             </button>
             <button class="account-nav-item" id="sidebarLogout" style="color:#EF4444;">
-                <span class="nav-icon">🚪</span> Logout
+                <span class="nav-icon"><span class="material-icons icon-inline">logout</span></span> Logout
             </button>
         </nav>
     </aside>
@@ -85,7 +84,7 @@
         <!-- OVERVIEW -->
         <section class="account-section active" id="section-overview">
             <div class="section-header-row">
-                <h2 class="section-title"><span class="title-icon">🏠</span> Overview</h2>
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">home</span></span> Overview</h2>
             </div>
 
             <!-- Stats strip -->
@@ -144,7 +143,7 @@
                 <h4>Last Order</h4>
                 <div id="lastOrderSnap">
                     <div class="empty-state" style="padding:20px;">
-                        <div class="empty-icon">📭</div>
+                        <div class="empty-icon"><span class="material-icons">inbox</span></div>
                         <p>No orders yet.</p>
                     </div>
                 </div>
@@ -154,7 +153,7 @@
         <!-- PROFILE EDIT -->
         <section class="account-section" id="section-profile">
             <div class="section-header-row">
-                <h2 class="section-title"><span class="title-icon">👤</span> Edit Profile</h2>
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">person</span></span> Edit Profile</h2>
             </div>
 
             <div class="account-card">
@@ -193,7 +192,7 @@
         <!-- ORDERS -->
         <section class="account-section" id="section-orders">
             <div class="section-header-row">
-                <h2 class="section-title"><span class="title-icon">📦</span> My Orders</h2>
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">inventory_2</span></span> My Orders</h2>
             </div>
             <div id="ordersContainer">
                 <div class="empty-state">
@@ -208,11 +207,11 @@
         <!-- REVIEWS -->
         <section class="account-section" id="section-reviews">
             <div class="section-header-row">
-                <h2 class="section-title"><span class="title-icon">⭐</span> My Reviews</h2>
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">star</span></span> My Reviews</h2>
             </div>
             <div id="reviewsContainer">
                 <div class="empty-state">
-                    <div class="empty-icon">✍️</div>
+                    <div class="empty-icon"><span class="material-icons">rate_review</span></div>
                     <h4>No reviews yet</h4>
                     <p>Share your thoughts on products you've purchased.</p>
                 </div>
@@ -222,11 +221,11 @@
         <!-- WISHLIST -->
         <section class="account-section" id="section-wishlist">
             <div class="section-header-row">
-                <h2 class="section-title"><span class="title-icon">❤️</span> Wishlist</h2>
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">favorite</span></span> Wishlist</h2>
             </div>
             <div id="wishlistContainer">
                 <div class="empty-state">
-                    <div class="empty-icon">🤍</div>
+                    <div class="empty-icon"><span class="material-icons">favorite_border</span></div>
                     <h4>Your wishlist is empty</h4>
                     <p>Save products you love by clicking "Add to Wishlist" on any product page.</p>
                     <a href="./category.html" class="btn-account-ghost">Explore Products</a>
@@ -237,11 +236,11 @@
         <!-- RECENTLY VIEWED -->
         <section class="account-section" id="section-recent">
             <div class="section-header-row">
-                <h2 class="section-title"><span class="title-icon">🕐</span> Recently Viewed</h2>
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">history</span></span> Recently Viewed</h2>
             </div>
             <div id="recentContainer">
                 <div class="empty-state">
-                    <div class="empty-icon">👀</div>
+                    <div class="empty-icon"><span class="material-icons">visibility</span></div>
                     <h4>Nothing viewed yet</h4>
                     <p>Products you browse will appear here automatically.</p>
                 </div>
@@ -251,7 +250,7 @@
         <!-- CHANGE PASSWORD -->
         <section class="account-section" id="section-security">
             <div class="section-header-row">
-                <h2 class="section-title"><span class="title-icon">🔒</span> Change Password</h2>
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">lock</span></span> Change Password</h2>
             </div>
 
             <div class="account-card">
@@ -315,9 +314,9 @@
         <div class="footer-section">
             <h4>Follow Us</h4>
             <div class="social-icons">
-                <a href="#">📘 Facebook</a>
-                <a href="#">🐦 Twitter</a>
-                <a href="#">📷 Instagram</a>
+                <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="vertical-align:middle;margin-right:5px;"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>Facebook</a>
+                <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="vertical-align:middle;margin-right:5px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X</a>
+                <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle;margin-right:5px;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>Instagram</a>
             </div>
         </div>
     </div>
