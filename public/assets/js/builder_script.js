@@ -21,6 +21,7 @@ const _ICON_MAP = {
   mouse: 'mouse', headset: 'headset'
 };
 
+
 async function loadPreviewProducts() {
   try {
     const res = await fetch('/api/products');
@@ -321,12 +322,33 @@ chips.innerHTML = count === 0
      ${hasDual ? '<span class="chip chip-ok">Dual Channel RAM</span>' : ''}
      ${psuChip}`;
   document.querySelectorAll('.action-btn.remove').forEach(btn =>
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       const p    = getParts();
-      const name = p[btn.dataset.id]?.name || 'Part';
+      const part = p[btn.dataset.id];
+      const name = part?.name || 'Part';
+      const productId = part?.productId;
+      
       delete p[btn.dataset.id];
       if (btn.dataset.id === 'memory') delete p['memory2'];
       saveParts(p); render();
+      
+      // Also remove from cart API and update badge
+      if (productId) {
+        try {
+          await fetch(`/api/cart/item/${productId}`, { method: 'DELETE' });
+          // Update cart badge
+          const cartRes = await fetch('/api/cart/count');
+          if (cartRes.ok) {
+            const { count } = await cartRes.json();
+            if (typeof window.updateCartBadge === 'function') {
+              window.updateCartBadge(count);
+            }
+          }
+        } catch (err) {
+          console.error('Failed to remove from cart:', err);
+        }
+      }
+      
       showToast(`${name} removed`);
     })
   );

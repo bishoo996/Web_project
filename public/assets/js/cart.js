@@ -9,6 +9,33 @@ let cartData    = { items: [], total: 0 };
 let isLoggedIn  = false;
 let taxRate     = 0.08;   // 8% estimated tax
 
+const REQUIRED_BUILD_CATEGORIES = ['cpu', 'gpu', 'motherboard', 'memory', 'storage', 'psu', 'case', 'cooler'];
+const REQUIRED_CORE_CATEGORIES = ['cpu', 'gpu', 'motherboard', 'memory', 'storage', 'psu'];
+const REQUIRED_CORE_LABELS = {
+    cpu: 'CPU', gpu: 'GPU', motherboard: 'Motherboard',
+    memory: 'Memory', storage: 'Storage', psu: 'Power Supply'
+};
+
+function getCartCategories() {
+    return new Set((cartData.items || []).map(item => String(item.category || '').toLowerCase()));
+}
+
+function isBuildOrder(categories) {
+    return REQUIRED_BUILD_CATEGORIES.some(cat => categories.has(cat));
+}
+
+function isBuilderFlowCart() {
+    return sessionStorage.getItem('builderFlowCart') === 'true';
+}
+
+function getMissingBuildComponents(categories) {
+    return REQUIRED_CORE_CATEGORIES.filter(cat => !categories.has(cat));
+}
+
+function formatMissingBuildComponents(categories) {
+    return getMissingBuildComponents(categories).map(id => REQUIRED_CORE_LABELS[id] || id);
+}
+
 // ── Boot ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
     await initCart();
@@ -21,7 +48,7 @@ async function initCart() {
         const res  = await fetch('/api/me');
         const data = await res.json();
         isLoggedIn = !!data.isLoggedIn;
-    } catch { isLoggedIn = false; }
+    } catch (err) { console.error('Error checking auth state', err); isLoggedIn = false; }
 
     if (!isLoggedIn) {
         // Show auth banner, hide summary
@@ -39,7 +66,8 @@ async function fetchAndRender() {
         const res = await fetch('/api/cart');
         if (!res.ok) throw new Error('fetch failed');
         cartData = await res.json();
-    } catch {
+    } catch (err) {
+        console.error('Failed to fetch cart data', err);
         cartData = { items: [], total: 0 };
     }
     renderCart();
@@ -61,6 +89,7 @@ function renderCart() {
     if (items.length === 0) {
         summaryCol.style.display = 'none';
         renderEmptyCart();
+        sessionStorage.removeItem('builderFlowCart');
         return;
     }
 
@@ -177,7 +206,8 @@ async function changeQty(productId, newQty) {
         });
         if (!res.ok) throw new Error('update failed');
         await fetchAndRender();
-    } catch {
+    } catch (err) {
+        console.error('Failed to update quantity', err);
         showToast('Failed to update quantity', 'error');
     }
 }
@@ -193,9 +223,28 @@ async function removeItem(productId) {
 
     try {
         await fetch(`/api/cart/item/${productId}`, { method: 'DELETE' });
+        
+        // Sync removal with builder if part exists
+        try {
+            const parts = JSON.parse(sessionStorage.getItem('builderParts') || '{}');
+            let removed = false;
+            Object.keys(parts).forEach(key => {
+                if (parts[key].productId === productId) {
+                    delete parts[key];
+                    removed = true;
+                }
+            });
+            if (removed) {
+                sessionStorage.setItem('builderParts', JSON.stringify(parts));
+            }
+        } catch (err) {
+            console.error('Failed to sync builder removal', err);
+        }
+        
         await fetchAndRender();
         showToast('Item removed from cart', 'success');
-    } catch {
+    } catch (err) {
+        console.error('Failed to remove item', err);
         showToast('Failed to remove item', 'error');
         await fetchAndRender();   // re-render to restore
     }
@@ -208,7 +257,8 @@ async function clearCart() {
         cartData = { items: [], total: 0 };
         renderCart();
         showToast('Cart cleared', 'success');
-    } catch {
+    } catch (err) {
+        console.error('Failed to clear cart', err);
         showToast('Failed to clear cart', 'error');
     }
 }
@@ -232,6 +282,13 @@ function initCheckoutModal() {
             return;
         }
 
+        const categories = getCartCategories();
+        const missing = formatMissingBuildComponents(categories);
+        if (isBuilderFlowCart() && isBuildOrder(categories) && missing.length > 0) {
+            showBuildWarning(missing);
+            return;
+        }
+
         // Pre-fill address if user has one stored
         modal.classList.add('show');
     });
@@ -240,6 +297,28 @@ function initCheckoutModal() {
 
     modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('show');
+    });
+
+    const buildWarningOverlay = document.getElementById('buildWarningOverlay');
+    const buildWarningCancel = document.getElementById('buildWarningCancel');
+    const buildWarningConfirm = document.getElementById('buildWarningConfirm');
+    const buildWarningList = document.getElementById('buildWarningList');
+
+    const hideBuildWarning = () => buildWarningOverlay?.classList.remove('show');
+    const showBuildWarning = (missing) => {
+        if (!buildWarningOverlay || !buildWarningList) return;
+        buildWarningList.innerHTML = missing.map(part => `<li>${part}</li>`).join('');
+        buildWarningOverlay.classList.add('show');
+    };
+
+    buildWarningCancel?.addEventListener('click', () => hideBuildWarning());
+    buildWarningOverlay?.addEventListener('click', (e) => {
+        if (e.target === buildWarningOverlay) hideBuildWarning();
+    });
+
+    buildWarningConfirm?.addEventListener('click', () => {
+        hideBuildWarning();
+        modal.classList.add('show');
     });
 
     confirmBtn?.addEventListener('click', async () => {
@@ -272,9 +351,10 @@ function initCheckoutModal() {
             // Clear local cart state
             cartData = { items: [], total: 0 };
             if (window.updateCartBadge) window.updateCartBadge(0);
-
-        } catch {
-            showToast('Network error. Please try again.', 'error');
+            sessionStorage.removeItem('builderFlowCart');
+        } catch (err) {
+            showToast('Checkout failed. Please try again.', 'error');
+        } finally {
             confirmBtn.disabled    = false;
             confirmBtn.textContent = 'Place Order';
         }
@@ -348,7 +428,8 @@ window.addToCart = async function(productId, quantity = 1) {
         if (window.updateCartBadge) window.updateCartBadge(data.itemCount);
         showToast('Added to cart!', 'success');
         return true;
-    } catch {
+    } catch (err) {
+        console.error('Failed to add item to cart', err);
         showToast('Network error', 'error');
         return false;
     }

@@ -121,6 +121,24 @@
     </div>
 </div>
 
+<!-- ═══════════════════════ BUILD WARNING POPUP ═══════════════════════ -->
+<div class="checkout-modal-overlay build-warning-overlay" id="buildWarningOverlay">
+    <div class="checkout-modal">
+        <h3>Build Incomplete</h3>
+        <p>Your cart appears to be part of a PC build but is missing essential components needed to boot.</p>
+
+        <div class="warning-parts-list">
+            <strong>Missing parts:</strong>
+            <ul id="buildWarningList"></ul>
+        </div>
+
+        <div class="checkout-btn-row">
+            <button class="btn-checkout-cancel" id="buildWarningCancel">Cancel</button>
+            <button class="btn-checkout-confirm" id="buildWarningConfirm">Continue anyway</button>
+        </div>
+    </div>
+</div>
+
 <!-- ═══════════════════════ SUCCESS OVERLAY ═══════════════════════ -->
 <div class="order-success-overlay" id="orderSuccessOverlay">
     <div class="order-success-box">

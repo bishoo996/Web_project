@@ -213,7 +213,7 @@ async function renderLiveProducts() {
                     <div class="product-price">
                         <span class="new-price">$${product.price}</span>
                     </div>
-                    <button class="btn-primary btn-full" onclick="event.stopPropagation(); CartWidget.add('${product._id}');">
+                    <button class="btn-primary btn-full" onclick="event.stopPropagation(); CartWidget.add('${product._id}', 1, event);">
                         Add to Cart
                     </button>
                 </div>

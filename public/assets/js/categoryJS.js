@@ -159,7 +159,7 @@ function renderGrid() {
             <div class="card-price">$${p.price.toFixed(2)}</div>
             <div class="card-stock ${stockClass}">${stockText}</div>
             
-            <button class="card-btn" onclick="event.stopPropagation(); CartWidget.add('${p._id}');">Add to Cart</button>
+            <button class="card-btn" onclick="event.stopPropagation(); CartWidget.addFromBuilder('${p._id}', '${_componentId}', event);">Add to Cart</button>
         `;
 
         grid.appendChild(card);

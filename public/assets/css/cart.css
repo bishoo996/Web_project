@@ -374,6 +374,33 @@
     transition: transform 0.25s;
 }
 
+.build-warning-overlay .checkout-modal {
+    max-width: 520px;
+}
+
+.build-warning-overlay h3 {
+    color: var(--warning);
+}
+
+.warning-parts-list {
+    background: rgba(245,158,11,0.08);
+    border: 1px dashed rgba(245,158,11,0.4);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: var(--text-color);
+    margin-bottom: 18px;
+    font-size: 13px;
+}
+
+.warning-parts-list ul {
+    margin: 10px 0 0;
+    padding-left: 1.3rem;
+}
+
+.warning-parts-list li {
+    margin-bottom: 6px;
+}
+
 .checkout-modal-overlay.show .checkout-modal {
     transform: translateY(0);
 }

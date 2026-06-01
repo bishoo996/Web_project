@@ -74,7 +74,7 @@ async function loadProductDetails() {
                 </div>
 
                 ${addToBuilderHTML}
-                <button class="btn-primary btn-large" style="width: 100%; margin-bottom: 10px;" onclick="CartWidget.add('${p._id}');">
+                <button class="btn-primary btn-large" style="width: 100%; margin-bottom: 10px;" onclick="CartWidget.add('${p._id}', 1, event);">
                     Add to Cart
                 </button>
                 <button id="wishlistButton" class="btn-outline btn-large" style="width: 100%;" type="button">
