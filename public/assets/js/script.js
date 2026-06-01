@@ -194,16 +194,25 @@ const offersGrid = document.getElementById('offersGrid');
 // ==========================================
 async function renderLiveProducts() {
     const offersGrid = document.getElementById('offersGrid');
-    
+    const featuredCategory = 'cpu';
+    const featuredUrl = `/api/products/${featuredCategory}`;
+
     try {
-        const response = await fetch('/api/products'); 
-        const products = await response.json();
+        let response = await fetch(featuredUrl);
+        let products = await response.json();
+
+        if (!Array.isArray(products) || products.length === 0) {
+            response = await fetch('/api/products');
+            products = await response.json();
+        }
+
+        products = Array.isArray(products) ? products.slice(0, 8) : [];
 
         let html = '';
         products.forEach(product => {
             html += `
                 <div class="product-card" style="cursor: pointer;" onclick="window.location.href='product.html?id=${product._id}'">
-                    <span class="badge-sale">${product.stockStatus.toUpperCase()}</span>
+                    <span class="badge-sale">${(product.stockStatus || 'IN').toString().toUpperCase()}</span>
                     <div class="product-image">
                         <img src="${product.imageUrl || ''}" alt="${product.title}" onerror="this.style.display='none'">
                         <span class="image-fallback"><span class="material-icons icon-inline" aria-hidden="true">inventory_2</span></span>
@@ -222,7 +231,8 @@ async function renderLiveProducts() {
 
         offersGrid.innerHTML = html;
     } catch (error) {
-        console.error('Failed to load home products', error);
+        console.error('Failed to load featured category products', error);
+        offersGrid.innerHTML = '<p class="error-message">Unable to load featured products right now.</p>';
     }
 }
 
@@ -349,7 +359,6 @@ document.querySelectorAll('.banner-buttons .btn-outline').forEach(btn => {
 });
 
 // START
-renderProducts();
 showQuestion();
 
 

@@ -187,7 +187,10 @@ app.get('/api/product/:id', async (req, res) => {
 
 app.get('/api/products/:categoryName', async (req, res) => {
     try{
-        const products = await Product.find({ category: req.params.categoryName, approvalStatus: 'approved' })
+        const products = await Product.find({
+            category: req.params.categoryName,
+            approvalStatus: { $ne: 'rejected' }
+        })
             .populate('baselineHardwareId');
 
         res.json(products);
@@ -201,7 +204,7 @@ app.get('/api/products/:categoryName', async (req, res) => {
 
 app.get('/api/products', async (req, res) => {
     try {
-        const products = await Product.find({ approvalStatus: 'approved' }).limit(8);
+        const products = await Product.find({ approvalStatus: { $ne: 'rejected' } }).limit(8);
         res.json(products);
     } catch (err) {
         console.error('Error fetching all products:', err);
