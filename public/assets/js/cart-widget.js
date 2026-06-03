@@ -297,7 +297,9 @@
                             try { sessionStorage.setItem('pendingPart', JSON.stringify({ componentId, part: {
                                 productId: productId, name: product.title, specs: (product.specs||[]).slice(0,3).map(s=>`${s.k}: ${s.v}`).join(' · '),
                                 badges: product.badges||[], icon: _getBuilderIcon(componentId)||_getBuilderIcon(product.category)||'inventory_2', watts:null, bench:null,
-                                avail: product.stockStatus||'in', price:`$${product.price.toFixed(2)}`, formFactor:(product.specs||[]).find(s=> (s.k||'').toLowerCase().includes('form'))?.v||null
+                                avail: product.stockStatus||'in', price:`$${product.price.toFixed(2)}`, formFactor:(product.specs||[]).find(s=> (s.k||'').toLowerCase().includes('form'))?.v||null,
+                                socket:(product.specs||[]).find(s=>(s.k||'').toLowerCase()==='socket')?.v||null,
+                                memType:(product.specs||[]).find(s=>(s.k||'').toLowerCase().includes('memory type'))?.v||null
                             } })); sessionStorage.setItem('builderFlowCart','true'); } catch(_){}
                             const rc = await fetch('/api/cart'); if (rc.ok) { const d = await rc.json(); updateBadge((d.items||[]).reduce((s,i)=>s+(i.quantity||0),0)); }
                             showToast('✅ Added to cart', 'success');
@@ -310,7 +312,9 @@
                             try { sessionStorage.setItem('pendingPart', JSON.stringify({ componentId, part: {
                                 productId: productId, name: product.title, specs: (product.specs||[]).slice(0,3).map(s=>`${s.k}: ${s.v}`).join(' · '),
                                 badges: product.badges||[], icon: _getBuilderIcon(componentId)||_getBuilderIcon(product.category)||'inventory_2', watts:null, bench:null,
-                                avail: product.stockStatus||'in', price:`$${product.price.toFixed(2)}`, formFactor:(product.specs||[]).find(s=> (s.k||'').toLowerCase().includes('form'))?.v||null
+                                avail: product.stockStatus||'in', price:`$${product.price.toFixed(2)}`, formFactor:(product.specs||[]).find(s=> (s.k||'').toLowerCase().includes('form'))?.v||null,
+                                socket:(product.specs||[]).find(s=>(s.k||'').toLowerCase()==='socket')?.v||null,
+                                memType:(product.specs||[]).find(s=>(s.k||'').toLowerCase().includes('memory type'))?.v||null
                             } })); sessionStorage.setItem('builderFlowCart','true'); } catch(_){}
                             const rc = await fetch('/api/cart'); if (rc.ok) { const d = await rc.json(); updateBadge((d.items||[]).reduce((s,i)=>s+(i.quantity||0),0)); }
                             showToast('✅ Quantity set to 2', 'success');
@@ -355,7 +359,9 @@
                                         bench: null,
                                         avail: product.stockStatus || 'in',
                                         price: `$${product.price.toFixed(2)}`,
-                                        formFactor: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('form'))?.v || null
+                                        formFactor: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('form'))?.v || null,
+                                        socket: (product.specs || []).find(s => (s.k || '').toLowerCase() === 'socket')?.v || null,
+                                        memType: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('memory type'))?.v || null
                                     };
                                     sessionStorage.setItem('pendingPart', JSON.stringify({ componentId, part }));
                                     sessionStorage.setItem('builderFlowCart', 'true');
@@ -378,7 +384,9 @@
                                         bench: null,
                                         avail: product.stockStatus || 'in',
                                         price: `$${product.price.toFixed(2)}`,
-                                        formFactor: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('form'))?.v || null
+                                        formFactor: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('form'))?.v || null,
+                                        socket: (product.specs || []).find(s => (s.k || '').toLowerCase() === 'socket')?.v || null,
+                                        memType: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('memory type'))?.v || null
                                     };
                                     sessionStorage.setItem('pendingPart', JSON.stringify({ componentId, part }));
                                     sessionStorage.setItem('builderFlowCart', 'true');
@@ -435,7 +443,9 @@
                 bench: null,
                 avail: product.stockStatus || 'in',
                 price: `$${product.price.toFixed(2)}`,
-                formFactor: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('form'))?.v || null
+                formFactor: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('form'))?.v || null,
+                socket: (product.specs || []).find(s => (s.k || '').toLowerCase() === 'socket')?.v || null,
+                memType: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('memory type'))?.v || null
             };
 
             // 4. Store pending part in sessionStorage for builder to pick up

@@ -52,9 +52,12 @@ body {
 .chip { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
 .chip-ok   { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
 .chip-warn { background: rgba(245,158,11,0.12);  color: var(--warning); border: 1px solid rgba(245,158,11,0.3); }
-.chip-info { background: rgba(59,130,246,0.12);  color: var(--accent-cyan); border: 1px solid rgba(59,130,246,0.25); }
+.chip-info  { background: rgba(59,130,246,0.12);  color: var(--accent-cyan); border: 1px solid rgba(59,130,246,0.25); }
+.chip-error { background: rgba(239,68,68,0.12);   color: #f87171;            border: 1px solid rgba(239,68,68,0.3); }
 .compat-spacer { flex: 1; }
 .compat-status { display: flex; align-items: center; gap: 6px; color: var(--success); font-weight: 600; font-size: 13px; }
+.compat-total { font-weight: 700; color: var(--accent); margin-left: 4px; }
+.compat-total:empty { display: none; }
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); box-shadow: 0 0 6px var(--success); animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 

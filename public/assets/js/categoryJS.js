@@ -8,6 +8,91 @@ const _urlParams = new URLSearchParams(window.location.search);
 const _fromBuilder = _urlParams.get('from') === 'builder';
 const _componentId = (_urlParams.get('category') || '').toLowerCase();
 
+// ==========================================
+// COMPARE FEATURE
+// ==========================================
+
+function getCompareList() {
+    try { return JSON.parse(localStorage.getItem('compareList') || '[]'); } catch { return []; }
+}
+
+function saveCompareList(list) {
+    localStorage.setItem('compareList', JSON.stringify(list));
+}
+
+function toggleCompare(productId, productName, productPrice, event) {
+    event.stopPropagation();
+    const list = getCompareList();
+    const idx = list.findIndex(p => p.id === productId);
+    if (idx > -1) {
+        list.splice(idx, 1);
+    } else {
+        if (list.length >= 3) {
+            showCompareToast('Max 3 products can be compared at once');
+            return;
+        }
+        list.push({ id: productId, name: productName, price: productPrice });
+    }
+    saveCompareList(list);
+    renderCompareBar();
+    renderGrid();
+}
+
+function clearCompare() {
+    saveCompareList([]);
+    renderCompareBar();
+    renderGrid();
+}
+
+function showCompareToast(msg) {
+    const t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+function renderCompareBar() {
+    const list = getCompareList();
+    let bar = document.getElementById('compareBar');
+    if (!bar) {
+        bar = document.createElement('div');
+        bar.id = 'compareBar';
+        bar.className = 'compare-bar';
+        document.body.appendChild(bar);
+    }
+
+    if (list.length === 0) {
+        bar.classList.remove('compare-bar-visible');
+        return;
+    }
+
+    bar.classList.add('compare-bar-visible');
+
+    const slots = [0, 1, 2].map(i => {
+        const item = list[i];
+        if (item) {
+            return `<div class="compare-slot compare-slot-filled">
+                <span class="compare-slot-name">${item.name}</span>
+                <button class="compare-slot-remove" onclick="toggleCompare('${item.id}','','',event)">×</button>
+            </div>`;
+        }
+        return `<div class="compare-slot compare-slot-empty">+ Add product</div>`;
+    }).join('');
+
+    bar.innerHTML = `
+        <div class="compare-bar-inner">
+            <span class="compare-bar-label">Compare</span>
+            <div class="compare-slots">${slots}</div>
+            <div class="compare-bar-actions">
+                <button class="compare-go-btn" onclick="window.location.href='./compare.html'" ${list.length < 2 ? 'disabled' : ''}>
+                    Compare (${list.length}) →
+                </button>
+                <button class="compare-clear-btn" onclick="clearCompare()">Clear</button>
+            </div>
+        </div>`;
+}
+
 async function initStore() {
     try {
         // 1. Fetch EVERYTHING from the new universal product database
@@ -150,6 +235,7 @@ function renderGrid() {
             : `<span style="font-size: 50px;"><span class="material-icons icon-inline" aria-hidden="true">inventory_2</span></span>`;
 
         // 2. Add stopPropagation to the Add to Cart button
+        const isComparing = getCompareList().some(c => c.id === p._id);
         card.innerHTML = `
             <div class="card-img-box">
                 ${imageHTML}
@@ -158,8 +244,11 @@ function renderGrid() {
             <div class="card-title">${p.title}</div>
             <div class="card-price">$${p.price.toFixed(2)}</div>
             <div class="card-stock ${stockClass}">${stockText}</div>
-            
+
             <button class="card-btn" onclick="event.stopPropagation(); CartWidget.addFromBuilder('${p._id}', '${_componentId}', event);">Add to Cart</button>
+            <button class="card-compare-btn ${isComparing ? 'comparing' : ''}" onclick="toggleCompare('${p._id}','${p.title.replace(/'/g,"\\'").replace(/"/g,'&quot;')}','$${p.price.toFixed(2)}',event)">
+                ${isComparing ? '✓ Comparing' : '+ Compare'}
+            </button>
         `;
 
         grid.appendChild(card);
@@ -179,4 +268,5 @@ document.getElementById('searchInput')?.addEventListener('input', renderGrid);
 document.getElementById('sortSelect')?.addEventListener('change', renderGrid);
 
 // Start the engine
+renderCompareBar();
 initStore();

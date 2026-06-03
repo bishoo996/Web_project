@@ -230,6 +230,146 @@ body {
     background: #5b21b6;
 }
 
+.card-compare-btn {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    width: 100%;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.card-compare-btn:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+.card-compare-btn.comparing {
+    background: rgba(124,58,237,0.15);
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+/* ── Floating Compare Bar ── */
+.compare-bar {
+    position: fixed;
+    bottom: -110px;
+    left: 0; right: 0;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    padding: 14px 24px;
+    z-index: 500;
+    transition: bottom 0.3s ease;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
+}
+
+.compare-bar.compare-bar-visible { bottom: 0; }
+
+.compare-bar-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.compare-bar-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.compare-slots {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+}
+
+.compare-slot {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    border: 1px dashed var(--border);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    max-width: 260px;
+}
+
+.compare-slot-filled {
+    background: rgba(124,58,237,0.1);
+    border: 1px solid var(--border-hover);
+    color: var(--text-primary);
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.compare-slot-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.compare-slot-remove {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+.compare-slot-remove:hover { color: var(--danger); }
+
+.compare-bar-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.compare-go-btn {
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.compare-go-btn:hover:not(:disabled) { background: #6d28d9; }
+.compare-go-btn:disabled { opacity: 0.45; cursor: default; }
+
+.compare-clear-btn {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.compare-clear-btn:hover { border-color: var(--danger); color: var(--danger); }
+
 /* ==========================================
    TOOLBAR & SEARCH
 ========================================== */

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overclocked · Compare Products</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="./assets/css/compare.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-container">
+      <div class="brand">Overclocked</div>
+      <ul class="nav-links">
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./builder_index.html">Build Your Own PC</a></li>
+        <li><a href="./category.html">Categories</a></li>
+        <li><a href="./benchmark.html">Benchmark</a></li>
+        <li><a href="/admin" id="adminNavLink" style="display:none;color:#ffaa00;font-weight:bold;">Admin Portal</a></li>
+        <li><a href="/vendor" id="vendorNavLink" style="display:none;color:#ffaa00;font-weight:bold;">Vendor Panel</a></li>
+      </ul>
+      <div class="nav-buttons">
+        <button class="btn-icon" style="position:relative;" onclick="window.location.href='./cart.html'">
+          <span class="material-icons icon-inline" aria-hidden="true">shopping_cart</span>
+          <span id="navCartBadge" style="display:none;position:absolute;top:-4px;right:-4px;background:#7C3AED;color:white;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;align-items:center;justify-content:center;"></span>
+        </button>
+        <button class="btn-primary" id="navSignIn" onclick="window.location.href='./sign_in.html'">Sign In</button>
+        <a class="btn-primary" id="navMyAccount" href="./account.html" style="display:none;text-decoration:none;align-items:center;gap:6px;">
+          <span class="material-icons icon-inline" aria-hidden="true">person</span>
+          <span class="nav-user-name">Account</span>
+        </a>
+        <button class="btn-outline" id="navLogout" style="display:none;">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="cmp-page">
+    <div class="cmp-header">
+      <h1>Compare Products</h1>
+      <p>Side-by-side specs, price, and availability</p>
+    </div>
+    <div id="compareContent"></div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <div class="brand">PCMarket</div>
+        <p class="footer-description">Your trusted source for PC parts, laptops, and gaming gear since 2020.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./builder_index.html">Build Your Own PC</a></li>
+          <li><a href="./category.html">Categories</a></li>
+          <li><a href="./benchmark.html">Benchmark</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="./terms.html">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 PCMarket. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="./assets/js/nav-auth.js"></script>
+  <script src="./assets/js/cart-widget.js"></script>
+  <script src="./assets/js/compare.js"></script>
+</body>
+</html>

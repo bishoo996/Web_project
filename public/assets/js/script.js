@@ -184,7 +184,7 @@ function restartQuiz() {
     showQuestion();
 }
 
-restartBtn.addEventListener('click', restartQuiz);
+if (restartBtn) restartBtn.addEventListener('click', restartQuiz);
 
 // RENDER PRODUCT CARDS
 const offersGrid = document.getElementById('offersGrid');

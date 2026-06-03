@@ -315,11 +315,41 @@ if (psu && psuCapacity > 0) {
 
 const caseFormFactor = parts['case']?.formFactor || (parts['case'] ? 'ATX' : null);
 
+const cpu  = parts['cpu'];
+const mobo = parts['motherboard'];
+const ram  = parts['memory'];
+
+let socketChip = '';
+if (cpu?.socket && mobo?.socket) {
+  const match = cpu.socket.toUpperCase() === mobo.socket.toUpperCase();
+  socketChip = match
+    ? `<span class="chip chip-ok">Socket · ${cpu.socket}</span>`
+    : `<span class="chip chip-error">Socket Mismatch · CPU: ${cpu.socket} / Mobo: ${mobo.socket}</span>`;
+}
+
+const refMemType = mobo?.memType || cpu?.memType;
+let memTypeChip = '';
+if (ram?.memType && refMemType) {
+  const match = ram.memType.toUpperCase() === refMemType.toUpperCase();
+  memTypeChip = match
+    ? `<span class="chip chip-ok">RAM · ${ram.memType}</span>`
+    : `<span class="chip chip-error">RAM Type Mismatch · ${ram.memType} vs ${refMemType}</span>`;
+}
+
+const totalPrice = Object.values(parts).reduce((sum, p) => {
+  const n = parseFloat((p?.price || '').replace('$', '').replace(',', ''));
+  return isNaN(n) ? sum : sum + n;
+}, 0);
+const totalEl = document.getElementById('builderTotal');
+if (totalEl) totalEl.textContent = totalPrice > 0 ? `· $${totalPrice.toFixed(2)}` : '';
+
 chips.innerHTML = count === 0
   ? '<span class="chip chip-info">No parts selected</span>'
   : `<span class="chip chip-ok">${count} Component${count !== 1 ? 's' : ''} Added</span>
      ${caseFormFactor ? `<span class="chip chip-info">${caseFormFactor} Form Factor</span>` : ''}
      ${hasDual ? '<span class="chip chip-ok">Dual Channel RAM</span>' : ''}
+     ${socketChip}
+     ${memTypeChip}
      ${psuChip}`;
   document.querySelectorAll('.action-btn.remove').forEach(btn =>
     btn.addEventListener('click', async () => {

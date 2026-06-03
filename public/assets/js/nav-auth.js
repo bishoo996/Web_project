@@ -98,3 +98,12 @@ function updateCartBadge(count) {
 }
 
 window.updateCartBadge = updateCartBadge;
+
+// Highlight the nav link that matches the current page
+(function setActiveNavLink() {
+    const currentFile = window.location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        const linkFile = (link.getAttribute('href') || '').replace(/^\.\//, '').split('?')[0];
+        if (linkFile === currentFile) link.classList.add('active');
+    });
+})();
