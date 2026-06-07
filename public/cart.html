@@ -79,6 +79,8 @@
                 <span class="value" id="summaryTotal">$0.00</span>
             </div>
 
+
+
             <button class="btn-checkout" id="checkoutBtn">
                 <span class="material-icons icon-inline" aria-hidden="true">lock</span> Proceed to Checkout
             </button>
@@ -175,8 +177,10 @@
             <h4>Support</h4>
             <ul>
                 <li><a href="./terms.html">Terms of Service</a></li>
+                <li><a href="#" onclick="openContactModal(); return false;">Contact Us</a></li>
             </ul>
         </div>
+
         <div class="footer-section">
             <h4>Follow Us</h4>
             <div class="social-icons">
@@ -191,7 +195,80 @@
     </div>
 </footer>
 
+<!-- ═══════════════════════ CONTACT MODAL ═══════════════════════ -->
+<div id="contactModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:var(--card-bg, #1a1a2e); border:1px solid rgba(124,58,237,0.3); border-radius:14px; padding:32px; width:100%; max-width:420px; margin:16px; position:relative;">
+        <button onclick="closeContactModal()" style="position:absolute; top:14px; right:16px; background:none; border:none; color:inherit; font-size:20px; cursor:pointer; opacity:0.6;">✕</button>
+        <h3 style="margin:0 0 6px; font-size:20px;">Contact Us</h3>
+        <p style="margin:0 0 20px; font-size:13px; opacity:0.6;">We'll get back to you as soon as possible.</p>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+            <input id="modalName" type="text" placeholder="Your name" style="padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.07); color:inherit; font-size:14px;">
+            <input id="modalEmail" type="email" placeholder="Your email" style="padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.07); color:inherit; font-size:14px;">
+            <textarea id="modalMessage" placeholder="Your message" rows="4" style="padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.07); color:inherit; font-size:14px; resize:none;"></textarea>
+            <button onclick="sendContactEmail()" style="padding:11px; background:#7C3AED; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700; font-size:14px;">Send Message</button>
+            <p id="modalEmailResult" style="font-size:13px; margin:0; text-align:center;"></p>
+        </div>
+    </div>
+</div>
+
 <script src="./assets/js/nav-auth.js"></script>
 <script src="./assets/js/cart.js"></script>
+
+<script>
+    // ── Contact Modal ───────────────────────────────────────────
+    function openContactModal() {
+        const m = document.getElementById('contactModal');
+        m.style.display = 'flex';
+    }
+    function closeContactModal() {
+        const m = document.getElementById('contactModal');
+        m.style.display = 'none';
+        document.getElementById('modalEmailResult').textContent = '';
+    }
+    // Close on backdrop click
+    document.getElementById('contactModal').addEventListener('click', function(e) {
+        if (e.target === this) closeContactModal();
+    });
+
+    // ── Contact Form ────────────────────────────────────────────
+    async function sendContactEmail() {
+        const name     = document.getElementById('modalName').value.trim();
+        const email    = document.getElementById('modalEmail').value.trim();
+        const message  = document.getElementById('modalMessage').value.trim();
+        const resultEl = document.getElementById('modalEmailResult');
+
+        if (!name || !email || !message) {
+            resultEl.style.color = '#f87171';
+            resultEl.textContent = 'Please fill in all fields.';
+            return;
+        }
+
+        resultEl.style.color = '#aaa';
+        resultEl.textContent = 'Sending...';
+
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, message })
+            });
+            const data = await res.json();
+            if (data.success) {
+                resultEl.style.color = '#4ade80';
+                resultEl.textContent = '✅ Message sent!';
+                document.getElementById('modalName').value = '';
+                document.getElementById('modalEmail').value = '';
+                document.getElementById('modalMessage').value = '';
+            } else {
+                resultEl.style.color = '#f87171';
+                resultEl.textContent = '❌ ' + data.error;
+            }
+        } catch {
+            resultEl.style.color = '#f87171';
+            resultEl.textContent = '❌ Failed to send. Try again.';
+        }
+    }
+</script>
+
 </body>
 </html>
