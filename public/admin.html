@@ -97,6 +97,10 @@
                     </div>
                     <div style="grid-column: span 2;"><label>Image URL</label> <input type="text" id="prodImage" placeholder="Paste image link here"></div>
                 </div>
+                <div style="margin-bottom: 20px;">
+                    <label>Upload Image</label>
+                    <input type="file" id="prodImageFile" accept="image/*">
+                </div>
 
                 <div id="magicLinkContainer" style="display: none; background: rgba(124, 58, 237, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #7C3AED;">
                     <h4 style="color: #7C3AED; margin-top: 0;"><span class="material-icons icon-inline" aria-hidden="true">link</span> Benchmark Magic Link</h4>
@@ -326,6 +330,8 @@
         </div>
         <label>Image URL</label>
         <input type="text" id="editImage">
+        <label>Upload Image</label>
+        <input type="file" id="editImageFile" accept="image/*">
         <button onclick="submitEdit()" class="login-btn" style="width: 100%; margin-top: 20px;">Save Changes</button>
         <div id="editMessage" class="message-box"></div>
     </div>

@@ -22,6 +22,20 @@ async function addVendorProduct(req, res) {
     }
 }
 
+async function uploadProductImage(req, res) {
+    try {
+        if (!req.file) {
+            return res.status(400).send('No image file uploaded');
+        }
+
+        const imageUrl = `/uploads/${req.file.filename}`;
+        res.json({ imageUrl });
+    } catch (err) {
+        console.error('Error uploading product image', err);
+        res.status(500).send('Error uploading image');
+    }
+}
+
 async function updateOrderItemStatus(req, res) {
     try {
         const { status } = req.body;
@@ -125,6 +139,7 @@ async function getVendorOrders(req, res) {
 module.exports = {
     getVendorProducts,
     addVendorProduct,
+    uploadProductImage,
     updateOrderItemStatus,
     editVendorProduct,
     deleteVendorProduct,

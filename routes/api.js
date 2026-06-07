@@ -1,4 +1,7 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const router = express.Router();
 
 const authController = require('../controllers/authController');
@@ -11,6 +14,29 @@ const benchmarkController = require('../controllers/benchmarkController');
 const adminController = require('../controllers/adminController');
 const vendorController = require('../controllers/vendorController');
 const { requireAuth, requireAdmin, requireSuperAdmin, requireVendor } = require('../middleware/authMiddleware');
+
+const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
+fs.mkdirSync(uploadDir, { recursive: true });
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadDir),
+    filename: (req, file, cb) => {
+        const timestamp = Date.now();
+        const safeName = file.originalname.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9.\-_]/g, '');
+        cb(null, `${timestamp}-${safeName}`);
+    }
+});
+
+const upload = multer({
+    storage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        if (!file.mimetype.startsWith('image/')) {
+            return cb(new Error('Only image uploads are allowed'));
+        }
+        cb(null, true);
+    }
+});
 
 // Auth
 router.post('/register', authController.register);
@@ -55,6 +81,7 @@ router.get('/benchmark/history', requireAuth, benchmarkController.getBenchmarkHi
 // Admin product management
 router.get('/admin/products', requireAdmin, productController.getAdminProducts);
 router.post('/admin/add-product', requireSuperAdmin, productController.addAdminProduct);
+router.post('/admin/upload-image', requireSuperAdmin, upload.single('image'), vendorController.uploadProductImage);
 router.put('/admin/edit-product/:id', requireAdmin, productController.editAdminProduct);
 router.delete('/admin/delete-product/:id', requireAdmin, productController.deleteAdminProduct);
 
@@ -87,6 +114,7 @@ router.delete('/superadmin/categories/:id', requireSuperAdmin, adminController.d
 // Vendor routes
 router.get('/vendor/products', requireVendor, vendorController.getVendorProducts);
 router.post('/vendor/add-product', requireVendor, vendorController.addVendorProduct);
+router.post('/vendor/upload-image', requireVendor, upload.single('image'), vendorController.uploadProductImage);
 router.put('/vendor/orders/:orderId/item/:itemId/status', requireVendor, vendorController.updateOrderItemStatus);
 router.put('/vendor/edit-product/:id', requireVendor, vendorController.editVendorProduct);
 router.delete('/vendor/delete-product/:id', requireVendor, vendorController.deleteVendorProduct);

@@ -67,6 +67,24 @@ async function handleFormSubmit(event, endpoint, payload, messageDivId) {
     }
 }
 
+async function uploadImageFile(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await fetch('/api/vendor/upload-image', {
+        method: 'POST',
+        body: formData
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Image upload failed.');
+    }
+
+    const data = await response.json();
+    return data.imageUrl;
+}
+
 // ==========================================
 // UNIVERSAL PRODUCT FORM LOGIC
 // ==========================================
@@ -144,14 +162,27 @@ document.getElementById('addProductForm').addEventListener('submit', async (e) =
         hardwareModel = category === 'cpu' ? 'CPU' : 'GPU';
     }
 
-    // C. Build the Payload
+    // C. Resolve the image URL from file upload or URL input
+    let imageUrl = document.getElementById('prodImage').value;
+    const prodImageFile = document.getElementById('prodImageFile');
+    if (prodImageFile && prodImageFile.files.length > 0) {
+        try {
+            imageUrl = await uploadImageFile(prodImageFile.files[0]);
+        } catch (uploadError) {
+            document.getElementById('productMessage').style.color = '#ff4444';
+            document.getElementById('productMessage').innerText = uploadError.message;
+            return;
+        }
+    }
+
+    // D. Build the Payload
     const payload = {
         title: document.getElementById('prodTitle').value,
         manufacturer: document.getElementById('prodMfg').value,
         category: category,
         price: Number(document.getElementById('prodPrice').value),
         stockStatus: document.getElementById('prodStock').value,
-        imageUrl: document.getElementById('prodImage').value,
+        imageUrl: imageUrl,
         supplierName: document.getElementById('prodSupplier').value,
         specs: specsArray,
         baselineHardwareId: baselineId || undefined,
@@ -159,7 +190,10 @@ document.getElementById('addProductForm').addEventListener('submit', async (e) =
     };
 
     const success = await handleFormSubmit(e, '/api/vendor/add-product', payload, 'productMessage');
-    if (success) specsContainer.innerHTML = '';
+    if (success) {
+        specsContainer.innerHTML = '';
+        if (prodImageFile) prodImageFile.value = '';
+    }
 });
 
 
@@ -259,13 +293,27 @@ function closeEditModal() {
 
 async function submitEdit() {
     const id = document.getElementById('editProductId').value;
+    let imageUrl = document.getElementById('editImage').value;
+    const editImageFile = document.getElementById('editImageFile');
+
+    if (editImageFile && editImageFile.files.length > 0) {
+        try {
+            imageUrl = await uploadImageFile(editImageFile.files[0]);
+        } catch (uploadError) {
+            const msgDiv = document.getElementById('editMessage');
+            msgDiv.style.color = '#ff4444';
+            msgDiv.innerText = uploadError.message;
+            return;
+        }
+    }
+
     const payload = {
         title: document.getElementById('editTitle').value,
         manufacturer: document.getElementById('editMfg').value,
         price: Number(document.getElementById('editPrice').value),
         stockStatus: document.getElementById('editStock').value,
         category: document.getElementById('editCategory').value,
-        imageUrl: document.getElementById('editImage').value,
+        imageUrl: imageUrl,
         supplierName: document.getElementById('editSupplier').value
     };
     const msgDiv = document.getElementById('editMessage');
@@ -278,6 +326,7 @@ async function submitEdit() {
         if (res.ok) {
             msgDiv.style.color = '#00ff00';
             msgDiv.innerText = 'Product updated!';
+            if (editImageFile) editImageFile.value = '';
             setTimeout(() => { closeEditModal(); loadProducts(); }, 900);
         } else {
             msgDiv.style.color = '#ff4444';
