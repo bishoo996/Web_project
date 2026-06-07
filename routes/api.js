@@ -15,8 +15,10 @@ const adminController = require('../controllers/adminController');
 const vendorController = require('../controllers/vendorController');
 const { requireAuth, requireAdmin, requireSuperAdmin, requireVendor } = require('../middleware/authMiddleware');
 
-const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
-fs.mkdirSync(uploadDir, { recursive: true });
+const uploadDir = process.env.NETLIFY
+    ? '/tmp/uploads'
+    : path.join(__dirname, '..', 'public', 'uploads');
+try { fs.mkdirSync(uploadDir, { recursive: true }); } catch (e) { /* ignore on read-only fs */ }
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadDir),
