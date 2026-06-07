@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overclocked · Choose Component</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="./assets/css/categorystyle.css">
+</head>
+<body>
+
+<%- include('partials/header') %>
+
+<div class="page">
+
+  <!-- Category header -->
+  <div class="cat-header">
+    <div class="cat-title-wrap">
+      <div class="cat-icon" id="catIcon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+      </div>
+      <div>
+        <div class="cat-title" id="catTitle">Component Marketplace</div>
+        <div class="cat-subtitle" id="catSubtitle">Browse and compare PC parts</div>
+      </div>
+    </div>
+    <button class="btn-go-builder" onclick="window.location.href='./builder_index.html'">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      Go to Builder
+    </button>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-input" id="searchInput" placeholder="Search parts…" type="text">
+    </div>
+
+    <div class="filter-group" id="filterGroup"></div>
+
+    <select class="sort-select" id="sortSelect">
+      <option value="default">Sort: Featured</option>
+      <option value="price-asc">Price: Low → High</option>
+      <option value="price-desc">Price: High → Low</option>
+      <option value="bench-desc">Best Benchmark</option>
+      <option value="watt-asc">Lowest Wattage</option>
+    </select>
+
+    <span class="results-count" id="resultsCount"><span>0</span> results</span>
+  </div>
+
+  <div class="shop-container" style="display: flex; gap: 24px; align-items: flex-start; margin-top: 20px;">
+
+      <aside class="filter-sidebar" id="filterSidebar">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+              <h3 style="margin: 0; color: var(--primary-color);">Filters</h3>
+              <button id="closeSidebarBtn" class="close-btn" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer; display: none;">&times;</button>
+          </div>
+
+          <div class="filter-section" style="margin-bottom: 24px;">
+              <h4 style="margin-bottom: 12px; font-size: 14px; color: var(--text-secondary);">CATEGORY</h4>
+              <div id="categoryFilters" style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+                  </div>
+          </div>
+
+          <div class="filter-section">
+              <h4 style="margin-bottom: 12px; font-size: 14px; color: var(--text-secondary);">MAX PRICE</h4>
+              <input type="range" id="priceRange" min="0" max="3000" value="3000" step="50" style="width: 100%; accent-color: var(--primary-color);">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-top: 8px; color: var(--text-secondary);">
+                  <span>$0</span>
+                  <span id="priceValue" style="color: var(--text-primary); font-weight: bold;">$3000</span>
+              </div>
+          </div>
+      </aside>
+
+      <main style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+              <button id="mobileFilterBtn" style="display: none; background: var(--bg-secondary); color: white; border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px;">Filters</button>
+              <p id="paginationInfo" style="font-size:13px; color: var(--text-muted); margin:0;"></p>
+          </div>
+
+          <div id="productGrid" class="ecommerce-grid">
+              </div>
+      </main>
+  </div>
+
+</div>
+
+<%- include('partials/footer') %>
+
+<div class="toast" id="toast"></div>
+<script src="./assets/js/nav-auth.js"></script>
+<script src="./assets/js/cart-widget.js"></script>
+<script src="./assets/js/categoryJS.js"></script>
+
+<%- include('partials/contact-modal') %>
+</body>
+</html>

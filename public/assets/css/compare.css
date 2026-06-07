@@ -1,0 +1,237 @@
+:root {
+  --bg-primary:    #020617;
+  --bg-secondary:  #0B1120;
+  --bg-tertiary:   #0F172A;
+  --accent:        #7C3AED;
+  --success:       #10B981;
+  --warning:       #F59E0B;
+  --danger:        #EF4444;
+  --text-primary:  #E5E7EB;
+  --text-secondary:#94A3B8;
+  --border:        rgba(124,58,237,0.3);
+  --border-hover:  rgba(124,58,237,0.6);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'JetBrains Mono', 'Work Sans', monospace;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124,58,237,.12), transparent);
+}
+
+.cmp-page { max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
+
+.cmp-header { margin-bottom: 28px; }
+.cmp-header h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+.cmp-header p  { color: var(--text-secondary); font-size: 13px; margin-top: 6px; }
+
+/* ── Table Wrapper ── */
+.cmp-table-wrap {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+.cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.cmp-table th,
+.cmp-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.cmp-table tbody tr:last-child td,
+.cmp-table tbody tr:last-child th { border-bottom: none; }
+
+/* Row label (first column) */
+.row-label {
+    text-align: left;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+    background: var(--bg-secondary);
+    width: 140px;
+    min-width: 140px;
+}
+
+/* Product header column */
+.cmp-product-col {
+    background: var(--bg-secondary);
+    min-width: 220px;
+    padding: 24px 18px;
+    vertical-align: top;
+}
+
+.cmp-img {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: var(--bg-primary);
+    padding: 10px;
+    margin: 0 auto 14px;
+    display: block;
+}
+
+.cmp-img-fallback {
+    width: 110px;
+    height: 110px;
+    border-radius: 8px;
+    background: var(--bg-primary);
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+}
+
+.cmp-img-fallback .material-icons { font-size: 48px; }
+
+.cmp-name {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+.cmp-brand {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+}
+
+.cmp-remove-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.cmp-remove-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+/* Row hover */
+.cmp-table tbody tr:hover td,
+.cmp-table tbody tr:hover th { background: rgba(124,58,237,0.04); }
+
+/* Price row */
+.row-price td { padding-top: 18px; padding-bottom: 18px; }
+.cmp-price { font-size: 20px; font-weight: 800; color: #ff5555; }
+.cmp-price.best-val { color: var(--success) !important; }
+.best-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--success);
+    background: rgba(16,185,129,0.15);
+    border-radius: 20px;
+    padding: 2px 8px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+/* Best value highlight */
+.best-val { color: var(--success); font-weight: 700; }
+
+/* Stock pills */
+.stock-pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.pill-in  { background: rgba(16,185,129,0.15); color: var(--success); }
+.pill-low { background: rgba(245,158,11,0.15);  color: var(--warning); }
+.pill-out { background: rgba(239,68,68,0.15);   color: var(--danger);  }
+
+/* Stars */
+.stars      { color: #FBBF24; font-size: 15px; }
+.rating-num { font-size: 12px; color: var(--text-secondary); margin-left: 4px; }
+.no-reviews { color: var(--text-secondary); font-size: 12px; }
+
+/* Specs section divider */
+.specs-divider td {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 8px 18px;
+    text-align: left;
+}
+
+.dash { color: var(--text-secondary); }
+
+/* Cart row */
+.row-cart td {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background: var(--bg-secondary);
+}
+
+.cmp-cart-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+    width: 100%;
+    max-width: 200px;
+}
+
+.cmp-cart-btn:hover:not(:disabled) { background: #6d28d9; }
+.cmp-cart-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+
+/* Empty state */
+.compare-empty {
+    text-align: center;
+    padding: 80px 24px;
+}
+
+.compare-empty h2 { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+.compare-empty p  { color: var(--text-secondary); margin-bottom: 28px; font-size: 14px; }
+
+.btn-browse {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    text-decoration: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: background 0.2s;
+}
+
+.btn-browse:hover { background: #6d28d9; }
+
+.compare-loading { text-align: center; padding: 60px; color: var(--text-secondary); font-size: 14px; }
+
+.cmp-back-link { text-align: center; margin-top: 20px; }
+.cmp-back-link a { color: var(--text-secondary); font-size: 13px; text-decoration: none; }
+.cmp-back-link a:hover { color: var(--text-primary); }

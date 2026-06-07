@@ -1,0 +1,668 @@
+/* ================================================================
+   account.css  —  My Account page styles
+   Inherits CSS variables from style.css:
+     --primary-color: #7C3AED
+     --bg-color:      #020617
+     --surface-color: #0B1120
+     --text-color:    #E5E7EB
+     --text-muted:    #94A3B8
+     --border-radius: 8px
+     --success-color: #10B981
+================================================================ */
+
+/* ── Page Layout ───────────────────────────────────────────────── */
+.account-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+/* ── Sidebar ────────────────────────────────────────────────────── */
+.account-sidebar {
+    background: var(--surface-color);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    position: sticky;
+    top: 90px;
+}
+
+.account-user-card {
+    padding: 28px 24px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(124,58,237,0.04));
+    border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+    text-align: center;
+}
+
+.account-avatar {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7C3AED, #9333EA);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 700;
+    color: white;
+    margin: 0 auto 14px;
+    letter-spacing: 1px;
+}
+
+.account-user-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 4px;
+}
+
+.account-user-email {
+    font-size: 12px;
+    color: var(--text-muted);
+    word-break: break-all;
+}
+
+.account-user-role {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 3px 10px;
+    background: rgba(124,58,237,0.2);
+    border-radius: 20px;
+    font-size: 11px;
+    color: var(--primary-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ── Sidebar Nav ────────────────────────────────────────────────── */
+.account-nav {
+    padding: 12px 0;
+}
+
+.account-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 24px;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.account-nav-item:hover {
+    color: var(--text-color);
+    background: rgba(124, 58, 237, 0.07);
+}
+
+.account-nav-item.active {
+    color: var(--primary-color);
+    background: rgba(124, 58, 237, 0.1);
+    border-left-color: var(--primary-color);
+    font-weight: 600;
+}
+
+.account-nav-item .nav-icon {
+    font-size: 17px;
+    width: 22px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.account-nav-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 8px 0;
+}
+
+/* ── Main Content ───────────────────────────────────────────────── */
+.account-main {
+    min-height: 400px;
+}
+
+.account-section {
+    display: none;
+}
+
+.account-section.active {
+    display: block;
+    animation: fadeSlideIn 0.25s ease;
+}
+
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Section Header ─────────────────────────────────────────────── */
+.section-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title .title-icon {
+    font-size: 22px;
+}
+
+/* ── Cards ──────────────────────────────────────────────────────── */
+.account-card {
+    background: var(--surface-color);
+    border: 1px solid rgba(124, 58, 237, 0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.account-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+}
+
+/* ── Info Grid ──────────────────────────────────────────────────── */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.info-value {
+    font-size: 14px;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.info-value.empty {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ── Forms ──────────────────────────────────────────────────────── */
+.account-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.account-form-group label {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.account-input {
+    width: 100%;
+    padding: 11px 14px;
+    background: var(--bg-color);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+    color: var(--text-color);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.account-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+}
+
+.form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────── */
+.btn-account-primary {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 11px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn-account-primary:hover {
+    background: #6D28D9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(124,58,237,0.35);
+}
+
+.btn-account-danger {
+    background: transparent;
+    color: #EF4444;
+    border: 1px solid #EF4444;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn-account-danger:hover {
+    background: #EF4444;
+    color: white;
+}
+
+.btn-account-ghost {
+    background: rgba(124,58,237,0.08);
+    color: var(--primary-color);
+    border: 1px solid rgba(124,58,237,0.25);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-account-ghost:hover {
+    background: rgba(124,58,237,0.15);
+}
+
+/* ── Form Feedback ──────────────────────────────────────────────── */
+.form-feedback {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 12px;
+    display: none;
+}
+
+.form-feedback.success {
+    background: rgba(16,185,129,0.1);
+    color: #10B981;
+    border: 1px solid rgba(16,185,129,0.3);
+    display: block;
+}
+
+.form-feedback.error {
+    background: rgba(239,68,68,0.1);
+    color: #EF4444;
+    border: 1px solid rgba(239,68,68,0.3);
+    display: block;
+}
+
+/* ── Orders ─────────────────────────────────────────────────────── */
+.order-card {
+    background: var(--bg-color);
+    border: 1px solid rgba(124,58,237,0.15);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+}
+
+.order-card:hover {
+    border-color: rgba(124,58,237,0.4);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+
+.order-id {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.order-date {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.order-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-pending    { background: rgba(245,158,11,0.15);  color: #F59E0B; }
+.status-processing { background: rgba(59,130,246,0.15);  color: #3B82F6; }
+.status-shipped    { background: rgba(139,92,246,0.15);  color: #8B5CF6; }
+.status-delivered  { background: rgba(16,185,129,0.15);  color: #10B981; }
+.status-cancelled  { background: rgba(239,68,68,0.15);   color: #EF4444; }
+
+.order-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.order-item-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.order-item-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.04);
+    flex-shrink: 0;
+}
+
+.order-item-info { flex: 1; }
+.order-item-name { color: var(--text-color); font-weight: 500; }
+.order-item-qty  { color: var(--text-muted); font-size: 12px; }
+.order-item-price { color: var(--success-color); font-weight: 600; }
+
+.order-total-row {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 14px;
+}
+
+.order-total-label { color: var(--text-muted); }
+.order-total-val   { color: var(--success-color); font-weight: 700; font-size: 16px; }
+
+/* ── Reviews ────────────────────────────────────────────────────── */
+.review-card {
+    background: var(--bg-color);
+    border: 1px solid rgba(124,58,237,0.15);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.review-product-img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+    flex-shrink: 0;
+}
+
+.review-body { flex: 1; }
+
+.review-product-link {
+    font-size: 12px;
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.review-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 4px 0;
+}
+
+.review-stars { color: #F59E0B; font-size: 14px; letter-spacing: 2px; }
+
+.review-comment {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    line-height: 1.6;
+}
+
+.review-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 8px;
+}
+
+.review-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+/* ── Wishlist & Recently Viewed Grid ────────────────────────────── */
+.mini-product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.mini-product-card {
+    background: var(--bg-color);
+    border: 1px solid rgba(124,58,237,0.12);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: block;
+}
+
+.mini-product-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(124,58,237,0.15);
+}
+
+.mini-product-img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    background: rgba(255,255,255,0.03);
+    padding: 12px;
+}
+
+.mini-product-img-placeholder {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    background: rgba(255,255,255,0.03);
+}
+
+.mini-product-info {
+    padding: 12px;
+}
+
+.mini-product-brand {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.mini-product-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-color);
+    line-height: 1.4;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.mini-product-price {
+    font-size: 14px;
+    color: var(--success-color);
+    font-weight: 700;
+}
+
+/* ── Stats strip at top of overview ────────────────────────────── */
+.account-stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.account-stat-card {
+    background: var(--surface-color);
+    border: 1px solid rgba(124,58,237,0.15);
+    border-radius: 10px;
+    padding: 18px 20px;
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.account-stat-card:hover {
+    border-color: rgba(124,58,237,0.4);
+}
+
+.account-stat-val {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary-color);
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.account-stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* ── Empty state ────────────────────────────────────────────────── */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+}
+
+.empty-state .empty-icon {
+    font-size: 52px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state h4 {
+    font-size: 16px;
+    color: var(--text-color);
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* ── Loading skeleton ───────────────────────────────────────────── */
+.skeleton {
+    background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 6px;
+}
+
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .account-page {
+        grid-template-columns: 1fr;
+    }
+    .account-sidebar {
+        position: static;
+    }
+    .account-nav {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 8px;
+        gap: 4px;
+    }
+    .account-nav-item {
+        flex: 1 1 auto;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border-left: none;
+        font-size: 13px;
+        justify-content: center;
+    }
+    .account-nav-item.active {
+        border-left: none;
+        background: rgba(124,58,237,0.2);
+    }
+    .info-grid { grid-template-columns: 1fr; }
+    .form-row-2 { grid-template-columns: 1fr; }
+    .account-stats-strip { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+    .account-stats-strip { grid-template-columns: 1fr 1fr; }
+    .mini-product-grid { grid-template-columns: repeat(2, 1fr); }
+}

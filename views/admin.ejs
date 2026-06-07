@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/assets/css/log.css">
+    <style>
+        /* Dashboard Layout Overrides */
+        body { margin: 0; background-color: #121212; color: #fff; font-family: sans-serif; }
+        .dashboard-container { display: flex; min-height: 100vh; }
+
+        /* The Sidebar Navigation */
+        .sidebar { width: 250px; background-color: #1e1e1e; padding: 20px; border-right: 1px solid #333; }
+        .sidebar h2 { color: #ffaa00; text-align: center; margin-bottom: 30px; }
+        .nav-btn { display: block; width: 100%; padding: 15px; margin-bottom: 10px; background: transparent; border: 1px solid #444; color: white; cursor: pointer; text-align: left; border-radius: 5px; transition: 0.3s; }
+        .nav-btn:hover, .nav-btn.active { background-color: #ffaa00; color: #000; font-weight: bold; }
+
+        /* The Main Content Area */
+        .main-content { flex: 1; padding: 40px; }
+        .content-section { display: none; max-width: 600px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .content-section.active { display: block; }
+
+        /* Form Styling */
+        input, select { width: 100%; padding: 10px; margin: 8px 0 20px 0; border-radius: 5px; border: 1px solid #444; background: #2a2a2a; color: white; box-sizing: border-box; }
+        .message-box { margin-top: 15px; font-weight: bold; text-align: center; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+        /* Wide sections (tables) */
+        #inventory-section, #users-section, #orders-section { max-width: 960px; }
+
+        /* Role badges */
+        .role-badge { padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .role-customer  { background: #1e40af22; color: #60A5FA; }
+        .role-vendor    { background: #92400e22; color: #FBBF24; }
+        .role-admin     { background: #78350f22; color: #ffaa00; }
+        .role-superadmin{ background: #581c8722; color: #A78BFA; }
+
+        /* Edit Modal */
+        #editModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+        #editModalBox { background: #1e1e1e; padding: 30px; border-radius: 10px; width: 520px; max-width: 90%; position: relative; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <button class="nav-btn active" data-target="product-section">Add Product</button>
+        <button class="nav-btn" data-target="inventory-section">Manage Inventory</button>
+        <button class="nav-btn" data-target="stats-section">Product Statistics</button>
+
+        <button class="nav-btn" data-target="benchmark-section">Benchmark Engine</button>
+
+        <hr style="border-color: #333; margin: 20px 0;">
+        <button class="nav-btn" data-target="users-section">Users Management</button>
+        <button class="nav-btn" data-target="orders-section">Orders Overview</button>
+
+        <hr style="border-color: #333; margin: 20px 0;">
+        <button class="nav-btn" onclick="window.location.href='/index.html'">← Back Home</button>
+    </div>
+
+    <div class="main-content">
+
+        <div id="product-section" class="content-section active">
+            <h3>Add New Product (Inventory)</h3>
+            <form id="addProductForm">
+                <label>Product Title</label> <input type="text" id="prodTitle" placeholder="e.g., ASUS TUF Gaming RTX 4070" required>
+
+                <div class="grid-3">
+                    <div><label>Manufacturer</label> <input type="text" id="prodMfg" placeholder="e.g., ASUS" required></div>
+                    <div><label>Category</label>
+                        <select id="prodCategory" required>
+                            <option value="cpu">CPU</option>
+                            <option value="gpu">GPU</option>
+                            <option value="motherboard">Motherboard</option>
+                            <option value="memory">Memory (RAM)</option>
+                            <option value="storage">Storage</option>
+                            <option value="psu">Power Supply</option>
+                            <option value="case">Case</option>
+                            <option value="cooler">Cooler</option>
+                            <option value="monitor">Monitor</option>
+                            <option value="keyboard">Keyboard</option>
+                            <option value="mouse">Mouse</option>
+                            <option value="headset">Headset</option>
+                        </select>
+                    </div>
+                    <div><label>Price ($)</label> <input type="number" id="prodPrice" required></div>
+                </div>
+
+                <div class="grid-3">
+                    <div><label>Stock Status</label>
+                        <select id="prodStock">
+                            <option value="in">In Stock</option>
+                            <option value="low">Low Stock</option>
+                            <option value="out">Out of Stock</option>
+                        </select>
+                    </div>
+                    <div style="grid-column: span 2;"><label>Image URL</label> <input type="text" id="prodImage" placeholder="Paste image link here"></div>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label>Upload Image</label>
+                    <input type="file" id="prodImageFile" accept="image/*">
+                </div>
+
+                <div id="magicLinkContainer" style="display: none; background: rgba(124, 58, 237, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #7C3AED;">
+                    <h4 style="color: #7C3AED; margin-top: 0;"><span class="material-icons icon-inline" aria-hidden="true">link</span> Benchmark Magic Link</h4>
+                    <p style="font-size: 12px; color: #94A3B8; margin-bottom: 10px;">Link this retail box to its raw silicon so the Bottleneck Calculator works!</p>
+                    <select id="prodBaselineId">
+                        <option value="">-- Do Not Link (No Benchmark) --</option>
+                    </select>
+                </div>
+
+                <hr style="margin: 20px 0; border-color: #444;">
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h4 style="margin: 0;">Custom Specifications</h4>
+                    <button type="button" id="addSpecBtn" style="background: #2a2a2a; color: white; border: 1px solid #444; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">+ Add Spec Row</button>
+                </div>
+
+                <div id="specsContainer"></div>
+
+                <button type="submit" class="login-btn" style="width: 100%; margin-top: 20px;">Save Product</button>
+                <div id="productMessage" class="message-box"></div>
+            </form>
+        </div>
+
+
+        <div id="inventory-section" class="content-section">
+            <h3 style="color: #ffaa00; margin-bottom: 20px;">Store Inventory</h3>
+
+            <div style="background: #2a2a2a; border-radius: 8px; padding: 20px; overflow-x: auto;">
+                <table style="width: 100%; text-align: left; border-collapse: collapse; color: white;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #444;">
+                            <th style="padding: 12px; color: #94A3B8;">Product</th>
+                            <th style="padding: 12px; color: #94A3B8;">Category</th>
+                            <th style="padding: 12px; color: #94A3B8;">Price</th>
+                            <th style="padding: 12px; color: #94A3B8;">Stock</th>
+                            <th style="padding: 12px; color: #94A3B8; text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="stats-section" class="content-section">
+            <h3 style="color: #ffaa00; margin-bottom: 30px;">Product Statistics</h3>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>Total Sales</h4>
+                    <div class="value" id="adminTotalSalesValue">0<span class="unit">units</span></div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Revenue</h4>
+                    <div class="value" id="adminTotalRevenueValue">$0<span class="unit"></span></div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Products</h4>
+                    <div class="value" id="adminTotalProductsValue">0<span class="unit">products</span></div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Orders</h4>
+                    <div class="value" id="adminTotalOrdersValue">0<span class="unit">orders</span></div>
+                </div>
+            </div>
+
+            <h4 style="color: #ffaa00; margin-bottom: 15px;">Sales by Product</h4>
+            <div style="background: #2a2a2a; border-radius: 8px; padding: 20px; overflow-x: auto;">
+                <table style="width: 100%; text-align: left; border-collapse: collapse; color: white;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #444;">
+                            <th style="padding: 12px; color: #94A3B8;">Product</th>
+                            <th style="padding: 12px; color: #94A3B8;">Units Sold</th>
+                            <th style="padding: 12px; color: #94A3B8;">Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminSalesTableBody">
+                        <tr><td colspan="3" style="text-align: center; padding: 20px; color: #94A3B8;">Loading statistics...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="benchmark-section" class="content-section">
+            <h3 style="color: #ffaa00; margin-bottom: 20px;">The Benchmark Engine</h3>
+            <p style="font-size: 13px; color: #94A3B8; margin-bottom: 30px;">Add raw silicon data here. You can link store inventory to these profiles later.</p>
+
+            <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h4 style="color: #7C3AED; margin-top: 0;">1. Add Raw CPU</h4>
+                <form id="addCpuForm">
+                    <div class="grid-3">
+                        <div><label>Name</label> <input type="text" id="cpuName" required></div>
+                        <div><label>Brand</label> <select id="cpuBrand"><option>Intel</option><option>AMD</option></select></div>
+                        <div><label>Socket</label> <input type="text" id="cpuSocket" required></div>
+                    </div>
+                    <div class="grid-3">
+                        <div><label>MSRP ($)</label> <input type="number" id="cpuPrice" required></div>
+                        <div><label>Compute Score</label> <input type="number" id="cpuScore" required></div>
+                    </div>
+                    <button type="submit" class="login-btn" style="width: 100%; padding: 10px;">Save Raw CPU</button>
+                    <div id="cpuMessage" class="message-box"></div>
+                </form>
+            </div>
+
+            <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h4 style="color: #7C3AED; margin-top: 0;">2. Add Raw GPU</h4>
+                <form id="addGpuForm">
+                    <div class="grid-3">
+                        <div><label>Name</label> <input type="text" id="gpuName" required></div>
+                        <div><label>Brand</label> <select id="gpuBrand"><option>NVIDIA</option><option>AMD</option><option>Intel</option></select></div>
+                        <div><label>VRAM (GB)</label> <input type="number" id="gpuVram" required></div>
+                    </div>
+                    <div class="grid-3">
+                        <div><label>MSRP ($)</label> <input type="number" id="gpuPrice" required></div>
+                        <div style="grid-column: span 2;">
+                            <label>Render Scores (1080p, 1440p, 4K)</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="number" id="gpu1080" placeholder="1080p" required>
+                                <input type="number" id="gpu1440" placeholder="1440p" required>
+                                <input type="number" id="gpu4k" placeholder="4K" required>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="login-btn" style="width: 100%; padding: 10px;">Save Raw GPU</button>
+                    <div id="gpuMessage" class="message-box"></div>
+                </form>
+            </div>
+
+            <div style="background: #2a2a2a; padding: 20px; border-radius: 8px;">
+                <h4 style="color: #7C3AED; margin-top: 0;">3. Add Game Profile</h4>
+                <form id="addGameForm">
+                    <div class="grid-3">
+                        <div><label>Title</label> <input type="text" id="gameTitle" required></div>
+                        <div><label>Optimization (e.g., 0.9)</label> <input type="number" step="0.1" id="gameOpt" required></div>
+                        <div><label style="display:block;">CPU Intensive?</label> <input type="checkbox" id="gameCpuIntensive" style="width: 20px; height: 20px; margin-top: 10px;"></div>
+                    </div>
+                    <label>Game Image URL</label> <input type="text" id="gameImage" required>
+                    <button type="submit" class="login-btn" style="width: 100%; padding: 10px;">Save Game</button>
+                    <div id="gameMessage" class="message-box"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===== USERS MANAGEMENT ===== -->
+        <div id="users-section" class="content-section">
+            <h3 style="color: #ffaa00; margin-bottom: 20px;">Users Management</h3>
+            <div style="background: #2a2a2a; border-radius: 8px; padding: 20px; overflow-x: auto;">
+                <table style="width: 100%; text-align: left; border-collapse: collapse; color: white;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #444;">
+                            <th style="padding: 12px; color: #94A3B8;">Name</th>
+                            <th style="padding: 12px; color: #94A3B8;">Email</th>
+                            <th style="padding: 12px; color: #94A3B8;">Role</th>
+                            <th style="padding: 12px; color: #94A3B8;">Phone</th>
+                            <th style="padding: 12px; color: #94A3B8;">Joined</th>
+                            <th style="padding: 12px; color: #94A3B8; text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== ORDERS OVERVIEW ===== -->
+        <div id="orders-section" class="content-section">
+            <h3 style="color: #ffaa00; margin-bottom: 20px;">Orders Overview</h3>
+            <div style="background: #2a2a2a; border-radius: 8px; padding: 20px; overflow-x: auto;">
+                <table style="width: 100%; text-align: left; border-collapse: collapse; color: white;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #444;">
+                            <th style="padding: 12px; color: #94A3B8;">Order ID</th>
+                            <th style="padding: 12px; color: #94A3B8;">Customer</th>
+                            <th style="padding: 12px; color: #94A3B8;">Items</th>
+                            <th style="padding: 12px; color: #94A3B8;">Total</th>
+                            <th style="padding: 12px; color: #94A3B8;">Status</th>
+                            <th style="padding: 12px; color: #94A3B8;">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ===== EDIT PRODUCT MODAL ===== -->
+<div id="editModal">
+    <div id="editModalBox">
+        <button onclick="closeEditModal()" style="position:absolute; top:15px; right:15px; background:transparent; border:none; color:#aaa; font-size:22px; cursor:pointer; line-height:1;">✕</button>
+        <h3 style="color: #ffaa00; margin-top: 0;">Edit Product</h3>
+        <input type="hidden" id="editProductId">
+        <label>Title</label>
+        <input type="text" id="editTitle">
+        <label>Manufacturer</label>
+        <input type="text" id="editMfg">
+        <div class="grid-3">
+            <div><label>Price ($)</label><input type="number" id="editPrice"></div>
+            <div><label>Stock Status</label>
+                <select id="editStock">
+                    <option value="in">In Stock</option>
+                    <option value="low">Low Stock</option>
+                    <option value="out">Out of Stock</option>
+                </select>
+            </div>
+            <div><label>Category</label>
+                <select id="editCategory">
+                    <option value="cpu">CPU</option>
+                    <option value="gpu">GPU</option>
+                    <option value="motherboard">Motherboard</option>
+                    <option value="memory">Memory (RAM)</option>
+                    <option value="storage">Storage</option>
+                    <option value="psu">Power Supply</option>
+                    <option value="case">Case</option>
+                    <option value="cooler">Cooler</option>
+                    <option value="monitor">Monitor</option>
+                    <option value="keyboard">Keyboard</option>
+                    <option value="mouse">Mouse</option>
+                    <option value="headset">Headset</option>
+                </select>
+            </div>
+        </div>
+        <label>Image URL</label>
+        <input type="text" id="editImage">
+        <label>Upload Image</label>
+        <input type="file" id="editImageFile" accept="image/*">
+        <button onclick="submitEdit()" class="login-btn" style="width: 100%; margin-top: 20px;">Save Changes</button>
+        <div id="editMessage" class="message-box"></div>
+    </div>
+</div>
+
+<script src="/assets/js/admin.js"></script>
+</body>
+</html>

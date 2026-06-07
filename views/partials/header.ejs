@@ -1,0 +1,22 @@
+<nav>
+    <div class="nav-container">
+        <div class="brand">Overclocked</div>
+        <ul class="nav-links">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./builder_index.html">Build Your Own PC</a></li>
+            <li><a href="./category.html">Categories</a></li>
+            <li><a href="./benchmark.html">Benchmark</a></li>
+            <li><a href="/admin" id="adminNavLink" style="display: none; color: #ffaa00; font-weight: bold;">Admin Portal</a></li>
+            <li><a href="/vendor" id="vendorNavLink" style="display: none; color: #ffaa00; font-weight: bold;">Vendor Panel</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="btn-icon" style="position:relative;" onclick="window.location.href='./cart.html'">
+                <span class="material-icons icon-inline" aria-hidden="true">shopping_cart</span>
+                <span id="navCartBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#7C3AED; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;"></span>
+            </button>
+            <button class="btn-primary" id="navSignIn" onclick="window.location.href='./sign_in.html'">Sign In</button>
+            <a class="btn-primary" id="navMyAccount" href="./account.html" style="display:none; text-decoration:none; align-items:center; gap:6px;"><span class="material-icons icon-inline" aria-hidden="true">person</span> <span class="nav-user-name">Account</span></a>
+            <button class="btn-outline" id="navLogout" style="display:none;">Logout</button>
+        </div>
+    </div>
+</nav>

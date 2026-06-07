@@ -1,0 +1,6 @@
+node_modules/
+.codex/
+*.log
+.tmp/
+.cache/
+.env

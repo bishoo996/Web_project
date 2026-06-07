@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overclocked — My Account</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/account.css">
+</head>
+<body>
+
+<%- include('partials/header') %>
+
+<!-- ═══════════════════════ PAGE ═══════════════════════ -->
+<div class="account-page" id="accountPageRoot">
+
+    <!-- ── Sidebar ────────────────────────────── -->
+    <aside class="account-sidebar">
+        <div class="account-user-card">
+            <div class="account-avatar" id="avatarInitials">?</div>
+            <div class="account-user-name" id="sidebarName">Loading…</div>
+            <div class="account-user-email" id="sidebarEmail"></div>
+            <div class="account-user-role" id="sidebarRole">Customer</div>
+        </div>
+
+        <nav class="account-nav">
+            <button class="account-nav-item active" data-section="overview">
+                <span class="nav-icon"><span class="material-icons icon-inline">home</span></span> Overview
+            </button>
+            <button class="account-nav-item" data-section="profile">
+                <span class="nav-icon"><span class="material-icons icon-inline">person</span></span> Edit Profile
+            </button>
+            <button class="account-nav-item" data-section="orders">
+                <span class="nav-icon"><span class="material-icons icon-inline">inventory_2</span></span> My Orders
+            </button>
+            <button class="account-nav-item" data-section="reviews">
+                <span class="nav-icon"><span class="material-icons icon-inline">star</span></span> My Reviews
+            </button>
+            <button class="account-nav-item" data-section="wishlist">
+                <span class="nav-icon"><span class="material-icons icon-inline">favorite</span></span> Wishlist
+            </button>
+            <button class="account-nav-item" data-section="recent">
+                <span class="nav-icon"><span class="material-icons icon-inline">history</span></span> Recently Viewed
+            </button>
+            <div class="account-nav-divider"></div>
+            <button class="account-nav-item" data-section="security">
+                <span class="nav-icon"><span class="material-icons icon-inline">lock</span></span> Change Password
+            </button>
+            <button class="account-nav-item" id="sidebarLogout" style="color:#EF4444;">
+                <span class="nav-icon"><span class="material-icons icon-inline">logout</span></span> Logout
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ── Main Content ────────────────────────── -->
+    <main class="account-main">
+
+        <!-- OVERVIEW -->
+        <section class="account-section active" id="section-overview">
+            <div class="section-header-row">
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">home</span></span> Overview</h2>
+            </div>
+
+            <!-- Stats strip -->
+            <div class="account-stats-strip">
+                <div class="account-stat-card">
+                    <div class="account-stat-val" id="statOrders">—</div>
+                    <div class="account-stat-label">Total Orders</div>
+                </div>
+                <div class="account-stat-card">
+                    <div class="account-stat-val" id="statReviews">—</div>
+                    <div class="account-stat-label">Reviews Written</div>
+                </div>
+                <div class="account-stat-card">
+                    <div class="account-stat-val" id="statWishlist">—</div>
+                    <div class="account-stat-label">Wishlist Items</div>
+                </div>
+                <div class="account-stat-card">
+                    <div class="account-stat-val" id="statSpent">—</div>
+                    <div class="account-stat-label">Total Spent</div>
+                </div>
+            </div>
+
+            <!-- User info snapshot -->
+            <div class="account-card">
+                <h4>Your Information</h4>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value" id="ovFullName">—</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <span class="info-value" id="ovEmail">—</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone</span>
+                        <span class="info-value" id="ovPhone">—</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Address</span>
+                        <span class="info-value" id="ovAddress">—</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Member Since</span>
+                        <span class="info-value" id="ovMemberSince">—</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Account Type</span>
+                        <span class="info-value" id="ovRole">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Last order snapshot -->
+            <div class="account-card">
+                <h4>Last Order</h4>
+                <div id="lastOrderSnap">
+                    <div class="empty-state" style="padding:20px;">
+                        <div class="empty-icon"><span class="material-icons">inbox</span></div>
+                        <p>No orders yet.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROFILE EDIT -->
+        <section class="account-section" id="section-profile">
+            <div class="section-header-row">
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">person</span></span> Edit Profile</h2>
+            </div>
+
+            <div class="account-card">
+                <h4>Personal Information</h4>
+                <form id="profileForm">
+                    <div class="form-row-2">
+                        <div class="account-form-group">
+                            <label>First Name</label>
+                            <input type="text" id="editFirstName" class="account-input" required>
+                        </div>
+                        <div class="account-form-group">
+                            <label>Last Name</label>
+                            <input type="text" id="editLastName" class="account-input" required>
+                        </div>
+                    </div>
+                    <div class="account-form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="editEmail" class="account-input" disabled style="opacity:0.5; cursor:not-allowed;">
+                        <span style="font-size:12px; color:var(--text-muted);">Email cannot be changed. Contact support if needed.</span>
+                    </div>
+                    <div class="account-form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="editPhone" class="account-input" placeholder="+1 (555) 000-0000">
+                    </div>
+                    <div class="account-form-group">
+                        <label>Shipping Address</label>
+                        <input type="text" id="editAddress" class="account-input" placeholder="123 Main St, City, Country">
+                    </div>
+
+                    <button type="submit" class="btn-account-primary">Save Changes</button>
+                    <div class="form-feedback" id="profileFeedback"></div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ORDERS -->
+        <section class="account-section" id="section-orders">
+            <div class="section-header-row">
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">inventory_2</span></span> My Orders</h2>
+            </div>
+            <div id="ordersContainer">
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h4>No orders yet</h4>
+                    <p>When you complete a purchase, your orders will appear here.</p>
+                    <a href="./category.html" class="btn-account-ghost">Browse Products</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- REVIEWS -->
+        <section class="account-section" id="section-reviews">
+            <div class="section-header-row">
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">star</span></span> My Reviews</h2>
+            </div>
+            <div id="reviewsContainer">
+                <div class="empty-state">
+                    <div class="empty-icon"><span class="material-icons">rate_review</span></div>
+                    <h4>No reviews yet</h4>
+                    <p>Share your thoughts on products you've purchased.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- WISHLIST -->
+        <section class="account-section" id="section-wishlist">
+            <div class="section-header-row">
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">favorite</span></span> Wishlist</h2>
+            </div>
+            <div id="wishlistContainer">
+                <div class="empty-state">
+                    <div class="empty-icon"><span class="material-icons">favorite_border</span></div>
+                    <h4>Your wishlist is empty</h4>
+                    <p>Save products you love by clicking "Add to Wishlist" on any product page.</p>
+                    <a href="./category.html" class="btn-account-ghost">Explore Products</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- RECENTLY VIEWED -->
+        <section class="account-section" id="section-recent">
+            <div class="section-header-row">
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">history</span></span> Recently Viewed</h2>
+            </div>
+            <div id="recentContainer">
+                <div class="empty-state">
+                    <div class="empty-icon"><span class="material-icons">visibility</span></div>
+                    <h4>Nothing viewed yet</h4>
+                    <p>Products you browse will appear here automatically.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHANGE PASSWORD -->
+        <section class="account-section" id="section-security">
+            <div class="section-header-row">
+                <h2 class="section-title"><span class="title-icon"><span class="material-icons icon-inline">lock</span></span> Change Password</h2>
+            </div>
+
+            <div class="account-card">
+                <h4>Update Password</h4>
+                <form id="passwordForm">
+                    <div class="account-form-group">
+                        <label>Current Password</label>
+                        <input type="password" id="currentPassword" class="account-input" required placeholder="Enter current password">
+                    </div>
+                    <div class="account-form-group">
+                        <label>New Password</label>
+                        <input type="password" id="newPassword" class="account-input" required placeholder="At least 6 characters" minlength="6">
+                    </div>
+                    <div class="account-form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="confirmPassword" class="account-input" required placeholder="Repeat new password">
+                    </div>
+
+                    <button type="submit" class="btn-account-primary">Update Password</button>
+                    <div class="form-feedback" id="passwordFeedback"></div>
+                </form>
+            </div>
+
+            <div class="account-card" style="margin-top:20px;">
+                <h4 style="color:#EF4444;">Danger Zone</h4>
+                <p style="font-size:14px; color:var(--text-muted); margin-bottom:16px;">
+                    Logging out will end your current session on this device.
+                </p>
+                <button class="btn-account-danger" id="dangerLogout">Sign Out of Account</button>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<%- include('partials/footer') %>
+
+<script src="./assets/js/nav-auth.js"></script>
+<script src="./assets/js/account.js"></script>
+
+<%- include('partials/contact-modal') %>
+</body>
+</html>

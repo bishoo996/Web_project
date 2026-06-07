@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Up</title>
+
+<link rel="stylesheet" href="./assets/css/log.css">
+</head>
+
+<body>
+
+
+<div class="auth-page">
+    <div class="auth-box">
+
+        <h2>Create Account</h2>
+        <form id="signupForm" action="/api/register" method="POST">
+
+            <label>First Name</label>
+            <input type="text" id="firstName" name="firstName" required>
+
+            <label>Last Name</label>
+            <input type="text" id="lastName" name="lastName" required>
+
+            <label>Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label>Phone</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="e.g., 01012345678">
+
+            <label>Password</label>
+            <div style="position:relative;">
+                <input type="password" id="password" name="password" required>
+                <button type="button" id="togglePassword" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:transparent; border:none; color:#94A3B8; cursor:pointer; display:flex; align-items:center;"></button>
+            </div>
+
+            <div id="signupError" class="message-box" style="color:#ff4444; display:none;"></div>
+
+            <label class="tos-checkbox" style="display:flex; align-items:center; gap:10px; margin:16px 0 0; font-size:14px; color:#94A3B8;">
+                <input type="checkbox" id="agreeTos" name="agreeTos" required style="width:16px; height:16px;">
+                I agree to the <a href="./terms.html" style="color:#7C3AED; text-decoration:underline;">Terms of Service</a>
+            </label>
+
+            <button class="login-btn" type="submit">Create Account</button>
+
+        </form>
+
+        <p class="switch">
+            Already have account?
+            <a href="./sign_in.html">Login</a>
+        </p>
+
+        <p class="switch">
+            <a href="./index.html">← Back Home</a>
+        </p>
+
+    </div>
+
+
+<script src="./assets/js/log.js"></script>
+</body>
+</html>
