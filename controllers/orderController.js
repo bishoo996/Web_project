@@ -47,7 +47,7 @@ async function getAccountOrders(req, res) {
         res.json(orders);
     } catch (err) {
         console.error('Error fetching account orders', err);
-        res.status(500).send('Error fetching orders');
+        res.status(500).json({ error: 'Error fetching orders' });
     }
 }
 

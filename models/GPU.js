@@ -16,6 +16,6 @@ const gpuSchema = new mongoose.Schema({
         p4k: { type: Number, required: true }
      }
 
-}, {timestamp: true});
+}, { timestamps: true });
 
 module.exports = mongoose.model('GPU', gpuSchema);

@@ -3,6 +3,8 @@
 // ==========================================
 
 let allProducts = [];
+let currentPage = 1;
+const ITEMS_PER_PAGE = 12;
 
 const _urlParams = new URLSearchParams(window.location.search);
 const _fromBuilder = _urlParams.get('from') === 'builder';
@@ -150,7 +152,7 @@ function setupCategoryFilters() {
 
     // Add event listeners to redraw grid when clicked
     document.querySelectorAll('.cat-checkbox').forEach(box => {
-        box.addEventListener('change', renderGrid);
+        box.addEventListener('change', () => { currentPage = 1; renderGrid(); });
     });
 }
 
@@ -160,7 +162,8 @@ function setupPriceSlider() {
     
     slider.addEventListener('input', (e) => {
         display.textContent = `$${e.target.value}`;
-        renderGrid(); // Redraw grid as you slide
+        currentPage = 1;
+        renderGrid();
     });
 }
 
@@ -203,13 +206,24 @@ function renderGrid() {
     const countSpan = document.querySelector('.results-count span');
     if (countSpan) countSpan.textContent = filteredProducts.length;
 
+    const infoEl = document.getElementById('paginationInfo');
+
     if (filteredProducts.length === 0) {
         grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #94A3B8;">No products match your filters.</div>`;
+        if (infoEl) infoEl.textContent = '';
+        renderPagination(0);
         return;
     }
 
-    // E. Build the Cards
-    // D. Build the Cards
+    // E. Paginate
+    const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+    currentPage = Math.min(currentPage, totalPages);
+    const pageStart = (currentPage - 1) * ITEMS_PER_PAGE;
+    const pageEnd = Math.min(pageStart + ITEMS_PER_PAGE, filteredProducts.length);
+    if (infoEl) infoEl.textContent = `Showing ${pageStart + 1}–${pageEnd} of ${filteredProducts.length} products`;
+    filteredProducts = filteredProducts.slice(pageStart, pageEnd);
+
+    // F. Build the Cards
     filteredProducts.forEach(p => {
         const card = document.createElement('div');
         card.className = 'product-card';
@@ -253,6 +267,38 @@ function renderGrid() {
 
         grid.appendChild(card);
     });
+
+    renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+    let container = document.getElementById('paginationControls');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'paginationControls';
+        container.className = 'pagination';
+        document.getElementById('productGrid').insertAdjacentElement('afterend', container);
+    }
+
+    if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+    }
+
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) pages.push(i);
+
+    container.innerHTML = `
+        <button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>&#8592; Prev</button>
+        ${pages.map(i => `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`).join('')}
+        <button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next &#8594;</button>
+    `;
+}
+
+function goToPage(page) {
+    currentPage = page;
+    renderGrid();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // --- MOBILE SIDEBAR TOGGLE ---
@@ -264,8 +310,8 @@ document.getElementById('closeSidebarBtn')?.addEventListener('click', () => {
 });
 
 // --- SEARCH & SORT EVENT LISTENERS ---
-document.getElementById('searchInput')?.addEventListener('input', renderGrid);
-document.getElementById('sortSelect')?.addEventListener('change', renderGrid);
+document.getElementById('searchInput')?.addEventListener('input', () => { currentPage = 1; renderGrid(); });
+document.getElementById('sortSelect')?.addEventListener('change', () => { currentPage = 1; renderGrid(); });
 
 // Start the engine
 renderCompareBar();

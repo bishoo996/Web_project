@@ -10,10 +10,10 @@ async function addCpu(req, res) {
     try {
         const cpu = new CPU(req.body);
         await cpu.save();
-        res.send('CPU saved successfully!');
+        res.json({ message: 'CPU saved successfully!' });
     } catch (err) {
         console.error('Error saving CPU', err);
-        res.status(500).send('Error saving CPU: ' + err.message);
+        res.status(500).json({ error: 'Error saving CPU: ' + err.message });
     }
 }
 
@@ -21,10 +21,10 @@ async function addGpu(req, res) {
     try {
         const gpu = new GPU(req.body);
         await gpu.save();
-        res.send('GPU saved successfully!');
+        res.json({ message: 'GPU saved successfully!' });
     } catch (err) {
         console.error('Error saving GPU', err);
-        res.status(500).send('Error saving GPU: ' + err.message);
+        res.status(500).json({ error: 'Error saving GPU: ' + err.message });
     }
 }
 
@@ -32,10 +32,10 @@ async function addGame(req, res) {
     try {
         const game = new Game(req.body);
         await game.save();
-        res.send('Game saved successfully!');
+        res.json({ message: 'Game saved successfully!' });
     } catch (err) {
         console.error('Error saving Game', err);
-        res.status(500).send('Error saving Game: ' + err.message);
+        res.status(500).json({ error: 'Error saving Game: ' + err.message });
     }
 }
 
@@ -46,23 +46,23 @@ async function getUsers(req, res) {
         res.json(users);
     } catch (err) {
         console.error('Error fetching users', err);
-        res.status(500).send('Error fetching users');
+        res.status(500).json({ error: 'Error fetching users' });
     }
 }
 
 async function updateUser(req, res) {
     try {
         const target = await User.findById(req.params.id);
-        if (!target) return res.status(404).send('User not found');
+        if (!target) return res.status(404).json({ error: 'User not found' });
         if (req.session.role === 'admin' && ['admin', 'superadmin'].includes(target.role)) {
-            return res.status(403).send('Admins may only edit customers and vendors');
+            return res.status(403).json({ error: 'Admins may only edit customers and vendors' });
         }
         const allowed = (({ firstName, lastName, phoneNumber, address }) => ({ firstName, lastName, phoneNumber, address }))(req.body);
         await User.findByIdAndUpdate(req.params.id, allowed);
-        res.send('User updated!');
+        res.json({ message: 'User updated!' });
     } catch (err) {
         console.error('Error updating user', err);
-        res.status(500).send('Error updating user');
+        res.status(500).json({ error: 'Error updating user' });
     }
 }
 
@@ -70,31 +70,31 @@ async function updateUserRole(req, res) {
     try {
         const { role } = req.body;
         if (!['customer', 'vendor', 'admin', 'superadmin'].includes(role)) {
-            return res.status(400).send('Invalid role');
+            return res.status(400).json({ error: 'Invalid role' });
         }
         await User.findByIdAndUpdate(req.params.id, { role });
-        res.send('Role updated!');
+        res.json({ message: 'Role updated!' });
     } catch (err) {
         console.error('Error updating role', err);
-        res.status(500).send('Error updating role');
+        res.status(500).json({ error: 'Error updating role' });
     }
 }
 
 async function deleteUser(req, res) {
     try {
         const target = await User.findById(req.params.id);
-        if (!target) return res.status(404).send('User not found');
+        if (!target) return res.status(404).json({ error: 'User not found' });
         if (target._id.equals(req.session.userId)) {
-            return res.status(400).send('Cannot delete your own account');
+            return res.status(400).json({ error: 'Cannot delete your own account' });
         }
         if (req.session.role === 'admin' && ['admin', 'superadmin'].includes(target.role)) {
-            return res.status(403).send('Admins may only delete customers and vendors');
+            return res.status(403).json({ error: 'Admins may only delete customers and vendors' });
         }
         await User.findByIdAndDelete(req.params.id);
-        res.send('User deleted!');
+        res.json({ message: 'User deleted!' });
     } catch (err) {
         console.error('Error deleting user', err);
-        res.status(500).send('Error deleting user');
+        res.status(500).json({ error: 'Error deleting user' });
     }
 }
 
@@ -104,7 +104,7 @@ async function getOrders(req, res) {
         res.json(orders);
     } catch (err) {
         console.error('Error fetching orders', err);
-        res.status(500).send('Error fetching orders');
+        res.status(500).json({ error: 'Error fetching orders' });
     }
 }
 
@@ -133,7 +133,7 @@ async function getProductStats(req, res) {
         });
     } catch (err) {
         console.error('Error fetching product stats', err);
-        res.status(500).send('Error fetching product stats');
+        res.status(500).json({ error: 'Error fetching product stats' });
     }
 }
 
@@ -143,7 +143,7 @@ async function getSuperAdminUsers(req, res) {
         res.json(users);
     } catch (err) {
         console.error('Error fetching users', err);
-        res.status(500).send('Error fetching users');
+        res.status(500).json({ error: 'Error fetching users' });
     }
 }
 
@@ -153,7 +153,7 @@ async function getSuperAdminOrders(req, res) {
         res.json(orders);
     } catch (err) {
         console.error('Error fetching orders', err);
-        res.status(500).send('Error fetching orders');
+        res.status(500).json({ error: 'Error fetching orders' });
     }
 }
 
@@ -162,30 +162,30 @@ async function createCategory(req, res) {
         const { name, slug, description } = req.body;
         const category = new Category({ name, slug, description });
         await category.save();
-        res.send('Category created!');
+        res.json({ message: 'Category created!' });
     } catch (err) {
         console.error('Error creating category', err);
-        res.status(500).send('Error creating category');
+        res.status(500).json({ error: 'Error creating category' });
     }
 }
 
 async function updateCategory(req, res) {
     try {
         await Category.findByIdAndUpdate(req.params.id, req.body);
-        res.send('Category updated!');
+        res.json({ message: 'Category updated!' });
     } catch (err) {
         console.error('Error updating category', err);
-        res.status(500).send('Error updating category');
+        res.status(500).json({ error: 'Error updating category' });
     }
 }
 
 async function deleteCategory(req, res) {
     try {
         await Category.findByIdAndDelete(req.params.id);
-        res.send('Category deleted!');
+        res.json({ message: 'Category deleted!' });
     } catch (err) {
         console.error('Error deleting category', err);
-        res.status(500).send('Error deleting category');
+        res.status(500).json({ error: 'Error deleting category' });
     }
 }
 
@@ -193,10 +193,10 @@ async function updateOrderStatus(req, res) {
     try {
         const { status } = req.body;
         await Order.findByIdAndUpdate(req.params.id, { status });
-        res.send('Status updated!');
+        res.json({ message: 'Status updated!' });
     } catch (err) {
         console.error('Error updating order status', err);
-        res.status(500).send('Error updating order status');
+        res.status(500).json({ error: 'Error updating order status' });
     }
 }
 

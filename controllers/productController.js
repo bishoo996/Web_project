@@ -32,7 +32,19 @@ async function getProductsByCategory(req, res) {
 
 async function getProducts(req, res) {
     try {
-        const products = await Product.find({ approvalStatus: { $ne: 'rejected' } }).limit(8);
+        const filter = { approvalStatus: { $ne: 'rejected' } };
+
+        if (req.query.page) {
+            const page = Math.max(1, parseInt(req.query.page) || 1);
+            const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 12));
+            const [products, total] = await Promise.all([
+                Product.find(filter).skip((page - 1) * limit).limit(limit),
+                Product.countDocuments(filter)
+            ]);
+            return res.json({ products, total, page, totalPages: Math.ceil(total / limit) });
+        }
+
+        const products = await Product.find(filter);
         res.json(products);
     } catch (err) {
         console.error('Error fetching all products:', err);

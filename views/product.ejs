@@ -48,7 +48,7 @@
         }
         .reviews { margin-bottom: 30px; font-size: 14px; color: var(--text-muted); }
         .reviews span { color: #F59E0B; letter-spacing: 2px; }
-        
+
         .specs-table {
             width: 100%;
             border-collapse: collapse;
@@ -60,7 +60,7 @@
         .specs-table tr { border-bottom: 1px solid #333; }
         .specs-table td { padding: 12px 16px; }
         .specs-table td:first-child { color: var(--text-muted); width: 40%; font-weight: bold; }
-        
+
         @media (max-width: 768px) {
             .product-page-container { grid-template-columns: 1fr; }
         }
@@ -68,28 +68,7 @@
 </head>
 <body>
 
-<nav>
-    <div class="nav-container">
-        <div class="brand">Overclocked</div>
-        <ul class="nav-links">
-            <li><a href="./index.html">Home</a></li>
-            <li><a href="./builder_index.html">Build Your Own PC</a></li>
-            <li><a href="./category.html">Categories</a></li>
-            <li><a href="./benchmark.html">Benchmark</a></li>
-            <li><a href="/admin" id="adminNavLink" style="display:none; color:#ffaa00; font-weight:bold;">Admin Portal</a></li>
-            <li><a href="/vendor" id="vendorNavLink" style="display:none; color:#ffaa00; font-weight:bold;">Vendor Panel</a></li>
-        </ul>
-        <div class="nav-buttons">
-            <button class="btn-icon" style="position:relative;" onclick="window.location.href='./cart.html'">
-                <span class="material-icons icon-inline" aria-hidden="true">shopping_cart</span>
-                <span id="navCartBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#7C3AED; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;"></span>
-            </button>
-            <button class="btn-primary" id="navSignIn" onclick="window.location.href='./sign_in.html'">Sign In</button>
-            <a class="btn-primary" id="navMyAccount" href="./account.html" style="display:none; text-decoration:none; align-items:center; gap:6px;"><span class="material-icons icon-inline" aria-hidden="true">person</span> <span class="nav-user-name">Account</span></a>
-            <button class="btn-outline" id="navLogout" style="display:none;">Logout</button>
-        </div>
-    </div>
-</nav>
+<%- include('partials/header') %>
 
     <div style="max-width: 1200px; margin: 20px auto 0; padding: 0 24px;">
         <a class="back-btn" href="javascript:history.back()" style="display: inline-flex; align-items: center; gap: 6px; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-secondary); padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all .2s;">
@@ -104,9 +83,9 @@
 
     <div style="max-width: 1200px; margin: 40px auto; padding: 0 24px;">
         <h2 style="color: var(--primary-color); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px;">Customer Reviews</h2>
-        
+
         <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 40px;">
-            
+
             <div style="background: var(--surface-color); padding: 24px; border-radius: 8px; border: 1px solid var(--border); height: fit-content;">
                 <h3 style="margin-bottom: 15px;">Write a Review</h3>
                 <form id="reviewForm">
@@ -136,43 +115,12 @@
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section">
-                <div class="brand">PCMarket</div>
-                <p class="footer-description">Your trusted source for PC parts, laptops, and gaming gear since 2020.</p>
-            </div>
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="./index.html">Home</a></li>
-                    <li><a href="./builder_index.html">Build Your Own PC</a></li>
-                    <li><a href="./category.html">Categories</a></li>
-                    <li><a href="./benchmark.html">Benchmark</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Support</h4>
-                <ul>
-                    <li><a href="./terms.html">Terms of Service</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Follow Us</h4>
-                <div class="social-icons">
-                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="vertical-align:middle;margin-right:5px;"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>Facebook</a>
-                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="vertical-align:middle;margin-right:5px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X</a>
-                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle;margin-right:5px;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>Instagram</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 PCMarket. All rights reserved.</p>
-        </div>
-    </footer>
+<%- include('partials/footer') %>
 
     <script src="./assets/js/nav-auth.js"></script>
     <script src="./assets/js/cart-widget.js"></script>
     <script src="./assets/js/product.js"></script>
+
+<%- include('partials/contact-modal') %>
 </body>
 </html>

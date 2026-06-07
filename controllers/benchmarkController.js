@@ -7,7 +7,7 @@ async function saveBenchmark(req, res) {
         res.json({ success: true });
     } catch (err) {
         console.error('Error saving benchmark result', err);
-        res.status(500).send('Benchmark error');
+        res.status(500).json({ error: 'Benchmark error' });
     }
 }
 
@@ -17,7 +17,7 @@ async function getBenchmarkHistory(req, res) {
         res.json(results);
     } catch (err) {
         console.error('Error fetching benchmark history', err);
-        res.status(500).send('Error fetching benchmark history');
+        res.status(500).json({ error: 'Error fetching benchmark history' });
     }
 }
 

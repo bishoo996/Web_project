@@ -8,7 +8,7 @@ async function getCart(req, res) {
         res.json(cart);
     } catch (err) {
         console.error('Error fetching cart', err);
-        res.status(500).send('Cart error');
+        res.status(500).json({ error: 'Cart error' });
     }
 }
 

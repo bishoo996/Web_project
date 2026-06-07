@@ -53,6 +53,11 @@ router.get('/product/:id', productController.getProductById);
 router.get('/products/:categoryName', productController.getProductsByCategory);
 router.get('/products', productController.getProducts);
 
+// ─── Account profile ─────────────────────────────────────────────
+router.get('/account/profile', requireAuth, accountController.getProfile);
+router.put('/account/profile', requireAuth, accountController.updateProfile);
+router.put('/account/password', requireAuth, accountController.updatePassword);
+
 // ─── Reviews & account activity ──────────────────────────────────
 router.post('/product/:id/review', accountController.postReview);
 router.get('/account/reviews', requireAuth, accountController.getAccountReviews);
@@ -81,7 +86,7 @@ router.get('/benchmark/history', requireAuth, benchmarkController.getBenchmarkHi
 // ─── Admin product management ────────────────────────────────────
 router.get('/admin/products', requireAdmin, productController.getAdminProducts);
 router.post('/admin/add-product', requireSuperAdmin, productController.addAdminProduct);
-router.post('/admin/upload-image', requireSuperAdmin, upload.single('image'), vendorController.uploadProductImage);
+router.post('/admin/upload-image', requireAdmin, upload.single('image'), vendorController.uploadProductImage);
 router.put('/admin/edit-product/:id', requireAdmin, productController.editAdminProduct);
 router.delete('/admin/delete-product/:id', requireAdmin, productController.deleteAdminProduct);
 

@@ -6,30 +6,11 @@
   <title>Overclocked · Choose Component</title>
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="stylesheet" href="./assets/css/categorystyle.css">
-  </head>
+</head>
 <body>
-  <nav>
-      <div class="nav-container">
-          <div class="brand">Overclocked</div>
-          <ul class="nav-links">
-    <li><a href="./index.html">Home</a></li>
-    <li><a href="./builder_index.html">Build Your Own PC</a></li>
-    <li><a href="./category.html">Categories</a></li>
-    <li><a href="./benchmark.html">Benchmark</a></li>
-    <li><a href="/admin" id="adminNavLink" style="display: none; color: #ffaa00; font-weight: bold;">Admin Portal</a></li>
-    <li><a href="/vendor" id="vendorNavLink" style="display: none; color: #ffaa00; font-weight: bold;">Vendor Panel</a></li>
-</ul>
-<div class="nav-buttons">
-    <button class="btn-icon" style="position:relative;" onclick="window.location.href='./cart.html'">
-        <span class="material-icons icon-inline" aria-hidden="true">shopping_cart</span>
-        <span id="navCartBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#7C3AED; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;"></span>
-    </button>
-    <button class="btn-primary" id="navSignIn" onclick="window.location.href='./sign_in.html'">Sign In</button>
-    <a class="btn-primary" id="navMyAccount" href="./account.html" style="display:none; text-decoration:none; align-items:center; gap:6px;"><span class="material-icons icon-inline" aria-hidden="true">person</span> <span class="nav-user-name">Account</span></a>
-    <button class="btn-outline" id="navLogout" style="display:none;">Logout</button>
-</div>
-      </div>
-  </nav>
+
+<%- include('partials/header') %>
+
 <div class="page">
 
   <!-- Category header -->
@@ -73,7 +54,7 @@
   </div>
 
   <div class="shop-container" style="display: flex; gap: 24px; align-items: flex-start; margin-top: 20px;">
-      
+
       <aside class="filter-sidebar" id="filterSidebar">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
               <h3 style="margin: 0; color: var(--primary-color);">Filters</h3>
@@ -99,52 +80,23 @@
       <main style="flex: 1;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
               <button id="mobileFilterBtn" style="display: none; background: var(--bg-secondary); color: white; border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px;">Filters</button>
+              <p id="paginationInfo" style="font-size:13px; color: var(--text-muted); margin:0;"></p>
           </div>
-          
+
           <div id="productGrid" class="ecommerce-grid">
               </div>
       </main>
   </div>
 
 </div>
-<footer class="footer">
-      <div class="footer-container">
-          <div class="footer-section">
-              <div class="brand">PCMarket</div>
-              <p class="footer-description">Your trusted source for PC parts, laptops, and gaming gear since 2020.</p>
-          </div>
-          <div class="footer-section">
-              <h4>Quick Links</h4>
-              <ul>
-    <li><a href="./index.html">Home</a></li>
-    <li><a href="./builder_index.html">Build Your Own PC</a></li>
-    <li><a href="./index.html#categories">Categories</a></li>
-    <li><a href="./benchmark.html">Benchmark</a></li>
-</ul>
-          </div>
-          <div class="footer-section">
-              <h4>Support</h4>
-              <ul>
-                  <li><a href="./terms.html">Terms of Service</a></li>
-              </ul>
-          </div>
-          <div class="footer-section">
-              <h4>Follow Us</h4>
-              <div class="social-icons">
-                  <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="vertical-align:middle;margin-right:5px;"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>Facebook</a>
-                  <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="vertical-align:middle;margin-right:5px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X</a>
-                  <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle;margin-right:5px;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>Instagram</a>
-              </div>
-          </div>
-      </div>
-      <div class="footer-bottom">
-          <p>&copy; 2026 PCMarket. All rights reserved.</p>
-      </div>
-  </footer>
+
+<%- include('partials/footer') %>
+
 <div class="toast" id="toast"></div>
 <script src="./assets/js/nav-auth.js"></script>
 <script src="./assets/js/cart-widget.js"></script>
 <script src="./assets/js/categoryJS.js"></script>
 
+<%- include('partials/contact-modal') %>
 </body>
 </html>

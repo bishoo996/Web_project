@@ -7,23 +7,8 @@
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
-    <nav>
-        <div class="nav-container">
-            <div class="brand">Overclocked</div>
-            <ul class="nav-links">
-                <li><a href="./index.html">Home</a></li>
-                <li><a href="./builder_index.html">Build Your Own PC</a></li>
-                <li><a href="./category.html">Categories</a></li>
-                <li><a href="./benchmark.html">Benchmark</a></li>
-            </ul>
-            <div class="nav-buttons">
-                <button class="btn-icon" onclick="window.location.href='./cart.html'">
-                    <span class="material-icons icon-inline" aria-hidden="true">shopping_cart</span>
-                </button>
-                <button class="btn-primary" onclick="window.location.href='./sign_in.html'">Sign In</button>
-            </div>
-        </div>
-    </nav>
+
+<%- include('partials/header') %>
 
     <main class="page-section" style="padding: 60px 24px; max-width: 980px; margin: 0 auto;">
         <div class="section-header">
@@ -62,39 +47,8 @@
         </article>
     </main>
 
-    <footer class="footer" style="margin-top: 0; padding-bottom: 40px;">
-        <div class="footer-container">
-            <div class="footer-section">
-                <div class="brand">PCMarket</div>
-                <p class="footer-description">Trusted PC hardware marketplace since 2020.</p>
-            </div>
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="./index.html">Home</a></li>
-                    <li><a href="./builder_index.html">Build Your Own PC</a></li>
-                    <li><a href="./category.html">Categories</a></li>
-                    <li><a href="./benchmark.html">Benchmark</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Support</h4>
-                <ul>
-                    <li><a href="./terms.html">Terms of Service</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Follow Us</h4>
-                <div class="social-icons">
-                    <a href="#">Facebook</a>
-                    <a href="#">X</a>
-                    <a href="#">Instagram</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 PCMarket. All rights reserved.</p>
-        </div>
-    </footer>
+<%- include('partials/footer') %>
+
+<%- include('partials/contact-modal') %>
 </body>
 </html>

@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('navLogout');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to log out?')) return;
             try {
                 await fetch('/api/logout', { method: 'POST' });
             } catch (_) {}

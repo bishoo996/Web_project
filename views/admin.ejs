@@ -8,18 +8,18 @@
         /* Dashboard Layout Overrides */
         body { margin: 0; background-color: #121212; color: #fff; font-family: sans-serif; }
         .dashboard-container { display: flex; min-height: 100vh; }
-        
+
         /* The Sidebar Navigation */
         .sidebar { width: 250px; background-color: #1e1e1e; padding: 20px; border-right: 1px solid #333; }
         .sidebar h2 { color: #ffaa00; text-align: center; margin-bottom: 30px; }
         .nav-btn { display: block; width: 100%; padding: 15px; margin-bottom: 10px; background: transparent; border: 1px solid #444; color: white; cursor: pointer; text-align: left; border-radius: 5px; transition: 0.3s; }
         .nav-btn:hover, .nav-btn.active { background-color: #ffaa00; color: #000; font-weight: bold; }
-        
+
         /* The Main Content Area */
         .main-content { flex: 1; padding: 40px; }
         .content-section { display: none; max-width: 600px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .content-section.active { display: block; } /* This class controls visibility! */
-        
+        .content-section.active { display: block; }
+
         /* Form Styling */
         input, select { width: 100%; padding: 10px; margin: 8px 0 20px 0; border-radius: 5px; border: 1px solid #444; background: #2a2a2a; color: white; box-sizing: border-box; }
         .message-box { margin-top: 15px; font-weight: bold; text-align: center; }
@@ -48,7 +48,7 @@
         <button class="nav-btn active" data-target="product-section">Add Product</button>
         <button class="nav-btn" data-target="inventory-section">Manage Inventory</button>
         <button class="nav-btn" data-target="stats-section">Product Statistics</button>
-        
+
         <button class="nav-btn" data-target="benchmark-section">Benchmark Engine</button>
 
         <hr style="border-color: #333; margin: 20px 0;">
@@ -60,15 +60,15 @@
     </div>
 
     <div class="main-content">
-        
+
         <div id="product-section" class="content-section active">
             <h3>Add New Product (Inventory)</h3>
             <form id="addProductForm">
                 <label>Product Title</label> <input type="text" id="prodTitle" placeholder="e.g., ASUS TUF Gaming RTX 4070" required>
-                
+
                 <div class="grid-3">
                     <div><label>Manufacturer</label> <input type="text" id="prodMfg" placeholder="e.g., ASUS" required></div>
-                    <div><label>Category</label> 
+                    <div><label>Category</label>
                         <select id="prodCategory" required>
                             <option value="cpu">CPU</option>
                             <option value="gpu">GPU</option>
@@ -88,7 +88,7 @@
                 </div>
 
                 <div class="grid-3">
-                    <div><label>Stock Status</label> 
+                    <div><label>Stock Status</label>
                         <select id="prodStock">
                             <option value="in">In Stock</option>
                             <option value="low">Low Stock</option>
@@ -107,7 +107,7 @@
                     <p style="font-size: 12px; color: #94A3B8; margin-bottom: 10px;">Link this retail box to its raw silicon so the Bottleneck Calculator works!</p>
                     <select id="prodBaselineId">
                         <option value="">-- Do Not Link (No Benchmark) --</option>
-                        </select>
+                    </select>
                 </div>
 
                 <hr style="margin: 20px 0; border-color: #444;">
@@ -116,19 +116,18 @@
                     <h4 style="margin: 0;">Custom Specifications</h4>
                     <button type="button" id="addSpecBtn" style="background: #2a2a2a; color: white; border: 1px solid #444; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">+ Add Spec Row</button>
                 </div>
-                
-                <div id="specsContainer">
-                    </div>
+
+                <div id="specsContainer"></div>
 
                 <button type="submit" class="login-btn" style="width: 100%; margin-top: 20px;">Save Product</button>
                 <div id="productMessage" class="message-box"></div>
             </form>
         </div>
-        
+
 
         <div id="inventory-section" class="content-section">
             <h3 style="color: #ffaa00; margin-bottom: 20px;">Store Inventory</h3>
-            
+
             <div style="background: #2a2a2a; border-radius: 8px; padding: 20px; overflow-x: auto;">
                 <table style="width: 100%; text-align: left; border-collapse: collapse; color: white;">
                     <thead>
@@ -140,15 +139,14 @@
                             <th style="padding: 12px; color: #94A3B8; text-align: right;">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="inventoryTableBody">
-                        </tbody>
+                    <tbody id="inventoryTableBody"></tbody>
                 </table>
             </div>
         </div>
 
         <div id="stats-section" class="content-section">
             <h3 style="color: #ffaa00; margin-bottom: 30px;">Product Statistics</h3>
-            
+
             <div class="stats-grid">
                 <div class="stat-card">
                     <h4>Total Sales</h4>
@@ -185,11 +183,10 @@
             </div>
         </div>
 
-
         <div id="benchmark-section" class="content-section">
             <h3 style="color: #ffaa00; margin-bottom: 20px;">The Benchmark Engine</h3>
             <p style="font-size: 13px; color: #94A3B8; margin-bottom: 30px;">Add raw silicon data here. You can link store inventory to these profiles later.</p>
-            
+
             <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
                 <h4 style="color: #7C3AED; margin-top: 0;">1. Add Raw CPU</h4>
                 <form id="addCpuForm">
@@ -246,7 +243,6 @@
             </div>
         </div>
 
-
         <!-- ===== USERS MANAGEMENT ===== -->
         <div id="users-section" class="content-section">
             <h3 style="color: #ffaa00; margin-bottom: 20px;">Users Management</h3>
@@ -266,7 +262,6 @@
                 </table>
             </div>
         </div>
-
 
         <!-- ===== ORDERS OVERVIEW ===== -->
         <div id="orders-section" class="content-section">
@@ -290,7 +285,6 @@
 
     </div>
 </div>
-
 
 <!-- ===== EDIT PRODUCT MODAL ===== -->
 <div id="editModal">
@@ -335,11 +329,6 @@
         <button onclick="submitEdit()" class="login-btn" style="width: 100%; margin-top: 20px;">Save Changes</button>
         <div id="editMessage" class="message-box"></div>
     </div>
-</div>
-
-
-    </div>
-
 </div>
 
 <script src="/assets/js/admin.js"></script>

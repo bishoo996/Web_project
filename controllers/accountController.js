@@ -5,7 +5,7 @@ async function postReview(req, res) {
     try {
         const { rating, title, comment } = req.body;
         const product = await Product.findById(req.params.id);
-        if (!product) return res.status(404).send('Product not found');
+        if (!product) return res.status(404).json({ error: 'Product not found' });
 
         const authorName = req.session.firstName ? `${req.session.firstName} ${req.session.lastName || ''}`.trim() : 'Guest Buyer';
         product.reviews.push({
@@ -17,10 +17,10 @@ async function postReview(req, res) {
         });
 
         await product.save();
-        res.send('Review added successfully!');
+        res.json({ message: 'Review added successfully!' });
     } catch (err) {
         console.error('Error saving review:', err);
-        res.status(500).send('Failed to save review');
+        res.status(500).json({ error: 'Failed to save review' });
     }
 }
 
@@ -48,19 +48,19 @@ async function getAccountReviews(req, res) {
         res.json(reviews);
     } catch (err) {
         console.error('Error fetching account reviews:', err);
-        res.status(500).send('Failed to load reviews');
+        res.status(500).json({ error: 'Failed to load reviews' });
     }
 }
 
 async function deleteReview(req, res) {
     try {
         const product = await Product.findById(req.params.productId);
-        if (!product) return res.status(404).send('Product not found');
+        if (!product) return res.status(404).json({ error: 'Product not found' });
 
         const review = product.reviews.id(req.params.reviewId);
-        if (!review) return res.status(404).send('Review not found');
+        if (!review) return res.status(404).json({ error: 'Review not found' });
         if (!review.reviewerId || review.reviewerId.toString() !== req.session.userId.toString()) {
-            return res.status(403).send('Unauthorized');
+            return res.status(403).json({ error: 'Unauthorized' });
         }
 
         product.reviews.pull(review._id);
@@ -68,7 +68,7 @@ async function deleteReview(req, res) {
         res.json({ success: true });
     } catch (err) {
         console.error('Error deleting review:', err);
-        res.status(500).send('Failed to delete review');
+        res.status(500).json({ error: 'Failed to delete review' });
     }
 }
 
@@ -78,7 +78,7 @@ async function getWishlist(req, res) {
         res.json(user.wishlist || []);
     } catch (err) {
         console.error('Error fetching wishlist:', err);
-        res.status(500).send('Failed to load wishlist');
+        res.status(500).json({ error: 'Failed to load wishlist' });
     }
 }
 
@@ -86,7 +86,7 @@ async function toggleWishlist(req, res) {
     try {
         const productId = req.params.productId;
         const user = await User.findById(req.session.userId);
-        if (!user) return res.status(404).send('User not found');
+        if (!user) return res.status(404).json({ error: 'User not found' });
 
         const exists = user.wishlist.some(id => id.toString() === productId);
         if (exists) {
@@ -100,7 +100,7 @@ async function toggleWishlist(req, res) {
         res.json({ action: 'added' });
     } catch (err) {
         console.error('Error updating wishlist:', err);
-        res.status(500).send('Failed to update wishlist');
+        res.status(500).json({ error: 'Failed to update wishlist' });
     }
 }
 
@@ -110,7 +110,7 @@ async function getRecentlyViewed(req, res) {
         res.json(user.recentlyViewed || []);
     } catch (err) {
         console.error('Error fetching recently viewed:', err);
-        res.status(500).send('Failed to load recently viewed');
+        res.status(500).json({ error: 'Failed to load recently viewed' });
     }
 }
 
@@ -118,7 +118,7 @@ async function saveRecentlyViewed(req, res) {
     try {
         const productId = req.params.productId;
         const user = await User.findById(req.session.userId);
-        if (!user) return res.status(404).send('User not found');
+        if (!user) return res.status(404).json({ error: 'User not found' });
 
         user.recentlyViewed = user.recentlyViewed.filter(id => id.toString() !== productId);
         user.recentlyViewed.unshift(productId);
@@ -129,7 +129,7 @@ async function saveRecentlyViewed(req, res) {
         res.json({ success: true });
     } catch (err) {
         console.error('Error updating recently viewed:', err);
-        res.status(500).send('Failed to save recently viewed');
+        res.status(500).json({ error: 'Failed to save recently viewed' });
     }
 }
 
@@ -139,7 +139,7 @@ async function getProfile(req, res) {
         res.json(user);
     } catch (err) {
         console.error('Error fetching profile', err);
-        res.status(500).send('Error fetching profile');
+        res.status(500).json({ error: 'Error fetching profile' });
     }
 }
 
@@ -149,7 +149,7 @@ async function updateProfile(req, res) {
         res.json(user);
     } catch (err) {
         console.error('Error updating profile', err);
-        res.status(500).send('Error updating profile');
+        res.status(500).json({ error: 'Error updating profile' });
     }
 }
 
@@ -158,14 +158,14 @@ async function updatePassword(req, res) {
         const { currentPassword, newPassword } = req.body;
         const user = await User.findById(req.session.userId);
         const match = await require('bcrypt').compare(currentPassword, user.password);
-        if (!match) return res.status(400).send('Wrong password');
+        if (!match) return res.status(400).json({ error: 'Wrong password' });
 
         user.password = await require('bcrypt').hash(newPassword, 10);
         await user.save();
-        res.send('Password updated');
+        res.json({ message: 'Password updated' });
     } catch (err) {
         console.error('Error updating password', err);
-        res.status(500).send('Password error');
+        res.status(500).json({ error: 'Password error' });
     }
 }
 
