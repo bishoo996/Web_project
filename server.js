@@ -3,6 +3,14 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
+<<<<<<< HEAD
+<<<<<<< HEAD
+const MongoStore = require('connect-mongo')(session); 
+=======
+const MongoStore = require('connect-mongo'); // 1. Added MongoStore
+>>>>>>> parent of ddda157 (.)
+=======
+>>>>>>> parent of 5bab57a (changedserver.js to deploy)
 
 const apiRoutes = require('./routes/api');
 const viewRoutes = require('./routes/views');
@@ -14,10 +22,16 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(session({
- secret: process.env.SESSION_SECRET || 'fallback_dev_secret',
- resave: false,
- saveUninitialized: false,
- cookie: {
+    secret: process.env.SESSION_SECRET || 'fallback_dev_secret',
+    resave: false,
+    saveUninitialized: false,
+<<<<<<< HEAD
+    store: new MongoStore({ 
+        url: process.env.MONGODB_URI || 'mongodb://localhost:27017/web_projectDB' 
+    }),
+=======
+>>>>>>> parent of 5bab57a (changedserver.js to deploy)
+    cookie: {
         secure: false,
         maxAge: 1000 * 60 * 60 * 24
     }
@@ -25,7 +39,7 @@ app.use(session({
 
 app.use((req, res, next) => {
     if (['/admin.html', '/vendor.html', '/superadmin.html'].includes(req.path)) {
-         return res.status(403).send('Forbidden');
+        return res.status(403).send('Forbidden');
     }
     next();
 });
@@ -48,5 +62,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-     console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
