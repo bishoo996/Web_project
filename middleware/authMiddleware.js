@@ -1,17 +1,27 @@
 function requireAuth(req, res, next) {
-    if (req.session.userId) {
+    if (req.session && req.session.userId) {
         return next();
     }
-    return res.status(401).send('Not logged in');
+    // Send 401 for API routes, redirect for page routes
+    if (req.originalUrl.startsWith('/api')) {
+        return res.status(401).json({ error: 'Not logged in' });
+    }
+    return res.redirect('/sign_in.html');
 }
 
 function requireRole(...roles) {
     return (req, res, next) => {
-        if (!req.session.userId) {
-            return res.status(401).send('Not logged in');
+        if (!req.session || !req.session.userId) {
+            if (req.originalUrl.startsWith('/api')) {
+                return res.status(401).json({ error: 'Not logged in' });
+            }
+            return res.redirect('/sign_in.html');
         }
         if (!roles.includes(req.session.role)) {
-            return res.status(403).send('Forbidden');
+            if (req.originalUrl.startsWith('/api')) {
+                return res.status(403).json({ error: 'Forbidden' });
+            }
+            return res.redirect('/');
         }
         next();
     };

@@ -35,13 +35,28 @@ async function login(req, res) {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).send('Invalid email or password');
 
+        // Save everything to session
         req.session.userId = user._id;
         req.session.firstName = user.firstName;
         req.session.lastName = user.lastName;
         req.session.companyName = user.companyName;
         req.session.role = user.role;
 
-        res.redirect('/index.html');
+        // Save session explicitly before redirecting
+        req.session.save(err => {
+            if (err) {
+                console.error('Session save error:', err);
+                return res.status(500).send('Login failed');
+            }
+
+            // Redirect based on role
+            const role = user.role;
+            if (role === 'superadmin') return res.redirect('/superadmin');
+            if (role === 'admin') return res.redirect('/admin');
+            if (role === 'vendor') return res.redirect('/vendor');
+            return res.redirect('/');
+        });
+
     } catch (err) {
         console.error('Error logging in user', err);
         res.status(500).send('Server error during login');
