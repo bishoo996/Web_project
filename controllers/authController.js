@@ -1,73 +1,60 @@
-const bcrypt = require('bcrypt');
-const User = require('../models/Users');
+require('dotenv').config();
+const path = require('path');
+const express = require('express');
+const mongoose = require('mongoose');
+const session = require('express-session');
 
-async function register(req, res) {
-    try {
-        const { firstName, lastName, email, phoneNumber, password } = req.body;
+const apiRoutes = require('./routes/api');
+const viewRoutes = require('./routes/views');
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const egPhoneRegex = /^(?:\+20|0)?1[0125]\d{8}$/;
-        if (!firstName || !lastName) return res.status(400).send('Name required');
-        if (!emailRegex.test(email)) return res.status(400).send('Invalid email');
-        if (!egPhoneRegex.test(phoneNumber)) return res.status(400).send('Invalid Egyptian phone number');
-        if (!password || password.length < 6) return res.status(400).send('Password must be at least 6 characters');
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ firstName, lastName, email, phoneNumber, password: hashedPassword });
+// Trust Render's proxy — required for sessions to work on Render
+app.set('trust proxy', 1);
 
-        await newUser.save();
-        res.redirect('/sign_in.html');
-    } catch (err) {
-        console.error('Error registering user', err);
-        if (err.code === 11000 && err.keyPattern && err.keyPattern.email) {
-            return res.status(400).send('Email already registered');
-        }
-        res.status(500).send('Server error during registration');
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Body parsers MUST come before routes
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'fallback_dev_secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        maxAge: 1000 * 60 * 60 * 24
     }
-}
+}));
 
-async function login(req, res) {
-    try {
-        const { identifier, password } = req.body;
-        const user = await User.findOne({ email: identifier });
-        if (!user) return res.status(400).send('Invalid email or password');
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).send('Invalid email or password');
-
-        req.session.userId = user._id;
-        req.session.firstName = user.firstName;
-        req.session.lastName = user.lastName;
-        req.session.companyName = user.companyName;
-        req.session.role = user.role;
-
-        res.redirect('/index.html');
-    } catch (err) {
-        console.error('Error logging in user', err);
-        res.status(500).send('Server error during login');
+// Block direct access to protected HTML files
+app.use((req, res, next) => {
+    if (['/admin.html', '/vendor.html', '/superadmin.html'].includes(req.path)) {
+        return res.status(403).send('Forbidden');
     }
-}
+    next();
+});
 
-function me(req, res) {
-    if (req.session.userId) {
-        res.json({
-            isLoggedIn: true,
-            firstName: req.session.firstName,
-            lastName: req.session.lastName,
-            companyName: req.session.companyName,
-            role: req.session.role
-        });
-    } else {
-        res.json({ isLoggedIn: false, role: 'guest' });
-    }
-}
+app.use(express.static('public'));
 
-function logout(req, res) {
-    req.session.destroy(err => {
-        if (err) return res.status(500).send('Logout failed');
-        res.clearCookie('connect.sid');
-        res.json({ success: true });
-    });
-}
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch((err) => console.error('Could not connect to MongoDB', err));
 
-module.exports = { register, login, me, logout };
+app.use('/api', apiRoutes);
+app.use('/', viewRoutes);
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    const status = err.status || err.statusCode || 500;
+    res.status(status).json({ error: err.message || 'Internal Server Error' });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
