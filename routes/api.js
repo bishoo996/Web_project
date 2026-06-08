@@ -2,7 +2,6 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const os = require('os');
 const router = express.Router();
 
 const authController = require('../controllers/authController');
@@ -16,11 +15,9 @@ const adminController = require('../controllers/adminController');
 const vendorController = require('../controllers/vendorController');
 const { requireAuth, requireAdmin, requireSuperAdmin, requireVendor } = require('../middleware/authMiddleware');
 
-const uploadDir = path.join(os.tmpdir(), 'uploads');
+const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
 
-if(!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
+fs.mkdirSync(uploadDir, { recursive: true }); 
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadDir),
