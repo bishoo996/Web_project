@@ -145,6 +145,7 @@ categorySelect.addEventListener('change', async (e) => {
 
 // 3. Submit the Universal Form
 document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
     // A. Gather the dynamic specs
     const specKeys = document.querySelectorAll('.spec-key');
     const specVals = document.querySelectorAll('.spec-val');
