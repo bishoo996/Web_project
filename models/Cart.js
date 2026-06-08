@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Cart schema stores a single cart per user and contains item metadata for each selected product.
 const cartItemSchema = new mongoose.Schema({
     productId: {
         type: mongoose.Schema.Types.ObjectId,

@@ -10,7 +10,7 @@ async function addCpu(req, res) {
     try {
         const cpu = new CPU(req.body);
         await cpu.save();
-        res.json({ message: 'CPU saved successfully!' });
+        res.json({ success: true, message: 'CPU saved successfully!', id: cpu._id });
     } catch (err) {
         console.error('Error saving CPU', err);
         res.status(500).json({ error: 'Error saving CPU: ' + err.message });
@@ -21,7 +21,7 @@ async function addGpu(req, res) {
     try {
         const gpu = new GPU(req.body);
         await gpu.save();
-        res.json({ message: 'GPU saved successfully!' });
+        res.json({ success: true, message: 'GPU saved successfully!', id: gpu._id });
     } catch (err) {
         console.error('Error saving GPU', err);
         res.status(500).json({ error: 'Error saving GPU: ' + err.message });
@@ -32,7 +32,7 @@ async function addGame(req, res) {
     try {
         const game = new Game(req.body);
         await game.save();
-        res.json({ message: 'Game saved successfully!' });
+        res.json({ success: true, message: 'Game saved successfully!', id: game._id });
     } catch (err) {
         console.error('Error saving Game', err);
         res.status(500).json({ error: 'Error saving Game: ' + err.message });

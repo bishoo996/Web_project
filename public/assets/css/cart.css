@@ -1,6 +1,7 @@
 /* ================================================================
    cart.css  —  Shopping Cart page styles
-   Inherits CSS variables from style.css
+   Inherits CSS variables from style.css.
+   Defines layout, cart item row styling, summary panel, and modal states.
 ================================================================ */
 
 .cart-page {

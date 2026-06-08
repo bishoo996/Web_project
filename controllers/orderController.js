@@ -1,7 +1,10 @@
+// Order controller handles checkout flow and order history retrieval.
+// It uses the Cart model to read purchased items and the Order model to record completed purchases.
 const Cart = require('../models/Cart');
 const Order = require('../models/Order');
 
 async function checkout(req, res) {
+    // Convert the user's cart into a saved order record.
     try {
         const { shippingAddress = '', paymentMethod = 'card', notes = '' } = req.body;
         const cart = await Cart.findOne({ userId: req.session.userId });
@@ -42,6 +45,7 @@ async function checkout(req, res) {
 }
 
 async function getAccountOrders(req, res) {
+    // Return all orders belonging to the authenticated user.
     try {
         const orders = await Order.find({ userId: req.session.userId });
         res.json(orders);

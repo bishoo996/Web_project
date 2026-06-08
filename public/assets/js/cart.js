@@ -1,14 +1,19 @@
 /**
  * cart.js — Shopping Cart page logic
- * NEW FILE — does not modify any existing file.
- * Uses /api/cart/* endpoints defined in newRoutes.js.
+ * This script renders the cart page, updates quantities, removes items,
+ * calculates totals, and handles checkout interactions.
+ * It communicates with the backend via /api/cart/* routes defined in routes/api.js.
  */
 
 // ── State ─────────────────────────────────────────────────────────────────────
+// Stores the currently loaded cart items and total values from the API.
 let cartData    = { items: [], total: 0 };
+// Tracks whether the user is authenticated and allowed to view the cart.
 let isLoggedIn  = false;
+// Estimated tax rate used in the order summary display.
 let taxRate     = 0.08;   // 8% estimated tax
 
+// Required part categories for builder flow validation when placing an order.
 const REQUIRED_BUILD_CATEGORIES = ['cpu', 'gpu', 'motherboard', 'memory', 'storage', 'psu', 'case', 'cooler'];
 const REQUIRED_CORE_CATEGORIES = ['cpu', 'gpu', 'motherboard', 'memory', 'storage', 'psu'];
 const REQUIRED_CORE_LABELS = {
@@ -16,47 +21,59 @@ const REQUIRED_CORE_LABELS = {
     memory: 'Memory', storage: 'Storage', psu: 'Power Supply'
 };
 
+// ── Helper functions for builder validation and cart state detection ──────
 function getCartCategories() {
+    // Return a lowercased set of categories present in the current cart.
     return new Set((cartData.items || []).map(item => String(item.category || '').toLowerCase()));
 }
 
 function isBuildOrder(categories) {
+    // Determine whether the cart contains any required builder components.
     return REQUIRED_BUILD_CATEGORIES.some(cat => categories.has(cat));
 }
 
 function isBuilderFlowCart() {
+    // Detect whether this checkout flow originated from the builder workflow.
     return sessionStorage.getItem('builderFlowCart') === 'true';
 }
 
 function getMissingBuildComponents(categories) {
+    // Return required core components that are still missing from the cart.
     return REQUIRED_CORE_CATEGORIES.filter(cat => !categories.has(cat));
 }
 
 function formatMissingBuildComponents(categories) {
+    // Convert missing component IDs into human-readable labels.
     return getMissingBuildComponents(categories).map(id => REQUIRED_CORE_LABELS[id] || id);
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
+// Wait for the HTML to load before initializing cart and modal behaviors.
 document.addEventListener('DOMContentLoaded', async () => {
     await initCart();
     initCheckoutModal();
 });
 
 async function initCart() {
-    // Check auth
+    // Check whether the current visitor is authenticated.
     try {
         const res  = await fetch('/api/me');
         const data = await res.json();
         isLoggedIn = !!data.isLoggedIn;
-    } catch (err) { console.error('Error checking auth state', err); isLoggedIn = false; }
+    } catch (err) {
+        // If auth check fails, assume guest mode and hide cart details.
+        console.error('Error checking auth state', err);
+        isLoggedIn = false;
+    }
 
     if (!isLoggedIn) {
-        // Show auth banner, hide summary
+        // Show the encourage-login banner and do not render cart items for guests.
         showEl('cartAuthBanner');
         renderEmptyCart('Sign in to view and save your cart.');
         return;
     }
 
+    // If authenticated, retrieve the user's cart and display it.
     await fetchAndRender();
 }
 
@@ -67,6 +84,7 @@ async function fetchAndRender() {
         if (!res.ok) throw new Error('fetch failed');
         cartData = await res.json();
     } catch (err) {
+        // If the fetch fails, display an empty cart instead of crashing.
         console.error('Failed to fetch cart data', err);
         cartData = { items: [], total: 0 };
     }
@@ -83,7 +101,7 @@ function renderCart() {
     const itemCount = items.reduce((s, i) => s + i.quantity, 0);
 
     if (badgeEl) badgeEl.textContent = itemCount;
-    // Also update the nav badge
+    // Also update the global navigation badge if available.
     if (window.updateCartBadge) window.updateCartBadge(itemCount);
 
     if (items.length === 0) {
@@ -95,7 +113,7 @@ function renderCart() {
 
     summaryCol.style.display = '';
 
-    // Header row
+    // Build the table header row and cart item rows as HTML.
     const headerHTML = `
         <div class="cart-header-row">
             <div>Product</div>
@@ -105,10 +123,10 @@ function renderCart() {
         </div>
     `;
 
-    // Items
+    // Render each cart item using the helper function.
     const itemsHTML = items.map(item => renderCartItem(item)).join('');
 
-    // Actions bar
+    // Render the cart actions section below the items list.
     const actionsHTML = `
         <div class="cart-actions-bar">
             <button class="btn-clear-cart" onclick="clearCart()"><span class="material-icons icon-inline" aria-hidden="true">delete</span> Clear Cart</button>
@@ -118,7 +136,7 @@ function renderCart() {
 
     itemsCol.innerHTML = headerHTML + itemsHTML + actionsHTML;
 
-    // Summary
+    // Update the order summary column based on the current items.
     updateSummary(items);
 }
 
@@ -127,6 +145,7 @@ function renderCartItem(item) {
     const subtotal  = (item.price * item.quantity).toLocaleString('en-US', { minimumFractionDigits: 2 });
     const each      = item.price.toLocaleString('en-US', { minimumFractionDigits: 2 });
 
+    // Build the HTML for a single cart item row.
     return `
         <div class="cart-item" id="cart-item-${productId}">
             <!-- Product cell -->
@@ -139,7 +158,7 @@ function renderCartItem(item) {
                 </div>
             </div>
 
-            <!-- Quantity -->
+            <!-- Quantity controls -->
             <div class="cart-qty-cell">
                 <div class="qty-control">
                     <button class="qty-btn" onclick="changeQty('${productId}', ${item.quantity - 1})">−</button>
@@ -148,13 +167,13 @@ function renderCartItem(item) {
                 </div>
             </div>
 
-            <!-- Price -->
+            <!-- Price display -->
             <div class="cart-price-cell">
                 $${subtotal}
                 <div class="cart-price-each">$${each} each</div>
             </div>
 
-            <!-- Remove -->
+            <!-- Remove action -->
             <div class="cart-remove-cell">
                 <button class="cart-remove-btn" title="Remove item" onclick="removeItem('${productId}')">✕</button>
             </div>
@@ -178,12 +197,14 @@ function renderEmptyCart(message = '') {
 }
 
 function updateSummary(items) {
+    // Compute the summary values that are displayed on the right-hand panel.
     const subtotal  = items.reduce((s, i) => s + i.price * i.quantity, 0);
     const tax       = subtotal * taxRate;
     const shipping  = subtotal > 500 ? 0 : 29.99;
     const total     = subtotal + tax + shipping;
     const itemCount = items.reduce((s, i) => s + i.quantity, 0);
 
+    // Update the DOM fields with formatted currency values.
     setEl('summaryItemCount', itemCount);
     setEl('summarySubtotal', '$' + subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 }));
     setEl('summaryTax',      '$' + tax.toLocaleString('en-US',      { minimumFractionDigits: 2 }));
@@ -193,6 +214,7 @@ function updateSummary(items) {
 
 // ── Cart actions ──────────────────────────────────────────────────────────────
 async function changeQty(productId, newQty) {
+    // If quantity falls below 1, treat the action as a remove request.
     if (newQty < 1) {
         removeItem(productId);
         return;
@@ -213,7 +235,7 @@ async function changeQty(productId, newQty) {
 }
 
 async function removeItem(productId) {
-    // Optimistic: fade out
+    // Fade out the removed item immediately for better UX.
     const el = document.getElementById(`cart-item-${productId}`);
     if (el) {
         el.style.transition = 'opacity 0.25s, transform 0.25s';
@@ -224,7 +246,7 @@ async function removeItem(productId) {
     try {
         await fetch(`/api/cart/item/${productId}`, { method: 'DELETE' });
         
-        // Sync removal with builder if part exists
+        // If the cart is part of a builder flow, keep session builder state in sync.
         try {
             const parts = JSON.parse(sessionStorage.getItem('builderParts') || '{}');
             let removed = false;
@@ -246,7 +268,7 @@ async function removeItem(productId) {
     } catch (err) {
         console.error('Failed to remove item', err);
         showToast('Failed to remove item', 'error');
-        await fetchAndRender();   // re-render to restore
+        await fetchAndRender();   // re-render to restore state after failure.
     }
 }
 
@@ -289,7 +311,7 @@ function initCheckoutModal() {
             return;
         }
 
-        // Pre-fill address if user has one stored
+        // Open the checkout modal after all validations pass.
         modal.classList.add('show');
     });
 
@@ -304,6 +326,7 @@ function initCheckoutModal() {
     const buildWarningConfirm = document.getElementById('buildWarningConfirm');
     const buildWarningList = document.getElementById('buildWarningList');
 
+    // Helper functions for the build warning dialog that appears when essential parts are missing.
     const hideBuildWarning = () => buildWarningOverlay?.classList.remove('show');
     const showBuildWarning = (missing) => {
         if (!buildWarningOverlay || !buildWarningList) return;
@@ -362,6 +385,7 @@ function initCheckoutModal() {
 }
 
 // ── Toast ─────────────────────────────────────────────────────────────────────
+// Render a temporary message box on the cart page.
 function showToast(message, type = 'success') {
     const toast = document.getElementById('cartToast');
     if (!toast) return;
@@ -371,6 +395,7 @@ function showToast(message, type = 'success') {
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
+// Render a Material icon inside an inline span.
 function renderIcon(iconName) {
     return `<span class="material-icons icon-inline" aria-hidden="true">${iconName}</span>`;
 }
@@ -386,10 +411,12 @@ function showEl(id) {
 }
 
 function escHtml(str) {
+    // Escape HTML entities before inserting strings into generated HTML.
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function getCategoryIcon(cat) {
+    // Choose a Material icon name based on the product category.
     const map = {
         cpu: 'memory',
         gpu: 'sports_esports',
@@ -406,7 +433,7 @@ function getCategoryIcon(cat) {
 }
 
 // ── Expose addToCart globally ─────────────────────────────────────────────────
-// Other pages (category, product) can call window.addToCart(productId)
+// Other pages (category, product) can call `window.addToCart(productId)` to add items.
 window.addToCart = async function(productId, quantity = 1) {
     try {
         const res = await fetch('/api/cart/add', {
@@ -425,6 +452,7 @@ window.addToCart = async function(productId, quantity = 1) {
             return false;
         }
 
+        // Update any cart badge displayed in the navigation bar.
         if (window.updateCartBadge) window.updateCartBadge(data.itemCount);
         showToast('Added to cart!', 'success');
         return true;

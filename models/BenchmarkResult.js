@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Stores benchmark results for a user, including selected CPU/GPU and measured FPS.
 const benchmarkResultSchema = new mongoose.Schema({
     userId:     { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     cpuId:      { type: mongoose.Schema.Types.ObjectId, ref: 'CPU',  required: true },

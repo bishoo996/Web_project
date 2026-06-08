@@ -1,3 +1,4 @@
+// Benchmark controller handles saving and retrieving benchmark result records.
 const BenchmarkResult = require('../models/BenchmarkResult');
 
 async function saveBenchmark(req, res) {

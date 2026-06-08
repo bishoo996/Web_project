@@ -1,15 +1,20 @@
+<!-- Benchmark page displays hardware selection controls and performance visualization. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Required metadata for encoding and mobile layout. -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Overclocked - GPU & CPU Benchmark</title>
+    <!-- Global styles for the benchmark page. -->
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
 
 <%- include('partials/header') %>
 
+    <!-- Hero section with hardware selection controls and run benchmark action. -->
+    <!-- Hero selection section for choosing CPU/GPU components. -->
     <section id="hero">
         <div class="hero-content">
             <h1>Component Benchmark</h1>
@@ -43,6 +48,7 @@
         </div>
     </section>
 
+    <!-- Benchmark result visualizations are updated by benchmark-script.js. -->
     <section id="benchmark-results">
         <h2>Benchmark Results</h2>
 
@@ -79,6 +85,7 @@
         </div>
     </section>
 
+    <!-- Dynamic game selection cards are rendered here from backend game data. -->
     <section id="game-simulation">
         <h2>Simulate FPS by Game</h2>
         <p class="subtitle">Click on a game to see estimated FPS with your selected components</p>
@@ -102,6 +109,7 @@
 
 <%- include('partials/footer') %>
 
+    <!-- Page scripts: navigation auth, cart widget helper, and benchmark interactions. -->
     <script src="./assets/js/nav-auth.js"></script>
     <script src="./assets/js/cart-widget.js"></script>
     <script src="./assets/js/benchmark-script.js"></script>

@@ -65,7 +65,7 @@ async function addAdminProduct(req, res) {
     try {
         const product = new Product({ ...req.body, approvalStatus: 'approved' });
         await product.save();
-        res.send('Product saved successfully!');
+        res.json({ success: true, message: 'Product saved successfully!', productId: product._id });
     } catch (err) {
         console.error('Error saving product:', err);
         res.status(500).send('Error saving product: ' + err.message);

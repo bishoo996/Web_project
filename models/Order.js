@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Order item subdocument schema captures product details stored at checkout time.
 const orderItemSchema = new mongoose.Schema({
     productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
     title:        { type: String, required: true },
@@ -17,6 +18,7 @@ const orderItemSchema = new mongoose.Schema({
 }, { _id: false });
 
 const orderSchema = new mongoose.Schema({
+    // The user who placed the order.
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

@@ -1,4 +1,11 @@
-let dbHardware = {  //store el DB data, act as cash so we dont pull from DB every time
+/*
+ * benchmark-script.js — Page logic for the benchmark tool
+ * Fetches live hardware data from the backend, populates dropdowns,
+ * renders game cards, and updates benchmark score bars.
+ */
+
+// Client-side cache for hardware data fetched from the API.
+let dbHardware = {
     cpus: [],
     gpus: [],
     games: []
@@ -21,14 +28,14 @@ const powerScore = document.getElementById('power-score');
 const thermalScore = document.getElementById('thermal-score');
 
 
-async function loadLiveHardware() {  //fetch DB data and populate dropdowns
+// ── Fetch hardware and populate page controls ───────────────────────────────
+async function loadLiveHardware() {
     try {
         const response = await fetch('/api/hardware');
         const data = await response.json();
-        dbHardware = data; //save to global state so our buttons can access the math variables later
+        dbHardware = data; // save to global cache for later calculations
         
-
-        //clear existing dropdowns
+        // Clear existing dropdown contents before repopulating.
         cpuSelect.innerHTML = '<option value="">-- Select CPU --</option>';
         gpuSelect.innerHTML = '<option value="">-- Select GPU --</option>';
 
@@ -53,8 +60,9 @@ async function loadLiveHardware() {  //fetch DB data and populate dropdowns
 
         data.games.forEach(game => {
             const card = document.createElement('div');
-            card.className = 'game-card'; //34an CSS styling
+            card.className = 'game-card'; // styled by CSS in the benchmark page
             
+            // Render a clickable game card with title and artwork.
             card.innerHTML = `
                 <img src="${game.imageUrl}" alt="${game.title}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;">
                 <h3 style="text-align: center; margin: 10px;">${game.title}</h3>
@@ -64,6 +72,7 @@ async function loadLiveHardware() {  //fetch DB data and populate dropdowns
                 const selectedGpuId = gpuSelect.value;
                 const selectedCpuId = cpuSelect.value;
                 
+                // Require both components before computing a game FPS estimate.
                 if (!selectedGpuId || !selectedCpuId) {
                     alert('Please select both a GPU and CPU first!');
                     return;
@@ -95,7 +104,7 @@ async function loadLiveHardware() {  //fetch DB data and populate dropdowns
     }
 }
 
-// 4. Update Progress Bars on Benchmark Click
+// ── Run benchmark and update score bars ───────────────────────────────────
 runBenchmarkBtn.addEventListener('click', function() {
     const selectedGpuId = gpuSelect.value;
     const selectedCpuId = cpuSelect.value;
@@ -110,7 +119,7 @@ runBenchmarkBtn.addEventListener('click', function() {
     const gpu = dbHardware.gpus.find(g => g._id === selectedGpuId);
     
    
-    // erformance: We average the CPU compute score and GPU 1440p score
+    // Performance: We average the CPU compute score and GPU 1440p score.
     const avgPerformance = Math.floor((cpu.computeScore + gpu.renderScores.p1440) / 2);
     
     // Memory: Scale VRAM to a 100% bar (assuming 24GB is max/100%)
@@ -119,7 +128,7 @@ runBenchmarkBtn.addEventListener('click', function() {
     animateProgressBar(performanceBar, performanceScore, Math.min(avgPerformance, 100));
     animateProgressBar(memoryBar, memoryScore, memoryPercentage);
     
-    //Power/Thermal aren't in DB yet, this is mock data
+    // Power and thermal scores are currently mocked because these values are not stored in the database.
     animateProgressBar(powerBar, powerScore, 85); 
     animateProgressBar(thermalBar, thermalScore, 78);
 });

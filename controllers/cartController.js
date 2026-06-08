@@ -1,7 +1,10 @@
+// Cart controller handles authenticated cart interactions through API endpoints.
+// It uses the Cart and Product models to read, update, and persist cart state.
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
 
 async function getCart(req, res) {
+    // Return the authenticated user's cart. If no cart exists yet, return an empty cart shape.
     try {
         let cart = await Cart.findOne({ userId: req.session.userId }).populate('items.productId');
         if (!cart) cart = { items: [] };
@@ -13,6 +16,8 @@ async function getCart(req, res) {
 }
 
 async function addToCart(req, res) {
+    // Add a product to the authenticated user's cart. If the item already exists,
+    // increment quantity; otherwise add a new item entry.
     try {
         const { productId, quantity = 1 } = req.body;
         const product = await Product.findById(productId);
@@ -47,6 +52,7 @@ async function addToCart(req, res) {
 }
 
 async function getCartCount(req, res) {
+    // Return only the total item count for the current user's cart.
     try {
         const cart = await Cart.findOne({ userId: req.session.userId });
         const count = cart ? cart.items.reduce((sum, i) => sum + i.quantity, 0) : 0;
@@ -58,6 +64,7 @@ async function getCartCount(req, res) {
 }
 
 async function updateCartItem(req, res) {
+    // Update the quantity for a specific item in the user's cart.
     try {
         const { quantity } = req.body;
         if (!quantity || quantity < 1) return res.status(400).json({ error: 'Invalid quantity' });
@@ -78,6 +85,7 @@ async function updateCartItem(req, res) {
 }
 
 async function removeCartItem(req, res) {
+    // Delete a single item from the user's cart.
     try {
         const cart = await Cart.findOne({ userId: req.session.userId });
         if (!cart) return res.status(404).json({ error: 'Cart not found' });
@@ -92,6 +100,7 @@ async function removeCartItem(req, res) {
 }
 
 async function clearCart(req, res) {
+    // Remove all items from the authenticated user's cart.
     try {
         const cart = await Cart.findOne({ userId: req.session.userId });
         if (cart) {

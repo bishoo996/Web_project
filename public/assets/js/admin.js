@@ -50,7 +50,16 @@ async function handleFormSubmit(event, endpoint, payload, messageDivId) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-        const resultText = await response.text();
+        // Prefer JSON responses when possible; fall back to text.
+        const contentType = response.headers.get('content-type') || '';
+        let resultText = '';
+        if (contentType.includes('application/json')) {
+            const data = await response.json();
+            // Display a friendly message if present, otherwise stringify the whole payload.
+            resultText = data.message || data.error || JSON.stringify(data);
+        } else {
+            resultText = await response.text();
+        }
 
         if (response.ok) {
             msgDiv.style.color = '#00ff00'; // Success green

@@ -18,6 +18,7 @@
     'use strict';
 
     // ── Toast ──────────────────────────────────────────────────────────────────
+    // Ensure the toast container exists before showing messages.
     function createToastEl() {
         if (document.getElementById('cwToast')) return;
         const el = document.createElement('div');
@@ -89,6 +90,7 @@
         // buttons' handlers are wired by showConfirmModal which sets callbacks on the overlay element
     }
 
+    // Build and show a confirmation modal for duplicate-cart actions.
     function showConfirmModal(title, body, { onAddOne, onSetTwo }) {
         ensureModalExists();
         const overlay = document.getElementById('cwConfirmModal');
@@ -119,6 +121,7 @@
     }
 
     // ── Cart badge ─────────────────────────────────────────────────────────────
+    // Update the navigation cart badge either via the shared global function or directly.
     function updateBadge(count) {
         // If nav-auth.js is loaded it will have set window.updateCartBadge
         if (typeof window.updateCartBadge === 'function') {
@@ -133,6 +136,7 @@
     }
 
     // ── Core add function ──────────────────────────────────────────────────────
+    // Adds a product to the cart and updates the badge and notifications.
     async function add(productId, quantity = 1, evt) {
         if (!productId) {
             showToast('⚠️ Invalid product', 'error');
@@ -233,6 +237,7 @@
     }
 
     // ── Toggle wishlist ────────────────────────────────────────────────────────
+    // Sends a request to add or remove a product from the user's wishlist.
     async function toggleWishlist(productId, btnEl) {
         if (!productId) return;
         try {
@@ -254,6 +259,7 @@
     }
 
     // ── Track recently viewed ──────────────────────────────────────────────────
+    // Notify the backend that a product was viewed so the account page can show history.
     async function trackView(productId) {
         if (!productId) return;
         try {
@@ -262,6 +268,7 @@
     }
 
     // ── Add from builder (category page → builder selection) ─────────────────
+    // This helper is used when adding a part from the PC builder workflow.
     async function addFromBuilder(productId, componentId, evt) {
         if (!productId || !componentId) {
             showToast('⚠️ Invalid product or component', 'error');
@@ -470,6 +477,7 @@
     }
 
     // ── Helper: get builder icon for component ────────────────────────────────
+    // Returns a Material icon identifier for a builder component slot.
     function _getBuilderIcon(componentId) {
         const iconMap = {
             cpu: 'memory', gpu: 'sports_esports', motherboard: 'desktop_windows',
