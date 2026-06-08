@@ -3,7 +3,11 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
+<<<<<<< HEAD
 const MongoStore = require('connect-mongo')(session); 
+=======
+const MongoStore = require('connect-mongo'); // 1. Added MongoStore
+>>>>>>> parent of ddda157 (.)
 
 const apiRoutes = require('./routes/api');
 const viewRoutes = require('./routes/views');
@@ -11,13 +15,13 @@ const viewRoutes = require('./routes/views');
 const app = express();
 const PORT = 3000;
 
-
+// 2. Trust Vercel's proxy for secure cookies
 app.set('trust proxy', 1);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-
+// 3. Updated Session Config for Serverless
 app.use(session({
     secret: process.env.SESSION_SECRET || 'fallback_dev_secret',
     resave: false,
@@ -31,7 +35,7 @@ app.use(session({
     }
 }));
 
-
+// Your custom role-based access middleware
 app.use((req, res, next) => {
     if (['/admin.html', '/vendor.html', '/superadmin.html'].includes(req.path)) {
         return res.status(403).send('Forbidden');
@@ -56,11 +60,11 @@ app.use((err, req, res, next) => {
     res.status(status).json({ error: err.message || 'Internal Server Error' });
 });
 
-
+// 4. CRITICAL FIX: Only listen locally, export for Vercel
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
     });
 }
 
-module.exports = app; 
+module.exports = app; // This is what Vercel needs to run your app
