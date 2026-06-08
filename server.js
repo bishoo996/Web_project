@@ -8,7 +8,7 @@ const apiRoutes = require('./routes/api');
 const viewRoutes = require('./routes/views');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT ||3000;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -34,10 +34,6 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch((err) => console.error('Could not connect to MongoDB', err));
-
 app.use('/api', apiRoutes);
 app.use('/', viewRoutes);
 
@@ -47,9 +43,19 @@ app.use((err, req, res, next) => {
     res.status(status).json({ error: err.message || 'Internal Server Error' });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+// FIX 2: Connect to the database first, THEN start listening for traffic
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => {
+        console.log('Connected to MongoDB');
+        
+        // Start the server only after a successful DB connection
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.error('Could not connect to MongoDB. Server not started.', err);
+    });
 
 
 
