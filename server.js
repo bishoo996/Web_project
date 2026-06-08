@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const MongoStore = require('connect-mongo'); 
+const MongoStore = require('connect-mongo')(session); 
 
 const apiRoutes = require('./routes/api');
 const viewRoutes = require('./routes/views');
@@ -22,8 +22,8 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'fallback_dev_secret',
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/web_projectDB'
+    store: new MongoStore({ 
+        url: process.env.MONGODB_URI || 'mongodb://localhost:27017/web_projectDB' 
     }),
     cookie: {
         secure: process.env.NODE_ENV === 'production',
