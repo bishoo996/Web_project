@@ -127,24 +127,6 @@ router.get('/vendor/sales-stats', requireVendor, vendorController.getVendorSales
 router.get('/vendor/orders', requireVendor, vendorController.getVendorOrders);
 
 // ════════════════════════════════════════════════════════════════
-// ─── Currency Exchange ──────────────────────────────────────────
-// GET /api/convert?amount=1000&to=EGP
-// ════════════════════════════════════════════════════════════════
-router.get('/convert', async (req, res) => {
-    const { amount = 1, to = 'EGP' } = req.query;
-    try {
-        const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-        const data = await response.json();
-        const rate = data.rates[to];
-        if (!rate) return res.status(400).json({ error: 'Currency not supported' });
-        const converted = (parseFloat(amount) * rate).toFixed(2);
-        res.json({ from: 'USD', to, amount, converted, rate });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to fetch exchange rate' });
-    }
-});
-
-// ════════════════════════════════════════════════════════════════
 // ─── Contact Email via SendGrid (External API) ──────────────────
 // POST /api/contact  { name, email, message }
 // ════════════════════════════════════════════════════════════════
