@@ -20,6 +20,7 @@ const _ICON_MAP = {
   cooler: 'ac_unit', monitor: 'desktop_mac', keyboard: 'keyboard',
   mouse: 'mouse', headset: 'headset'
 };
+// Hena byhandl el data el asaseya w by-map kol category lel icon bta3tha 3ashan tZhar fel UI.
 
 
 async function loadPreviewProducts() {
@@ -42,10 +43,11 @@ async function loadPreviewProducts() {
   } catch (_) {}
   render();
 }
+// El function de btegeb el products men el server w beta5od awel 3 fel category 3ashan t3redhom fel hover preview.
 
 
 const CORE = [
-  { id: 'cpu',         label: 'CPU',           sub: 'Processor',        icon: 'memory', btn: 'Choose A CPU' },
+  { id: 'cpu',         label: 'CPU',         sub: 'Processor',        icon: 'memory', btn: 'Choose A CPU' },
   { id: 'motherboard', label: 'Motherboard',   sub: 'Main Board',       icon: 'desktop_windows', btn: 'Choose A Motherboard' },
   { id: 'gpu',         label: 'Video Card',    sub: 'GPU',              icon: 'sports_esports', btn: 'Choose A Video Card' },
   { id: 'memory',      label: 'Memory',        sub: 'Slot 1',           icon: 'memory', btn: 'Choose Memory' },
@@ -61,6 +63,7 @@ const PERIPH = [
   { id: 'mouse',    label: 'Mouse',    sub: 'Input',   icon: 'mouse', btn: 'Choose A Mouse' },
   { id: 'headset',  label: 'Headset',  sub: 'Audio',   icon: 'headset', btn: 'Choose A Headset' },
 ];
+// Dol el arrays ely feha asamy el parts el asaseya w el extra (zay el mouse w el keyboard) ely htzhar fel gadwal.
 
 
 function getParts() { try { return JSON.parse(sessionStorage.getItem('builderParts') || '{}'); } catch { return {}; } }
@@ -71,6 +74,7 @@ function saveParts(p) {
     showToast('Storage limit reached — some changes may not be saved.');
   }
 }
+// Dol bygebo w ysayvo el parts ely enta ekhtartha fel browser (sessionStorage) 3ashan matde3sh lma t3ml refresh.
 
 
 (function applyPending() {
@@ -84,6 +88,8 @@ function saveParts(p) {
     saveParts(p);
   } catch {}
 })();
+// El block da byshoof law enta dost "Add" 3la part men saf7a tanya, byzawedha 3al cart bta3tak awel ma el saf7a tefta7.
+
 
 let toastTimer;
 function showToast(msg) {
@@ -93,6 +99,8 @@ function showToast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
+// De bttala3 popup zghyra (toast) t2olak en fe 7aga 7asalt, w btkhtefy b3d 2.4 sec.
+
 
 function wattageHTML(watts) {
   if (watts === null || watts === undefined) return '<span class="dash">—</span>';
@@ -155,6 +163,8 @@ const cartSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" str
 function renderIcon(iconName) {
   return `<span class="material-icons icon-inline" aria-hidden="true">${iconName}</span>`;
 }
+// El functions dol homa el modules ely btrsem el HTML bta3 kol column, zay el wattage w el benchmark w el card ely btzhr fel hover.
+
 
 function makeRow(comp, parts) {
   const sel     = parts[comp.id];
@@ -215,6 +225,8 @@ function makeRow(comp, parts) {
   [tdCat, tdSel, tdWatt, tdBench, tdAvail, tdPrice, tdBuy].forEach(td => tr.appendChild(td));
   return tr;
 }
+// Da el builder el asasy ely byrsem kol row fel gadwal; lw ekhtart part byzherha b tfaselha, w lw la2 byseebha fadya be button Choose.
+
 
 function makeMemory2Row(parts) {
   const sel    = parts['memory2'];
@@ -271,6 +283,8 @@ function makeMemory2Row(parts) {
   [tdCat, tdSel, tdWatt, tdBench, tdAvail, tdPrice, tdBuy].forEach(td => tr.appendChild(td));
   return tr;
 }
+// De function makhsosa btrsem slot el RAM el tany bs lw enta already 7atet RAM fe slot 1.
+
 
 function render() {
   const parts = getParts();
@@ -285,9 +299,11 @@ function render() {
     }
   });
   PERIPH.forEach(c => pb.appendChild(makeRow(c, parts)));
+// Hena bnbd2 el render (El Store Manager): bymsa7 el gadwal el adeem w byrsem el gadwal el gded block by block, w byZawed el RAM el tanya lw mawgouda.
 
   const count = Object.keys(parts).length;
   document.getElementById('partsCount').textContent = `${count} Part${count !== 1 ? 's' : ''} Selected`;
+// Da by3d enta mkhter kam part fel cart bta3tak w yktbha.
 
 const chips = document.getElementById('compatChips');
 const hasDual = parts['memory'] && parts['memory2'];
@@ -298,6 +314,7 @@ const psuCapacity = psu?.watts ?? null;
 const totalWatts = Object.entries(parts)
   .filter(([id]) => id !== 'psu')
   .reduce((sum, [, part]) => sum + (part.watts || 0), 0);
+// Da by7seb el total wattage ely el gehaz m7tago mn gher ma y7seb el power supply nfsaha.
 
 let psuChip = '';
 if (psu && psuCapacity > 0) {
@@ -312,6 +329,7 @@ if (psu && psuCapacity > 0) {
 } else if (totalWatts > 0 && !psu) {
   psuChip = `<span class="chip chip-warn">No PSU · ${totalWatts}W needed</span>`;
 }
+// Hena bytsheck law el power supply (PSU) hykfy el wattage wla hayfre23 (overloaded) w yetala3lak warning.
 
 const caseFormFactor = parts['case']?.formFactor || (parts['case'] ? 'ATX' : null);
 
@@ -326,6 +344,7 @@ if (cpu?.socket && mobo?.socket) {
     ? `<span class="chip chip-ok">Socket · ${cpu.socket}</span>`
     : `<span class="chip chip-error">Socket Mismatch · CPU: ${cpu.socket} / Mobo: ${mobo.socket}</span>`;
 }
+// Da byshoof law el CPU wl Motherboard yerkabo 3la b3d (nfss el socket) wla fe ghalat (Mismatch).
 
 const refMemType = mobo?.memType || cpu?.memType;
 let memTypeChip = '';
@@ -335,6 +354,7 @@ if (ram?.memType && refMemType) {
     ? `<span class="chip chip-ok">RAM · ${ram.memType}</span>`
     : `<span class="chip chip-error">RAM Type Mismatch · ${ram.memType} vs ${refMemType}</span>`;
 }
+// Hena nfs el klam bs bytsheck el RAM type (zay DDR4 w DDR5) m3 el Motherboard.
 
 const totalPrice = Object.values(parts).reduce((sum, p) => {
   const n = parseFloat((p?.price || '').replace('$', '').replace(',', ''));
@@ -342,6 +362,7 @@ const totalPrice = Object.values(parts).reduce((sum, p) => {
 }, 0);
 const totalEl = document.getElementById('builderTotal');
 if (totalEl) totalEl.textContent = totalPrice > 0 ? `· $${totalPrice.toFixed(2)}` : '';
+// El cashier: byshel 3lamet el dollar w by7seb el total price bta3 el tegem3a kolha.
 
 chips.innerHTML = count === 0
   ? '<span class="chip chip-info">No parts selected</span>'
@@ -351,8 +372,11 @@ chips.innerHTML = count === 0
      ${socketChip}
      ${memTypeChip}
      ${psuChip}`;
+// Da bey7ot kol el warning chips w el success badges ely eshtaghlna 3aleha fo2 fel saf7a mra wa7da.
+
   document.querySelectorAll('.action-btn.remove').forEach(btn =>
     btn.addEventListener('click', async () => {
+      
       const p    = getParts();
       const part = p[btn.dataset.id];
       const name = part?.name || 'Part';
@@ -361,12 +385,12 @@ chips.innerHTML = count === 0
       delete p[btn.dataset.id];
       if (btn.dataset.id === 'memory') delete p['memory2'];
       saveParts(p); render();
+     //Bygeeb el part ely dost 3aleha w yemsa7ha mn el browser. Law msa7t el RAM el asaseya bymsa7 el RAM el tanya m3aha automatic, w b3den y3ml render 3ashan yeshelha mn el shasha.
       
-      // Also remove from cart API and update badge
+      
       if (productId) {
         try {
           await fetch(`/api/cart/item/${productId}`, { method: 'DELETE' });
-          // Update cart badge
           const cartRes = await fetch('/api/cart/count');
           if (cartRes.ok) {
             const { count } = await cartRes.json();
@@ -380,6 +404,7 @@ chips.innerHTML = count === 0
       }
       
       showToast(`${name} removed`);
+    //Bykallem el server y2olo emsa7 el part de mn el database w mn 7sab el user. B3den bygeeb el raqam el gded bta3 el cart w y-update el icon ely fo2, w ytl3lak el popup (toast) ytamenak enha etmasa7t.
     })
   );
 
@@ -390,3 +415,4 @@ chips.innerHTML = count === 0
 
 render();
 loadPreviewProducts();
+// W fl akher da el ignition: byshghal el render w by7amel el preview products awel ma el website yeftah.
