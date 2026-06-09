@@ -15,8 +15,14 @@ const adminController = require('../controllers/adminController');
 const vendorController = require('../controllers/vendorController');
 const { requireAuth, requireAdmin, requireSuperAdmin, requireVendor } = require('../middleware/authMiddleware');
 
+
+
+
 const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
 fs.mkdirSync(uploadDir, { recursive: true });
+
+
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadDir),
@@ -26,6 +32,8 @@ const storage = multer.diskStorage({
         cb(null, `${timestamp}-${safeName}`);
     }
 });
+
+
 
 const upload = multer({
     storage,
@@ -126,10 +134,8 @@ router.delete('/vendor/delete-product/:id', requireVendor, vendorController.dele
 router.get('/vendor/sales-stats', requireVendor, vendorController.getVendorSalesStats);
 router.get('/vendor/orders', requireVendor, vendorController.getVendorOrders);
 
-// ════════════════════════════════════════════════════════════════
-// ─── Contact Email via SendGrid (External API) ──────────────────
-// POST /api/contact  { name, email, message }
-// ════════════════════════════════════════════════════════════════
+
+// ─── Contact Email (External API) ──────────────────
 router.post('/contact', async (req, res) => {
     const { name, email, message } = req.body;
     if (!name || !email || !message)
