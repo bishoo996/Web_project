@@ -259,7 +259,7 @@ function renderGrid() {
             <div class="card-price">$${p.price.toFixed(2)}</div>
             <div class="card-stock ${stockClass}">${stockText}</div>
 
-            <button class="card-btn" onclick="event.stopPropagation(); CartWidget.addFromBuilder('${p._id}', '${_componentId}', event);">Add to Cart</button>
+            <button class="card-btn" onclick="event.stopPropagation(); ${_fromBuilder ? `CartWidget.addFromBuilder('${p._id}', '${_componentId}', event)` : `CartWidget.add('${p._id}', 1, event)`};">Add to Cart</button>
             <button class="card-compare-btn ${isComparing ? 'comparing' : ''}" onclick="toggleCompare('${p._id}','${p.title.replace(/'/g,"\\'").replace(/"/g,'&quot;')}','$${p.price.toFixed(2)}',event)">
                 ${isComparing ? '✓ Comparing' : '+ Compare'}
             </button>
