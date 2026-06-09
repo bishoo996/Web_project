@@ -1,24 +1,13 @@
-/**
- * cart-widget.js
- * NEW FILE — a lightweight, self-contained "Add to Cart" widget.
- *
- * Any page can include this script and call:
- *   CartWidget.add(productId)           — add 1 unit
- *   CartWidget.add(productId, qty)      — add N units
- *
- * The widget:
- *  - Shows a toast notification (no page redirect required)
- *  - Updates the nav cart badge
- *  - Falls back gracefully if not logged in (prompts sign-in)
- *
- * Does NOT modify any existing page or script.
- */
+//(function () { ... })() is called an IIFE — Immediately Invoked Function Expression.  scope isolation
+//''use strict'' means el JavaScript code da haytanfaz b strict mode, eli by5ali el code more safe w bey2alel el commom mistakes.
 
 (function () {
     'use strict';
 
     // ── Toast ──────────────────────────────────────────────────────────────────
+    // El block da mas2ool eno ye3mel el "Toast" (El popup el soghayar ely byzhar ta7t 3al yemeen y2olak "✅ Added to cart" aw error).
     function createToastEl() {
+        // btbny el HTML bta3 el toast law msh mawgood, w btdylo shwayet style (CSS) 3ashan shakhlo yb2a ndef.
         if (document.getElementById('cwToast')) return;
         const el = document.createElement('div');
         el.id = 'cwToast';
@@ -33,11 +22,12 @@
             'transform:translateY(80px)', 'opacity:0',
             'transition:all 0.3s cubic-bezier(0.175,0.885,0.32,1.275)',
             'pointer-events:none'
-        ].join(';');
+        ].join(';'); // bet5aly kol el styles da mawgoda fl element da ex: style="position:fixed; bottom:24px; right:24px; ..." taree2et ketaba tanya
         document.body.appendChild(el);
     }
 
     function showToast(message, type) {
+        // btkhaly el toast yzhar b text mo3ayan, w by5tar lon el border. B3d 3 sawany, bytaffy lewa7do.
         createToastEl();
         const el = document.getElementById('cwToast');
         el.textContent = message;
@@ -54,7 +44,9 @@
     }
 
     // ── Modal prompt for duplicate items ─────────────────────────────────────
+    // Da by3mel Popup Modal kbeer fl nos. Law el user by-add product howa aslan mawgood fl cart, ys2alo: "Tzawed wa7ed kaman wala te5aly el quantity 2?".
     function ensureModalExists() {
+        // btebny el shasha di fl HTML law msh mawgooda.
         if (document.getElementById('cwConfirmModal')) return;
         const overlay = document.createElement('div');
         overlay.id = 'cwConfirmModal';
@@ -86,16 +78,15 @@
         overlay.addEventListener('click', (e) => { if (e.target === overlay) hideConfirmModal(); });
 
         document.getElementById('cwBtnCancel').addEventListener('click', hideConfirmModal);
-        // buttons' handlers are wired by showConfirmModal which sets callbacks on the overlay element
     }
 
     function showConfirmModal(title, body, { onAddOne, onSetTwo }) {
+        // btzhro we btrbot el zrayer b el functions ely htzawad aw t3adel el quantity.
         ensureModalExists();
         const overlay = document.getElementById('cwConfirmModal');
         document.getElementById('cwConfirmTitle').textContent = title;
         document.getElementById('cwConfirmBody').textContent = body;
 
-        // detach previous handlers
         const btnAddOne = document.getElementById('cwBtnAddOne');
         const btnSet2   = document.getElementById('cwBtnSet2');
         const newAdd    = async () => { hideConfirmModal(); try { await onAddOne(); } catch (e) { console.error(e); } };
@@ -112,6 +103,7 @@
     }
 
     function hideConfirmModal() {
+        // btkhfeha w traka3ha opacity: 0.
         const overlay = document.getElementById('cwConfirmModal');
         if (!overlay) return;
         overlay.style.opacity = '0';
@@ -119,13 +111,13 @@
     }
 
     // ── Cart badge ─────────────────────────────────────────────────────────────
+    // mas2oola tboso 3la el raqam el a7mar el zghyar fo2 icon el cart fl navigation bar.
     function updateBadge(count) {
-        // If nav-auth.js is loaded it will have set window.updateCartBadge
+        // Btt2aked law feh function esmaha window.updateCartBadge teshagalha. Law la2, btgeeb el element benafshaha we tektob gwah el count.
         if (typeof window.updateCartBadge === 'function') {
             window.updateCartBadge(count);
             return;
         }
-        // Fallback: look for the badge element directly
         const badge = document.getElementById('navCartBadge');
         if (!badge) return;
         badge.textContent = count > 0 ? (count > 99 ? '99+' : count) : '';
@@ -133,6 +125,7 @@
     }
 
     // ── Core add function ──────────────────────────────────────────────────────
+    // Di aham function hena. Bta5od el productId we bydefault btzawad quantity = 1.
     async function add(productId, quantity = 1, evt) {
         if (!productId) {
             showToast('⚠️ Invalid product', 'error');
@@ -145,7 +138,7 @@
                 try { sessionStorage.setItem('builderFlowCart', 'true'); } catch (_) {}
             }
 
-            // Check cart for duplicates first
+            // Awel 7aga btkallem el backend API tshoof hal el product da aslan fl cart wala la2.
             try {
                 const existingCartRes = await fetch('/api/cart');
                 if (existingCartRes.ok) {
@@ -154,9 +147,10 @@
                         const id = i.productId?._id || i.productId;
                         return String(id) === String(productId);
                     });
+                    
                     if (existingItem) {
                         const existingQty = existingItem.quantity || 1;
-                        // Only show modal for trusted user events. If not a user gesture, default to adding one.
+                        // Law el request makansh clicket user 7a2e2y, byzawad 3la tool.
                         if (!(evt && evt.isTrusted)) {
                             const newQty = existingQty + (quantity || 1);
                             await fetch(`/api/cart/item/${productId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ quantity: newQty }) });
@@ -165,11 +159,11 @@
                             return true;
                         }
 
+                        // Law mawgood: bttala3 el Modal bta3 "Make 2" aw "Add one more" lel user.
                         showConfirmModal('Item already in cart',
                             'This product is already in your cart. Would you like to add one more, or set the quantity to 2?',
                             {
                                 onAddOne: async () => {
-                                    // Set quantity = existingQty + quantity
                                     const newQty = existingQty + (quantity || 1);
                                     await fetch(`/api/cart/item/${productId}`, {
                                         method: 'PUT', headers: { 'Content-Type': 'application/json' },
@@ -202,13 +196,14 @@
                 console.error('Failed to check existing cart before add', err);
             }
 
-            // No duplicate — proceed to add
+            // Law msh mawgood: byb3at POST request 3ashan y-add el product el gded da fl cart.
             const res = await fetch('/api/cart/add', {
                 method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body:    JSON.stringify({ productId, quantity })
             });
 
+            // Law msh 3amel Login (401): byzhar toast feha error, we b3den by-redirect le saf7et el sign_in.html.
             if (res.status === 401) {
                 showToast('🔒 Sign in to add items to cart', 'error');
                 setTimeout(() => { window.location.href = './sign_in.html'; }, 1500);
@@ -222,6 +217,7 @@
                 return false;
             }
 
+            // fl a5er bta-update el badge bl raqam el gded we t-show success toast.
             showToast('✅ Added to cart!', 'success');
             updateBadge(data.itemCount);
             return true;
@@ -233,6 +229,7 @@
     }
 
     // ── Toggle wishlist ────────────────────────────────────────────────────────
+    // Btkallem el API 3ashan te-add aw tesheel el product mn el Favorites.
     async function toggleWishlist(productId, btnEl) {
         if (!productId) return;
         try {
@@ -254,6 +251,7 @@
     }
 
     // ── Track recently viewed ──────────────────────────────────────────────────
+    // Function baseeta btetsgal anhy product enta fathhto 3ashan tb2a tezhar fl "Recently Viewed" section.
     async function trackView(productId) {
         if (!productId) return;
         try {
@@ -262,6 +260,7 @@
     }
 
     // ── Add from builder (category page → builder selection) ─────────────────
+    // Di makhsousa law el user 3amlo redirect mn el PC Builder 3ashan ye5tar part mo3ayan.
     async function addFromBuilder(productId, componentId, evt) {
         if (!productId || !componentId) {
             showToast('⚠️ Invalid product or component', 'error');
@@ -269,7 +268,7 @@
         }
 
         try {
-            // 1. Fetch product details to build the part object
+            // Btkallem el API tegeeb tafaseel el product da 3ashan te3raf ta5od mno el Watts, formFactor, Wel price.
             const productRes = await fetch(`/api/product/${productId}`);
             if (!productRes.ok) {
                 showToast('❌ Product not found', 'error');
@@ -277,19 +276,15 @@
             }
             const product = await productRes.json();
 
-            // If user came from builder and a part is already selected for this component,
-            // prompt only for real user clicks (evt.isTrusted). Programmatic calls shouldn't trigger UI.
+            // Bt-t2aked law el user 3ando aslan part lel component da.
             try {
                 const parts = JSON.parse(sessionStorage.getItem('builderParts') || '{}');
                 if (parts && parts[componentId]) {
                     if (!(evt && evt.isTrusted)) {
-                        // Not a direct user gesture — skip prompting to avoid unexpected popups
                         return false;
                     }
-                    // Show modal to let user pick add-one or make-2
                     showConfirmModal('Replace or Add?', `${product.title} — you already have a selection for this slot. Add one more to cart or set quantity to 2?`, {
                         onAddOne: async () => {
-                            // Attempt to add one via API
                             try {
                                 const addRes = await fetch('/api/cart/add', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId, quantity: 1 }) });
                                 if (addRes.status === 401) { showToast('🔒 Sign in to add items to cart', 'error'); setTimeout(()=>window.location.href='./sign_in.html',1500); return; }
@@ -327,7 +322,7 @@
                 console.error('Failed to read builderParts', err);
             }
 
-            // 2. Check cart to avoid duplicate adds (if user already added this product)
+            // Bt-t2aked bardo law el product aslan mwgood fe el cart wala la2.
             try {
                 const existingCartRes = await fetch('/api/cart');
                 if (existingCartRes.ok) {
@@ -344,10 +339,8 @@
 
                         showConfirmModal('Item already in cart', `\n"${product.title}" is already in your cart (qty: ${existingQty}). Add one more, or set the quantity to 2?`, {
                             onAddOne: async () => {
-                                // increment
                                 const newQty = existingQty + 1;
                                 await fetch(`/api/cart/item/${productId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ quantity: newQty }) });
-                                // store pending part and redirect
                                 try {
                                     const part = {
                                         productId: productId,
@@ -355,10 +348,7 @@
                                         specs: (product.specs || []).slice(0, 3).map(s => `${s.k}: ${s.v}`).join(' · '),
                                         badges: product.badges || [],
                                         icon: _getBuilderIcon(componentId) || _getBuilderIcon(product.category) || 'inventory_2',
-                                        watts: null,
-                                        bench: null,
-                                        avail: product.stockStatus || 'in',
-                                        price: `$${product.price.toFixed(2)}`,
+                                        watts: null, bench: null, avail: product.stockStatus || 'in', price: `$${product.price.toFixed(2)}`,
                                         formFactor: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('form'))?.v || null,
                                         socket: (product.specs || []).find(s => (s.k || '').toLowerCase() === 'socket')?.v || null,
                                         memType: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('memory type'))?.v || null
@@ -380,10 +370,7 @@
                                         specs: (product.specs || []).slice(0, 3).map(s => `${s.k}: ${s.v}`).join(' · '),
                                         badges: product.badges || [],
                                         icon: _getBuilderIcon(componentId) || _getBuilderIcon(product.category) || 'inventory_2',
-                                        watts: null,
-                                        bench: null,
-                                        avail: product.stockStatus || 'in',
-                                        price: `$${product.price.toFixed(2)}`,
+                                        watts: null, bench: null, avail: product.stockStatus || 'in', price: `$${product.price.toFixed(2)}`,
                                         formFactor: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('form'))?.v || null,
                                         socket: (product.specs || []).find(s => (s.k || '').toLowerCase() === 'socket')?.v || null,
                                         memType: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('memory type'))?.v || null
@@ -400,11 +387,9 @@
                     }
                 }
             } catch (err) {
-                // If cart check fails, fall back to attempting to add normally
                 console.error('Failed to check existing cart for duplicates', err);
             }
 
-            // 3. Add to cart
             const cartRes = await fetch('/api/cart/add', {
                 method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -426,7 +411,6 @@
             const cartData = await cartRes.json();
             updateBadge(cartData.itemCount);
 
-            // 3. Build the part object for the builder
             const wattSpec = (product.specs || []).find(s => {
                 const k = (s.k || '').toLowerCase();
                 return k.includes('tdp') || k.includes('watt') || k.includes('power');
@@ -448,13 +432,13 @@
                 memType: (product.specs || []).find(s => (s.k || '').toLowerCase().includes('memory type'))?.v || null
             };
 
-            // 4. Store pending part in sessionStorage for builder to pick up
+            // By-save kol tafaseel el product da gowa variable fl browser esmo pendingPart fl sessionStorage.
             try {
                 sessionStorage.setItem('pendingPart', JSON.stringify({ componentId, part }));
                 sessionStorage.setItem('builderFlowCart', 'true');
             } catch (_) {}
 
-            // 5. Redirect back to builder
+            // Fl akher by-redirect el user tany 3ala saf7et el builder_index.html.
             showToast(`✅ ${product.title} added!`, 'success');
             setTimeout(() => {
                 window.location.href = './builder_index.html';
@@ -470,6 +454,7 @@
     }
 
     // ── Helper: get builder icon for component ────────────────────────────────
+    // Function baseeta bt2oul kol part el icon bta3o el monaseb eh.
     function _getBuilderIcon(componentId) {
         const iconMap = {
             cpu: 'memory', gpu: 'sports_esports', motherboard: 'desktop_windows',
@@ -481,6 +466,7 @@
     }
 
     // ── Public API ─────────────────────────────────────────────────────────────
+    // bykhaly el object CartWidget mawgood Global 3ala mosatwa el window bta3 el browser 3ashan t-access el functions di bshakl direct.
     window.CartWidget = { add, addFromBuilder, toggleWishlist, trackView };
 
 }());

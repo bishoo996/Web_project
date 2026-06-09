@@ -12,6 +12,7 @@ async function initComparePage() {
             </div>`;
         return;
     }
+    // Ben-geeb list el products mn el localStorage. Lw el user msh daayef 7agat aw daayef product wa7ed bas, bn-zher message eno maynf3sh nqaren w ntlbo ydeef kaman.
 
     content.innerHTML = `<p class="compare-loading">Loading comparison…</p>`;
 
@@ -34,9 +35,11 @@ async function initComparePage() {
             </div>`;
         return;
     }
+    // Hena bn-fetch el data bta3t el products kolha mn el backend mra wa7da (in parallel b-Promise.all) 3ashan nksab waqt. Bn-filter bi Boolean 3ashan nmsa7 ay null (lw product msh mawgood), w lw rge3na b-a2al mn 2 products sh8aleen bn-wa2af w ndy error.
 
     // Union of all spec keys across every product
     const allSpecKeys = [...new Set(products.flatMap(p => (p.specs || []).map(s => s.k)))];
+    // Bn-gma3 kol el asamy bta3t el specs mn kol el products w n7ot-ha fi array wa7da mn 8er tekrar (Set) 3ashan tb2a dy el rows bta3t el table.
 
     // ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -69,6 +72,7 @@ async function initComparePage() {
             ${cells.map(c => `<td>${c}</td>`).join('')}
         </tr>`;
     }
+    // Dol shwayet helper functions 3ashan ysahlo 3alena resm el HTML gowa el table: n7seb el average rating, nersm el nogoom, n3ml el stock label (in/low/out), n-get qemet spec mo3ayana, w nersm row kamil.
 
     // ── Derived values ────────────────────────────────────────────────────────
 
@@ -76,6 +80,7 @@ async function initComparePage() {
     const ratings     = products.map(avgRating);
     const numRatings  = ratings.map(r => r !== null ? Number(r) : -1);
     const bestRating  = Math.max(...numRatings);
+    // Bn-7seb a2al se3r w a3la rating mn el products el mawgoda 3ashan ne-highlight el "Best Value" ll user f el table.
 
     // ── Product header cells ──────────────────────────────────────────────────
 
@@ -88,6 +93,7 @@ async function initComparePage() {
             <div class="cmp-brand">${p.manufacturer}</div>
             <button class="cmp-remove-btn" onclick="removeProduct('${p._id}')">✕ Remove</button>`;
     });
+    // Ben-gehaz el ras bta3t el table l kol product (El sora, el esm, el brand, w zorar el Remove).
 
     // ── Fixed rows ────────────────────────────────────────────────────────────
 
@@ -108,6 +114,7 @@ async function initComparePage() {
             && numRatings.filter(x => x === bestRating).length < numRatings.length;
         return `<span class="${isBest ? 'best-val' : ''}">${starsHTML(r)}</span>`;
     });
+    // Hena bn-bny el cells bta3t el rows el asaseya zay el se3r, el category, el stock, w el rating, w bn-dy class 'best-val' l a7san se3r w a7san rating 3ashan y-nawar ll user.
 
     // ── Spec rows ─────────────────────────────────────────────────────────────
 
@@ -125,6 +132,7 @@ async function initComparePage() {
         });
         return makeRow(key, cells, 'spec-row');
     });
+    // Bn-lff 3ala kol spec key, w ngeb el value bta3to mn kol product. Lw kolhom arqam (zay el RAM aw el Watts), bn-highlight a3la raqam fihom. Lw el product mfehosh el spec da, bn7ot dash "—".
 
     // ── Cart row ──────────────────────────────────────────────────────────────
 
@@ -135,6 +143,7 @@ async function initComparePage() {
             ${disabled ? 'Out of Stock' : 'Add to Cart'}
         </button>`;
     });
+    // Ben-gehaz zorar "Add to Cart" l kol product. Lw el product out of stock, bn-disable el zorar 3ashan mynf3sh yt-daaf.
 
     // ── Assemble ──────────────────────────────────────────────────────────────
 
@@ -164,11 +173,13 @@ async function initComparePage() {
         </div>
         <p class="cmp-back-link"><a href="./category.html">← Add more products to compare</a></p>`;
 }
+// Fel a5er 5ales, bn-gma3 kol el rows w el cells w nersm el table kolo w n-inject da fel HTML container bta3na.
 
 function removeProduct(productId) {
     const list = JSON.parse(localStorage.getItem('compareList') || '[]');
     localStorage.setItem('compareList', JSON.stringify(list.filter(p => p.id !== productId)));
     initComparePage();
 }
+// Lma el user ydoos 3ala zorar "Remove" fo2 ay product, bn-msa7 el product da mn el array bta3t el localStorage w n-run initComparePage() tany 3ashan t-update el table live.
 
 initComparePage();

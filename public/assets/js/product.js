@@ -13,12 +13,14 @@ const BUILDER_ICON_MAP = {
     case: 'desktop_windows', cooler: 'ac_unit', monitor: 'desktop_mac',
     keyboard: 'keyboard', mouse: 'mouse', headset: 'headset'
 };
+// Hena ben-geeb el data mn el URL (zay el ID w lw gai mn el builder) w ben-zabat map lel icons.
 
 async function loadProductDetails() {
     if (!productId) {
         document.getElementById('productDetailsContent').innerHTML = '<h1>Product not found.</h1>';
         return;
     }
+    // Lw mfeesh ID fel URL, bn-wa2af el function w n-tl3 message eno msh mawgood.
 
     try {
         const response = await fetch(`/api/product/${productId}`);
@@ -26,6 +28,7 @@ async function loadProductDetails() {
         
         const p = await response.json();
         const container = document.getElementById('productDetailsContent');
+        // Hena ben-fetch el product data mn el backend, w ne7awelha JSON 3ashan neshta8al beha.
 
         // 1. Dynamic Specs
         let specsRows = '';
@@ -44,10 +47,12 @@ async function loadProductDetails() {
             p.reviews.forEach(r => totalScore += r.rating);
             avgRating = (totalScore / reviewCount).toFixed(1); // e.g., 4.5
         }
+        // Hena 3amalna el rows bta3t el specs table, w e7sabna el average rating bta3 el reviews (total / count).
 
         let stockColor = p.stockStatus === 'in' ? '#10B981' : (p.stockStatus === 'low' ? '#F59E0B' : '#EF4444');
         let stockText = p.stockStatus.toUpperCase() + ' STOCK';
         const imageHTML = p.imageUrl ? `<img src="${p.imageUrl}" alt="${p.title}">` : `<div style="font-size: 16px; color: var(--text-muted);">No Image Available</div>`;
+        // Ben-zabat el alwan bta3t el stock (a5dar, asfar, a7mar) w el HTML bta3 soret el product.
 
         // 3. Draw the main product section
         const addToBuilderHTML = (fromBuilder && builderComponentId) ? `
@@ -87,6 +92,7 @@ async function loadProductDetails() {
                 </table>
             </div>
         `;
+        // Hena ben-inject el HTML kolo fel page b-data el product (sora, title, price, zrayer el cart w el wishlist, w el specs).
 
         if (fromBuilder && builderComponentId) {
             document.getElementById('addToBuilderBtn')?.addEventListener('click', () => {
@@ -115,6 +121,7 @@ async function loadProductDetails() {
             });
         }
         document.title = `Overclocked - ${p.title}`;
+        // Lw el user da5el y-add el part da lel PC builder, ben-gehaz el object bta3o w ne-save fel sessionStorage, w ne-redirect tany lel builder.
 
         const wishlistBtn = document.getElementById('wishlistButton');
         if (wishlistBtn) {
@@ -138,12 +145,14 @@ async function loadProductDetails() {
                 // ignore
             }
         }
+        // Ben-check lw el user 3amel login w 7atet el product da fel wishlist abl kda 3ashan ne-update shakl zorar el wishlist.
 
         try {
             await CartWidget.trackView(p._id);
         } catch (err) {
             // ignore
         }
+        // Ben-eb3at lel server en el user fata7 el product da 3ashan yet7eseb fel "Recently Viewed".
 
         // 4. Draw the Reviews List at the bottom
         const reviewsContainer = document.getElementById('reviewsList');
@@ -170,6 +179,7 @@ async function loadProductDetails() {
                 `;
             });
         }
+        // Ben-lff 3ala el reviews w ne-ersmha fl a5er. Ben-e3kes el array bel reverse 3ashan a5er review yezhar fo2 awel wa7ed.
 
     } catch (error) {
         console.error('Failed to load product details:', error);
@@ -210,5 +220,6 @@ document.getElementById('reviewForm').addEventListener('submit', async (e) => {
         msgDiv.innerText = 'Network error.';
     }
 });
+// Lma el user ydoos submit lel review, ben-eb3at el data (rating w text) lel backend b-POST request, w lw tamaam b-ne-reload el page silently 3ashan nwareeh el review bta3o w ne-update el math.
 
 loadProductDetails();
