@@ -12,11 +12,11 @@ async function initComparePage() {
             </div>`;
         return;
     }
-    // Ben-geeb list el products mn el localStorage. Lw el user msh daayef 7agat aw daayef product wa7ed bas, bn-zher message eno maynf3sh nqaren w ntlbo ydeef kaman.
+    // Ben-geeb list el products mn el localStorage. Lw el user msh 7atet 7agat aw 7atet product wa7ed bas, bn-zher message eno maynf3sh nqaren w ntlbo ydeef kaman.
 
     content.innerHTML = `<p class="compare-loading">Loading comparison…</p>`;
 
-    const results = await Promise.all(
+    const results = await Promise.all(  // await sequential one by one fetches would be too slow, especially if some products have slow response times. By using Promise.all, we can fire all the fetch requests at once and wait for all of them to complete, which is much faster.
         list.map(item =>
             fetch(`/api/product/${item.id}`)
                 .then(r => r.ok ? r.json() : null)
