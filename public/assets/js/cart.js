@@ -1,13 +1,6 @@
-/**
- * cart.js — Shopping Cart page logic
- * NEW FILE — does not modify any existing file.
- * Uses /api/cart/* endpoints defined in newRoutes.js.
- */
-
-// ── State ─────────────────────────────────────────────────────────────────────
 let cartData    = { items: [], total: 0 };
 let isLoggedIn  = false;
-let taxRate     = 0.08;   // 8% estimated tax
+let taxRate     = 0.08;   
 
 const REQUIRED_BUILD_CATEGORIES = ['cpu', 'gpu', 'motherboard', 'memory', 'storage', 'psu', 'case', 'cooler'];
 const REQUIRED_CORE_CATEGORIES = ['cpu', 'gpu', 'motherboard', 'memory', 'storage', 'psu'];
@@ -16,15 +9,15 @@ const REQUIRED_CORE_LABELS = {
     memory: 'Memory', storage: 'Storage', psu: 'Power Supply'
 };
 
-function getCartCategories() {
+function getCartCategories() { //bete3mel set ll item categories bs [cpu,gpu,psu]
     return new Set((cartData.items || []).map(item => String(item.category || '').toLowerCase()));
 }
 
-function isBuildOrder(categories) {
+function isBuildOrder(categories) { //howa be7awel yebni pc?
     return REQUIRED_BUILD_CATEGORIES.some(cat => categories.has(cat));
 }
 
-function isBuilderFlowCart() {
+function isBuilderFlowCart() { //howa esta5dem builder?
     return sessionStorage.getItem('builderFlowCart') === 'true';
 }
 
@@ -32,22 +25,39 @@ function getMissingBuildComponents(categories) {
     return REQUIRED_CORE_CATEGORIES.filter(cat => !categories.has(cat));
 }
 
-function formatMissingBuildComponents(categories) {
+function formatMissingBuildComponents(categories) { //7ot el esm el chic
     return getMissingBuildComponents(categories).map(id => REQUIRED_CORE_LABELS[id] || id);
 }
 
-// ── Boot ──────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', async () => {
+
+
+
+
+
+
+// BOOT
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', async () => { //wait html y load
     await initCart();
     initCheckoutModal();
 });
 
-async function initCart() {
-    // Check auth
+async function initCart() { //law me4 logged in show banner
+    
     try {
         const res  = await fetch('/api/me');
         const data = await res.json();
-        isLoggedIn = !!data.isLoggedIn;
+        isLoggedIn = !!data.isLoggedIn; //!!forces boolean, 3shan law data.isLoggedIn undefined yeb2a false
     } catch (err) { console.error('Error checking auth state', err); isLoggedIn = false; }
 
     if (!isLoggedIn) {
@@ -60,11 +70,11 @@ async function initCart() {
     await fetchAndRender();
 }
 
-// ── Fetch cart from API and render ────────────────────────────────────────────
-async function fetchAndRender() {
+
+async function fetchAndRender() { 
     try {
         const res = await fetch('/api/cart');
-        if (!res.ok) throw new Error('fetch failed');
+        if (!res.ok) throw new Error('fetch failed'); //ok di ll 404
         cartData = await res.json();
     } catch (err) {
         console.error('Failed to fetch cart data', err);
@@ -73,8 +83,8 @@ async function fetchAndRender() {
     renderCart();
 }
 
-// ── Main render ───────────────────────────────────────────────────────────────
-function renderCart() {
+
+function renderCart() { //render header item action bar
     const itemsCol   = document.getElementById('cartItemsCol');
     const summaryCol = document.getElementById('cartSummaryCol');
     const badgeEl    = document.getElementById('cartCountBadge');
@@ -82,11 +92,11 @@ function renderCart() {
     const items     = cartData.items || [];
     const itemCount = items.reduce((s, i) => s + i.quantity, 0);
 
-    if (badgeEl) badgeEl.textContent = itemCount;
-    // Also update the nav badge
-    if (window.updateCartBadge) window.updateCartBadge(itemCount);
+    if (badgeEl) badgeEl.textContent = itemCount; //badge 3ala icon el cart fel nav
+    
+    if (window.updateCartBadge) window.updateCartBadge(itemCount); //ay script u call zay nav-auth
 
-    if (items.length === 0) {
+    if (items.length === 0) { 
         summaryCol.style.display = 'none';
         renderEmptyCart();
         sessionStorage.removeItem('builderFlowCart');
@@ -95,7 +105,7 @@ function renderCart() {
 
     summaryCol.style.display = '';
 
-    // Header row
+
     const headerHTML = `
         <div class="cart-header-row">
             <div>Product</div>
@@ -105,10 +115,10 @@ function renderCart() {
         </div>
     `;
 
-    // Items
+    
     const itemsHTML = items.map(item => renderCartItem(item)).join('');
 
-    // Actions bar
+    //Actions bar
     const actionsHTML = `
         <div class="cart-actions-bar">
             <button class="btn-clear-cart" onclick="clearCart()"><span class="material-icons icon-inline" aria-hidden="true">delete</span> Clear Cart</button>
@@ -123,7 +133,7 @@ function renderCart() {
 }
 
 function renderCartItem(item) {
-    const productId = item.productId?._id || item.productId;
+    const productId = item.productId?._id || item.productId; //? is optional chaining 34an law object aw string
     const subtotal  = (item.price * item.quantity).toLocaleString('en-US', { minimumFractionDigits: 2 });
     const each      = item.price.toLocaleString('en-US', { minimumFractionDigits: 2 });
 

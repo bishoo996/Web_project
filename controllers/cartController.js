@@ -12,6 +12,9 @@ async function getCart(req, res) {
     }
 }
 
+
+
+
 async function addToCart(req, res) {
     try {
         const { productId, quantity = 1 } = req.body;
@@ -46,6 +49,10 @@ async function addToCart(req, res) {
     }
 }
 
+
+
+
+
 async function getCartCount(req, res) {
     try {
         const cart = await Cart.findOne({ userId: req.session.userId });
@@ -56,6 +63,12 @@ async function getCartCount(req, res) {
         res.status(500).json({ count: 0 });
     }
 }
+
+
+
+
+
+
 
 async function updateCartItem(req, res) {
     try {
@@ -77,6 +90,9 @@ async function updateCartItem(req, res) {
     }
 }
 
+
+
+
 async function removeCartItem(req, res) {
     try {
         const cart = await Cart.findOne({ userId: req.session.userId });
@@ -90,6 +106,11 @@ async function removeCartItem(req, res) {
         res.status(500).json({ error: 'Remove error' });
     }
 }
+
+
+
+
+
 
 async function clearCart(req, res) {
     try {

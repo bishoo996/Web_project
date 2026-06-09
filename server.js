@@ -11,13 +11,13 @@ const viewRoutes = require('./routes/views');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Trust Render's proxy — required for sessions to work on Render
+//Trust Render's proxy
 app.set('trust proxy', 1);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Body parsers MUST come before routes
+//Body parsers MUST come before routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -37,7 +37,7 @@ app.use(session({
     }
 }));
 
-// Block direct access to protected HTML files
+//Block direct access to protected HTML files
 app.use((req, res, next) => {
     if (['/admin.html', '/vendor.html', '/superadmin.html'].includes(req.path)) {
         return res.status(403).send('Forbidden');

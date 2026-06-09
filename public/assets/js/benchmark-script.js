@@ -28,14 +28,14 @@ async function loadLiveHardware() {  //fetch DB data and populate dropdowns
         dbHardware = data; //save to global state so our buttons can access the math variables later
         
 
-        //clear existing dropdowns
+        //4il existing dropdowns
         cpuSelect.innerHTML = '<option value="">-- Select CPU --</option>';
         gpuSelect.innerHTML = '<option value="">-- Select GPU --</option>';
 
-        //populate dropdowns
+        //populate 
         data.cpus.forEach(cpu => {
             const option = document.createElement('option');
-            option.value = cpu._id; // Store the MongoDB ID!
+            option.value = cpu._id;
             option.textContent = `${cpu.brand} ${cpu.name}`;
             cpuSelect.appendChild(option);
         });
@@ -119,9 +119,9 @@ runBenchmarkBtn.addEventListener('click', function() {
     animateProgressBar(performanceBar, performanceScore, Math.min(avgPerformance, 100));
     animateProgressBar(memoryBar, memoryScore, memoryPercentage);
     
-    //Power/Thermal aren't in DB yet, this is mock data
+    
     animateProgressBar(powerBar, powerScore, 85); 
-    animateProgressBar(thermalBar, thermalScore, 78);
+    animateProgressBar(thermalBar, (powerScore+performanceScore)/2, 78);
 });
 
 

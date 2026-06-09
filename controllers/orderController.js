@@ -10,7 +10,7 @@ async function checkout(req, res) {
         }
 
         const total = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-        const expandedItems = cart.items.map(item => ({
+        const expandedItems = cart.items.map(item => ({ //loop items w create new object for each
             productId: item.productId,
             title: item.title,
             manufacturer: item.manufacturer,
