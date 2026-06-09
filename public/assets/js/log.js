@@ -2,18 +2,36 @@ console.log("Login system loaded");
 
 // Simple validations
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const egPhoneRegex = /^(?:\+20|0)?1[0125]\d{8}$/; // Egyptian mobile: 010,011,012,015 (+20 optional)
-
+const egPhoneRegex = /^01[0125][0-9]{8}$/;
+const nameRegex = /^[A-Za-z]{3,}$/;
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 function validateLogin(email, password) {
     if (!email || !password) return false;
     return true;
 }
 
 function validateSignupData(data) {
-    if (!data.firstName || !data.lastName) return { ok: false, msg: 'Name required' };
-    if (!emailRegex.test(data.email)) return { ok: false, msg: 'Invalid email' };
-    if (!egPhoneRegex.test(data.phoneNumber)) return { ok: false, msg: 'Enter a valid Egyptian phone number' };
-    if (!data.password || data.password.length < 6) return { ok: false, msg: 'Password must be >= 6 chars' };
+
+    if (!nameRegex.test(data.firstName)) {
+        return { ok: false, msg: "First name must be at least 3 letters and letters only" };
+    }
+
+    if (!nameRegex.test(data.lastName)) {
+        return { ok: false, msg: "Last name must be at least 3 letters and letters only" };
+    }
+
+    if (!emailRegex.test(data.email)) {
+        return { ok: false, msg: "Email must be Gmail only" };
+    }
+
+    if (!egPhoneRegex.test(data.phoneNumber)) {
+        return { ok: false, msg: "Phone must be 11 digits starting with 01" };
+    }
+
+    if (!passwordRegex.test(data.password)) {
+        return { ok: false, msg: "Password must be min 6 ." };
+    }
+
     return { ok: true };
 }
 

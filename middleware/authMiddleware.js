@@ -26,7 +26,7 @@ function requireRole(...roles) {
         next();
     };
 }
-
+const egPhoneRegex = /^01[0125][0-9]{8}$/;
 const requireAdmin = requireRole('admin', 'superadmin');
 const requireSuperAdmin = requireRole('superadmin');
 const requireVendor = requireRole('vendor');
